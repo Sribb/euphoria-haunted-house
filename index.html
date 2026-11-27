@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#07050C" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 9 16' shape-rendering='crispEdges'%3E%3Crect x='4' y='0' width='1' height='2' fill='%23E8661C'/%3E%3Crect x='3' y='2' width='3' height='4' fill='%23FF9A3C'/%3E%3Crect x='4' y='3' width='1' height='2' fill='%23FFE3A0'/%3E%3Crect x='2' y='8' width='5' height='6' fill='%23E6E1D3'/%3E%3Crect x='0' y='14' width='9' height='2' fill='%23A8641A'/%3E%3C/svg%3E" />
+    <title>Euphoria Haunted House</title>
+    <meta name="description" content="A haunted pixel-art house where every room is an investing lesson. Free the ghosts by learning how money works." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+10&family=Press+Start+2P&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/src/ui/ui.css" />
+  </head>
+  <body>
+    <div id="stage">
+      <canvas id="view" aria-label="The Foyer of the haunted house"></canvas>
+      <div id="letterbox" aria-hidden="true"><div></div><div></div></div>
+      <div id="fade" aria-hidden="true"></div>
+      <canvas id="wipe" aria-hidden="true"></canvas>
+
+      <header id="hud" hidden>
+        <div class="status">
+          <div class="room"><span class="label">Room 1 of 5</span><span class="name">The Foyer</span></div>
+          <div class="goal">
+            <div class="goal-head"><span class="label">Candles</span><div id="candles" aria-label="Candles lit"></div><span class="label" id="candle-count">0 of 3</span></div>
+            <p id="objective" aria-live="polite">Find the glowing clues to light the candles.</p>
+          </div>
+        </div>
+        <button id="mute" type="button" aria-label="Mute sound">Sound on</button>
+      </header>
+
+      <div id="prompt" hidden><kbd>E</kbd><span></span></div>
+      <button id="act" type="button" hidden>Examine</button>
+      <div id="toast" role="status" aria-live="polite"></div>
+
+      <section id="dialog" hidden aria-live="polite">
+        <div class="speaker"></div>
+        <h2 class="title"></h2>
+        <p class="text"></p>
+        <div class="more">Next <span aria-hidden="true">&#9662;</span></div>
+      </section>
+
+      <section id="battle" hidden>
+        <div class="foe">
+          <span class="name"></span>
+          <div class="unrest" aria-label="Unrest"></div>
+        </div>
+        <div class="panel">
+          <p class="question"></p>
+          <div class="options" role="group"></div>
+          <p class="feedback" aria-live="polite"></p>
+          <div class="more" hidden>Next <span aria-hidden="true">&#9662;</span></div>
+        </div>
+      </section>
+
+      <section id="title" class="card">
+        <p class="kicker">Euphoria presents</p>
+        <h1>Haunted<br />House</h1>
+        <p class="sub">Every room is a lesson. Every ghost is a question.</p>
+        <button id="start" type="button">Enter the house</button>
+        <p class="hint" id="controls-hint">Move with WASD or the arrow keys. Press E to look at things.</p>
+      </section>
+
+      <section id="intro" class="card" hidden>
+        <p class="kicker">How to play</p>
+        <h2>Welcome to the<br />haunted house</h2>
+        <p class="sub">This house is Euphoria's investing course, haunted. Every room is one short lesson, and every ghost is stuck here until someone understands it.</p>
+        <ol class="steps">
+          <li><span class="icon" data-icon="wisp"></span><span><b>Explore with your lantern.</b> Glowing wisps mark the clues.</span></li>
+          <li><span class="icon" data-icon="candle"></span><span><b>Look at each clue.</b> It plays a short movie and lights one of the room's three candles.</span></li>
+          <li><span class="icon" data-icon="ghost"></span><span><b>Face the ghost.</b> With all three candles lit, answer its questions to set it free and open the next door.</span></li>
+        </ol>
+        <button id="begin" type="button">Start exploring</button>
+        <p class="hint" id="intro-controls">Move with WASD or the arrow keys. Press E to look at things.</p>
+      </section>
+
+      <section id="end" class="card" hidden>
+        <p class="kicker">Room 1 complete</p>
+        <h1>The Foyer<br />is at peace</h1>
+        <p class="sub">You learned what investing is, why cash is not safe, and why time does most of the work.</p>
+        <p class="next">Room 2, The Cellar, opens next.</p>
+        <button id="restart" type="button">Play the Foyer again</button>
+      </section>
+
+      <section id="movie" hidden aria-live="polite">
+        <div class="frame">
+          <div class="chip" hidden></div>
+          <div class="screen">
+            <canvas aria-hidden="true"></canvas>
+            <div class="labels" aria-hidden="true"></div>
+          </div>
+          <p class="caption"></p>
+        </div>
+        <div class="titlecard">
+          <p class="kicker"></p>
+          <h2></h2>
+          <p class="sub"></p>
+          <button type="button" class="play"><span aria-hidden="true">&#9654;</span> Play</button>
+        </div>
+        <button type="button" class="continue" hidden>Continue</button>
+      </section>
+
+      <div id="stick" aria-hidden="true"><div id="stick-knob"></div></div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

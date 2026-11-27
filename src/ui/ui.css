@@ -1,0 +1,153 @@
+:root {
+  --canvas: #07050c;
+  --surface: #151024;
+  --ink: #e6e1d3;
+  --muted: #9c95ae;
+  --violet: #9256e0;
+  --violet-deep: #5c2496;
+  --candle: #e89a2e;
+  --candle-light: #ffd47a;
+  --blood: #d63a3a;
+  --ecto: #5be37d;
+  --ghost: #6fe3e8;
+  --px: 4px;
+  font-family: "Jersey 10", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--canvas); color: var(--ink); overflow: hidden; }
+body { touch-action: none; user-select: none; -webkit-user-select: none; }
+button { font: inherit; color: inherit; cursor: pointer; }
+[hidden] { display: none !important; }
+
+#stage { position: fixed; inset: 0; overflow: hidden; }
+#view { position: absolute; left: 0; top: 0; image-rendering: pixelated; image-rendering: crisp-edges; }
+
+/* pixel panels: a hard two-step border made with box-shadow, no rounded corners */
+.panel, #dialog, .card, #prompt, #act, #hud .status, #mute, #toast {
+  background: var(--surface);
+  border: var(--px) solid var(--violet-deep);
+  box-shadow: 0 0 0 var(--px) #07050c, inset 0 0 0 var(--px) #1d1530;
+}
+
+#hud { position: absolute; top: 16px; left: 16px; right: 16px; display: flex; gap: 12px; align-items: flex-start; pointer-events: none; }
+#hud .status { display: flex; align-items: stretch; pointer-events: auto; max-width: min(560px, calc(100% - 140px)); }
+#hud .room { display: flex; flex-direction: column; justify-content: center; line-height: 1; padding: 8px 14px; border-right: 3px solid #2c2140; }
+#hud .label { font-family: "Press Start 2P", monospace; font-size: 8px; color: var(--muted); letter-spacing: 1px; white-space: nowrap; }
+#hud .name { font-size: 28px; color: var(--candle-light); white-space: nowrap; }
+#hud .goal { padding: 6px 14px 8px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+#hud .goal-head { display: flex; align-items: center; gap: 10px; }
+#objective { margin: 0; font-size: 22px; line-height: 1.05; color: var(--ink); }
+#candles { display: flex; gap: 2px; }
+#candles svg { width: 18px; height: 32px; image-rendering: pixelated; transition: filter 0.4s; }
+#candles svg.lit { filter: drop-shadow(0 0 6px rgba(255, 154, 60, 0.7)); }
+#mute { margin-left: auto; padding: 6px 12px; font-size: 22px; color: var(--muted); pointer-events: auto; }
+#mute[aria-pressed="true"] { color: var(--blood); }
+
+#prompt { position: absolute; transform: translate(-50%, -100%); display: flex; gap: 8px; align-items: center; padding: 4px 10px; font-size: 24px; pointer-events: none; white-space: nowrap; }
+#prompt kbd { font-family: "Press Start 2P", monospace; font-size: 10px; background: var(--candle); color: #1c1210; padding: 4px 6px; }
+#act { position: absolute; right: 24px; bottom: 40px; padding: 14px 22px; font-size: 30px; color: var(--candle-light); }
+
+#toast { position: absolute; left: 50%; top: 84px; transform: translate(-50%, -12px); padding: 6px 16px; font-size: 28px; color: var(--candle-light); opacity: 0; transition: opacity 0.3s, transform 0.3s; pointer-events: none; }
+#toast.on { opacity: 1; transform: translate(-50%, 0); }
+
+#dialog { position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%); width: min(760px, calc(100% - 32px)); padding: 16px 22px 14px; cursor: pointer; }
+#dialog .speaker { font-family: "Press Start 2P", monospace; font-size: 11px; color: var(--blood); margin-bottom: 8px; }
+#dialog .speaker:empty, #dialog .title:empty { display: none; }
+#dialog .title { margin: 0 0 6px; font-weight: 400; font-size: 30px; color: var(--candle-light); line-height: 1; }
+#dialog .text { margin: 0; font-size: 28px; line-height: 1.12; min-height: 3.4em; }
+.more { text-align: right; font-size: 22px; color: var(--muted); animation: bob 0.9s steps(2) infinite; }
+@keyframes bob { 50% { transform: translateY(3px); } }
+
+#battle { position: absolute; inset: 0; pointer-events: none; }
+#battle .foe { position: absolute; top: 84px; right: 16px; text-align: center; padding: 10px 14px; background: var(--surface); border: var(--px) solid #8e1c24; box-shadow: 0 0 0 var(--px) #07050c; }
+#battle .name { font-family: "Press Start 2P", monospace; font-size: 14px; color: var(--blood); text-shadow: 2px 2px 0 #07050c; }
+#battle .unrest { display: flex; gap: 6px; justify-content: center; margin-top: 10px; }
+#battle .unrest i { width: 44px; height: 14px; background: var(--blood); box-shadow: 0 0 0 3px #07050c, inset 0 -4px 0 #8e1c24; transition: background 0.3s, transform 0.3s; }
+#battle .unrest i.gone { background: #241a33; box-shadow: 0 0 0 3px #07050c; transform: scaleY(0.6); }
+#battle .panel { position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%); width: min(820px, calc(100% - 32px)); padding: 16px 20px; pointer-events: auto; }
+#battle .question { margin: 0 0 12px; font-size: 30px; line-height: 1.08; }
+#battle .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+#battle .options button { text-align: left; padding: 10px 12px; font-size: 24px; line-height: 1.05; background: #1d1530; border: 3px solid #3e3058; display: flex; gap: 10px; align-items: flex-start; }
+#battle .options button b { font-family: "Press Start 2P", monospace; font-size: 10px; color: var(--candle); padding-top: 6px; font-weight: 400; }
+#battle .options button:hover, #battle .options button.sel { border-color: var(--candle); background: #2c2140; }
+#battle .options button.right { border-color: var(--ecto); background: #123a22; }
+#battle .options button.wrong { border-color: var(--blood); background: #3a1018; }
+#battle .options button:disabled { cursor: default; }
+#battle .feedback { margin: 12px 0 0; font-size: 26px; line-height: 1.1; }
+#battle .feedback:empty { display: none; }
+#battle .feedback.good { color: var(--ecto); }
+#battle .feedback.bad { color: #f08a80; }
+
+#letterbox div { position: absolute; left: 0; right: 0; height: 0; background: #000; transition: height 0.45s steps(6); pointer-events: none; }
+#letterbox div:first-child { top: 0; }
+#letterbox div:last-child { bottom: 0; }
+#stage.battle #letterbox div { height: 7vh; }
+
+#wipe { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; image-rendering: pixelated; z-index: 15; }
+#fade { position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; transition: opacity 0.5s; }
+
+.card { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(560px, calc(100% - 32px)); padding: 28px 28px 22px; text-align: center; }
+.card .kicker { font-family: "Press Start 2P", monospace; font-size: 10px; color: var(--muted); margin: 0 0 14px; letter-spacing: 1px; }
+.card h1 { font-family: "Press Start 2P", monospace; font-weight: 400; font-size: clamp(24px, 6vw, 40px); line-height: 1.25; margin: 0 0 14px; color: var(--candle-light); text-shadow: 4px 4px 0 var(--violet-deep); }
+.card .sub { font-size: 28px; margin: 0 0 18px; line-height: 1.1; }
+.card .next { font-size: 24px; color: var(--ghost); margin: -6px 0 18px; }
+.card button { font-size: 30px; padding: 10px 26px; background: var(--violet-deep); border: var(--px) solid var(--violet); color: var(--ink); box-shadow: 0 var(--px) 0 #2a0f48; }
+.card button:hover, .card button:focus-visible { background: var(--violet); outline: none; }
+.card .hint { font-size: 22px; color: var(--muted); margin: 18px 0 0; }
+#title { background: rgba(21, 16, 36, 0.92); }
+#intro { width: min(620px, calc(100% - 32px)); text-align: left; max-height: calc(100% - 32px); overflow: auto; }
+#intro .kicker, #intro h2 { text-align: center; }
+#intro h2 { font-family: "Press Start 2P", monospace; font-weight: 400; font-size: clamp(18px, 4vw, 28px); line-height: 1.35; margin: 0 0 14px; color: var(--candle-light); text-shadow: 3px 3px 0 var(--violet-deep); }
+#intro .sub { font-size: 25px; text-align: center; }
+#intro .steps { list-style: none; counter-reset: step; margin: 0 0 22px; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+#intro .steps li { counter-increment: step; display: flex; gap: 14px; align-items: center; font-size: 24px; line-height: 1.1; background: #1d1530; border: 3px solid #2c2140; padding: 10px 12px; }
+#intro .steps li::before { content: counter(step); font-family: "Press Start 2P", monospace; font-size: 12px; color: #1c1210; background: var(--candle); padding: 6px 8px; }
+#intro .steps b { color: var(--candle-light); font-weight: 400; }
+#intro .icon { flex: 0 0 48px; height: 48px; display: grid; place-items: center; }
+#intro .icon svg { max-width: 48px; max-height: 48px; image-rendering: pixelated; }
+#intro button { display: block; margin: 0 auto; }
+#intro .hint { text-align: center; }
+
+#stick { position: absolute; width: 112px; height: 112px; margin: -56px 0 0 -56px; border: 4px solid rgba(146, 86, 224, 0.5); opacity: 0; pointer-events: none; }
+#stick.on { opacity: 1; }
+#stick-knob { position: absolute; left: 32px; top: 32px; width: 40px; height: 40px; background: rgba(232, 154, 46, 0.8); }
+
+/* the fullscreen cutscene */
+#movie { position: absolute; inset: 0; z-index: 20; background: #000; display: grid; place-items: center; }
+#movie .frame { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+#movie .screen { position: relative; box-shadow: 0 0 0 4px #1d1530, 0 0 0 8px #000, 0 0 60px rgba(146, 86, 224, 0.25); }
+#movie canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
+#movie .labels { position: absolute; inset: 0; pointer-events: none; }
+#movie .pill { position: absolute; white-space: nowrap; padding: 2px 8px 3px; font-size: clamp(16px, 2.2vw, 26px); line-height: 1; border: 3px solid; box-shadow: 0 3px 0 #000; }
+#movie .caption { width: var(--stage-w, 640px); max-width: calc(100vw - 32px); min-height: 2.3em; margin: 0; font-size: clamp(22px, 2.7vw, 34px); line-height: 1.12; text-align: center; color: var(--ink); text-shadow: 3px 3px 0 #000; }
+#movie .chip { align-self: flex-start; font-family: "Press Start 2P", monospace; font-size: 11px; color: #1c1210; background: var(--candle); padding: 6px 10px; box-shadow: 0 0 0 3px #000; }
+#movie .titlecard { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: radial-gradient(ellipse at center, rgba(7, 5, 12, 0.35), rgba(0, 0, 0, 0.85)); }
+#movie .titlecard[hidden] { display: none; }
+#movie .titlecard .kicker { font-family: "Press Start 2P", monospace; font-size: 11px; letter-spacing: 2px; color: var(--muted); margin: 0 0 16px; text-transform: uppercase; }
+#movie .titlecard h2 { font-family: "Press Start 2P", monospace; font-weight: 400; font-size: clamp(20px, 4.2vw, 40px); line-height: 1.3; margin: 0 16px 12px; color: var(--candle-light); text-shadow: 4px 4px 0 var(--violet-deep), 0 0 24px rgba(232, 154, 46, 0.45); }
+#movie .titlecard .sub { font-size: clamp(22px, 3vw, 32px); margin: 0 0 28px; color: var(--ink); }
+#movie .play, #movie .continue { font-family: "Press Start 2P", monospace; font-size: clamp(14px, 2vw, 20px); padding: 16px 28px; color: #1c1210; background: var(--candle); border: 4px solid var(--candle-light); box-shadow: 0 6px 0 #7e4d14, 0 0 0 4px #000; animation: pulse 1.4s steps(2) infinite; }
+#movie .play:hover, #movie .continue:hover, #movie .play:focus-visible, #movie .continue:focus-visible { background: var(--candle-light); outline: none; }
+#movie .continue { position: absolute; bottom: 28px; right: 28px; }
+@keyframes pulse { 50% { box-shadow: 0 6px 0 #7e4d14, 0 0 0 4px #000, 0 0 28px rgba(255, 212, 122, 0.55); } }
+
+@media (max-width: 640px) {
+  #hud { top: 10px; left: 10px; right: 10px; gap: 8px; }
+  #hud .status { flex-direction: column; max-width: calc(100% - 96px); }
+  #hud .room { border-right: 0; border-bottom: 3px solid #2c2140; padding: 6px 10px; }
+  #hud .name { font-size: 22px; }
+  #hud .goal { padding: 4px 10px 6px; }
+  #objective { font-size: 19px; }
+  #candles svg { width: 14px; height: 24px; }
+  #intro .steps li { font-size: 21px; }
+  #dialog .text, #battle .question { font-size: 24px; }
+  #battle .options { grid-template-columns: 1fr; }
+  #battle .options button { font-size: 21px; }
+  #battle .foe { top: 70px; right: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .more, #movie .play, #movie .continue { animation: none; }
+  #letterbox div, #toast, #fade { transition: none; }
+}

@@ -23,13 +23,13 @@ Costume Contest judges want spooky design that improves the app, not decoration.
 - A wrong answer makes the room flicker, and the ghost explains the mistake. Wrong answers teach. They never just punish.
 - The mansion map shows freed rooms lit and locked rooms dark, so you always know what is next.
 
-## Core loop
+## Core loop (built in room 1)
 
-1. Mansion map. Rooms unlock in order.
-2. Enter a room.
-3. Short lesson beats, one at a time.
-4. One question to free the ghost.
-5. The ghost is freed, the room lights up, and the next room unlocks.
+1. Walk the room with a lantern. Most of it is dark.
+2. Three clues glow with a wisp. Looking at one plays a short fullscreen Halloween pixel movie of the lesson (Play to start, no skipping, Continue at the end) and lights one candle.
+3. With all three candles lit, face the ghost. The encounter asks questions from the lesson. Each right answer drains the ghost's unrest. A wrong answer makes the room flicker, the ghost explains, and the same question comes back.
+4. The freed ghost thanks you and rises away, warm light fills the room, and the door unseals.
+5. Walk through the door to finish the room.
 
 ## Rooms (first five)
 
