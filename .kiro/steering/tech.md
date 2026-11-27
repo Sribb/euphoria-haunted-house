@@ -35,7 +35,7 @@ inclusion: always
   - Room progress: a ghost cannot be faced before all three candles are lit, cannot be freed before its unrest reaches zero, rooms unlock only in order, and saved progress loads back the same.
   - Player collision: whatever the input sequence, the player never ends up inside a collider or outside the room.
   - Camera snap: the snapped camera plus the remainder always equals the unsnapped position, and the remainder stays within half a pixel.
-- Run the typecheck, the tests and the build before calling any task done.
+- Run the typecheck, the tests and the build before calling any task done: `npm test` (typecheck, then `tests/e2e/playthrough.mjs`, which plays all five rooms in Chrome and checks the phone tap safety) and `npm run build`.
 - `window.__game` (dev builds only) exposes the game state and a `teleport(x, z)` helper for browser tests.
 
 ## Code rules
