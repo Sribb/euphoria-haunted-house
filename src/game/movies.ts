@@ -5,7 +5,8 @@ import { dressScene } from "./halloween";
 /**
  * Clue movies, built from a lesson's Euphoria story data (content/euphoria/ifN-story.json): its art, its
  * story beats and its toggle cards. Captions are the lesson's own words. Every scene wears its Halloween
- * costume (halloween.ts). Each room's script picks which story or toggles play at which clue.
+ * costume (halloween.ts). Each room's script picks which story or toggles play at which clue, and where
+ * the room's ghost drifts through its own memory (the cameo).
  */
 
 type State = { chip?: string; frame: string; caption: string; cast?: StoryCue[]; labels?: StoryLabel[]; strip?: { h: number } | null };
@@ -18,7 +19,9 @@ type StoryData = {
 
 /** A beat plus what the movie player shows around it: a chapter chip, and the toggle's tile strip. */
 export type MovieBeat = ReelBeat & { chip?: string; strip?: { spec: StripSpec; h: number } };
-export type Movie = { id: string; kicker: string; title: string; subtitle: string; lesson: ReelLesson & { beats: MovieBeat[] } };
+/** The room's ghost, faint, in one beat of its memory: which beat (from 0) and where on the 80 x 60 stage. */
+export type Cameo = { sprite: PixelSprite; beat: number; x: number; y: number };
+export type Movie = { id: string; kicker: string; title: string; subtitle: string; lesson: ReelLesson & { beats: MovieBeat[] }; cameo?: Cameo };
 
 export const beat = (frame: string, caption: string, cast: StoryCue[] = [], labels: StoryLabel[] = [], extra: Partial<MovieBeat> = {}): MovieBeat => ({
   frame,
@@ -46,12 +49,13 @@ export const movieKit = (raw: unknown) => {
           strip: t.strip && st.strip !== null ? { spec: t.strip, h: st.strip?.h ?? t.strip.restH } : undefined,
         }),
       ),
-    make: (id: string, num: number, kicker: string, title: string, subtitle: string, beats: MovieBeat[]): Movie => ({
+    make: (id: string, num: number, kicker: string, title: string, subtitle: string, beats: MovieBeat[], cameo?: Cameo): Movie => ({
       id,
       kicker,
       title,
       subtitle,
       lesson: { num, title, frames, actors: data.art.actors, order: data.art.order, beats },
+      cameo,
     }),
   };
 };

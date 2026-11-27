@@ -22,9 +22,9 @@ export const CELLAR: RoomScript = {
   name: "The Cellar",
   build: buildCellar,
   movies: {
-    crate: kit.make("crate", 1, "A memory in the crate", kit.storyTitle, "What can grow more can also drop more", kit.storyBeats()),
-    barrels: kit.make("barrels", 2, "The barrels remember", (story.mix as Toggle).title, "How far each one can fall", kit.toggleBeats(story.mix as Toggle)),
-    tallies: kit.make("tallies", 3, "Someone kept count", (story.longer as Toggle).title, "Time turns a risky year into a safer stretch", kit.toggleBeats(story.longer as Toggle)),
+    crate: kit.make("crate", 1, "A memory in the crate", kit.storyTitle, "What can grow more can also drop more", kit.storyBeats(), { sprite: gamblerCalm, beat: 1, x: 50, y: 14 }),
+    barrels: kit.make("barrels", 2, "The barrels remember", (story.mix as Toggle).title, "How far each one can fall", kit.toggleBeats(story.mix as Toggle), { sprite: gamblerCalm, beat: 2, x: 36, y: 8 }),
+    tallies: kit.make("tallies", 3, "Someone kept count", (story.longer as Toggle).title, "Time turns a risky year into a safer stretch", kit.toggleBeats(story.longer as Toggle), { sprite: gamblerCalm, beat: 0, x: -4, y: 12 }),
   },
   clueLabels: { crate: "Open the juice crate", barrels: "Read the barrels", tallies: "Look at the tally marks" },
   ghost: { name: NAME, restless: gamblerRestless, calm: gamblerCalm, freed: gamblerFreed, light: "#E8661C" },

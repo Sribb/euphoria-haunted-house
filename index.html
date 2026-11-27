@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Jersey+10&family=Press+Start+2P&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/src/ui/ui.css" />
+    <link rel="stylesheet" href="/src/ui/movie.css" />
   </head>
   <body>
     <div id="stage">
@@ -83,20 +84,22 @@
         <button id="restart" type="button">Play from the start</button>
       </section>
 
-      <section id="movie" hidden aria-live="polite">
+      <section id="movie" hidden aria-live="polite" aria-label="A memory" tabindex="-1">
         <div class="frame">
-          <div class="chip" hidden></div>
           <div class="screen">
             <canvas aria-hidden="true"></canvas>
             <div class="labels" aria-hidden="true"></div>
+            <div class="chip" hidden></div>
+            <div class="titlecard">
+              <p class="kicker"></p>
+              <h2></h2>
+              <i class="divider" aria-hidden="true"></i>
+              <p class="sub"></p>
+              <button type="button" class="play">Play</button>
+            </div>
           </div>
           <p class="caption"></p>
-        </div>
-        <div class="titlecard">
-          <p class="kicker"></p>
-          <h2></h2>
-          <p class="sub"></p>
-          <button type="button" class="play"><span aria-hidden="true">&#9654;</span> Play</button>
+          <div class="pips" role="img"></div>
         </div>
         <button type="button" class="continue" hidden>Continue</button>
       </section>

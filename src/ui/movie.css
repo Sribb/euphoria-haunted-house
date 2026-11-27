@@ -1,0 +1,86 @@
+/* the fullscreen cutscene: a memory of the house, hung in a gilt frame (see .kiro/steering/ui-style.md) */
+
+/* Tokens. Each one reads the shared token from ui.css and falls back to the same value, so this sheet
+   works on its own. --stage-w and --reserve are set by movie.ts when it sizes the stage. */
+#movie {
+  --ms: var(--s, 2px);
+  --m-body: var(--t-body, 28px);
+  --m-small: var(--t-small, 24.8889px);
+  --m-tiny: var(--t-tiny, 18.6667px);
+  --m-outline: var(--outline, #0b0714);
+  --m-wick: var(--wick, #1c1210);
+  --m-gilt: var(--candle-deep, #7e4d14);
+  --m-bright: var(--ink-bright, #fffbef);
+  --m-rim: 0px;
+}
+@media (max-width: 640px) {
+  #movie { --m-body: var(--t-body, 24.8889px); --m-small: var(--t-small, 18.6667px); }
+}
+
+#movie { position: absolute; inset: 0; z-index: 20; display: grid; place-items: center; padding-bottom: var(--reserve, 0px); background: #000; outline: none; }
+#movie .frame { position: relative; display: flex; flex-direction: column; align-items: center; animation: movie-open 160ms steps(4); }
+@keyframes movie-open { from { clip-path: inset(50% 0 50% 0); } to { clip-path: inset(0); } }
+
+/* the stage: a thin gilt rule on small screens, the gilded picture frame on large ones. The frame is drawn
+   outside the stage by a pseudo-element, so it never changes the whole-number scale of the picture. */
+#movie .screen { position: relative; margin: 4px; box-shadow: 0 0 0 var(--ms) var(--m-outline), 0 0 0 calc(2 * var(--ms)) var(--m-gilt); }
+#movie.framed { --m-rim: calc(48 * var(--ms)); }
+#movie.framed .screen { margin: calc(24 * var(--ms)) calc(24 * var(--ms)) calc(25 * var(--ms)); box-shadow: none; }
+#movie.framed .screen::after {
+  content: ""; position: absolute; inset: calc(-24 * var(--ms)) calc(-24 * var(--ms)) calc(-25 * var(--ms)); pointer-events: none;
+  border-style: solid; border-color: transparent; border-width: calc(24 * var(--ms)) calc(24 * var(--ms)) calc(25 * var(--ms));
+  border-image: url("../../assets/third-party/dragon-regalia-gui/haunted/frame-gilded.png") 24 24 25 / calc(24 * var(--ms)) calc(24 * var(--ms)) calc(25 * var(--ms)) stretch;
+  image-rendering: pixelated;
+}
+#movie canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
+
+/* label pills over the picture, placed by movie.ts in percent of the stage */
+#movie .labels { position: absolute; inset: 0; pointer-events: none; }
+#movie .pill { position: absolute; white-space: nowrap; padding: 0 calc(3 * var(--ms)) 1px; font-size: var(--m-small); line-height: 1.1; border: var(--ms) solid; box-shadow: 0 var(--ms) 0 #000; }
+#movie.compact .pill { font-size: var(--m-tiny); }
+
+/* the chapter chip: a small brass plate on the top edge of the picture */
+#movie .chip { position: absolute; z-index: 1; left: 50%; top: 0; transform: translate(-50%, -50%); white-space: nowrap; font: 8px/1 "Press Start 2P", monospace; color: var(--m-wick); background: var(--candle); padding: 6px 8px; box-shadow: 0 0 0 var(--ms) var(--m-outline); }
+
+/* caption and progress under the picture. movie.ts fixes the caption's min-height to the movie's tallest. */
+#movie .caption { width: calc(var(--stage-w, 640px) + var(--m-rim)); max-width: calc(100vw - 24px); margin: 12px 0 0; font-size: var(--m-body); line-height: 1.12; text-align: center; text-wrap: balance; color: var(--ink); text-shadow: var(--ms) 0 0 #000, calc(-1 * var(--ms)) 0 0 #000, 0 var(--ms) 0 #000, 0 calc(-1 * var(--ms)) 0 #000; }
+#movie.framed .caption { margin-top: 6px; }
+#movie .caption.measure { position: absolute; left: 50%; top: 0; margin: 0; transform: translateX(-50%); visibility: hidden; pointer-events: none; }
+#movie .pips { display: flex; justify-content: center; gap: calc(3 * var(--ms)); margin-top: 10px; height: calc(16 * var(--ms)); }
+#movie .pips i { display: block; width: calc(9 * var(--ms)); height: calc(16 * var(--ms)); }
+#movie .pips svg { display: block; width: 100%; height: 100%; }
+#movie .pips .now { filter: drop-shadow(0 0 6px rgba(255, 154, 60, 0.7)); }
+
+/* the title card: over the picture, or under it on an upright phone where the picture is too small */
+#movie .titlecard { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 16px; text-align: center; background: radial-gradient(ellipse at center, rgba(7, 5, 12, 0.6), rgba(7, 5, 12, 0.9)); }
+#movie .titlecard .kicker { margin: 0 0 12px; font: 8px/1 "Press Start 2P", monospace; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+#movie .titlecard h2 { max-width: 100%; margin: 0; font-family: "Jacquard 12", "Jersey 10", monospace; font-weight: 400; font-size: 42px; line-height: 0.9; text-wrap: balance; color: var(--candle-light); text-shadow: 0 calc(2 * var(--ms)) 0 var(--violet-deep), 0 0 24px rgba(232, 154, 46, 0.35); }
+#movie.grand .titlecard h2 { font-family: "Jacquard 24", "Jersey 10", monospace; font-size: 86px; }
+#movie .divider { display: block; flex: none; width: calc(192 * var(--ms)); max-width: 100%; height: calc(18 * var(--ms)); margin: 12px auto; background: url("../../assets/third-party/fantasy-ui-borders/haunted/divider.png") center / calc(192 * var(--ms)) 100% no-repeat; image-rendering: pixelated; }
+#movie .titlecard .sub { margin: 0 0 16px; font-size: var(--m-body); line-height: 1.1; color: var(--ink); }
+#movie.compact .divider { width: 192px; height: 18px; margin: 8px auto; background-size: 192px 100%; }
+#movie.portrait .titlecard { inset: calc(100% + 16px) 0 auto; padding: 0 8px; background: none; }
+#movie.portrait.waiting .pips { visibility: hidden; }
+
+/* Play and Continue: the gilded button, with a candle-gold icon beside the word */
+#movie .play, #movie .continue {
+  display: inline-flex; flex: none; align-items: center; justify-content: center; gap: calc(4 * var(--ms));
+  height: calc(35 * var(--ms)); min-width: calc(80 * var(--ms)); padding: 0 calc(4 * var(--ms));
+  border-style: solid; border-color: transparent; border-width: calc(12 * var(--ms)) calc(20 * var(--ms));
+  border-image: url("../../assets/third-party/dragon-regalia-gui/haunted/button-rest.png") 12 20 fill / calc(12 * var(--ms)) calc(20 * var(--ms)) repeat;
+  background: none; box-shadow: none; image-rendering: pixelated;
+  font-family: "Jersey 10", monospace; font-size: var(--m-body); line-height: 1; white-space: nowrap;
+  color: var(--candle-light); text-shadow: 0 var(--ms) 0 var(--m-outline);
+  animation: pulse 1.4s steps(2) infinite;
+}
+#movie .play::before, #movie .continue::after { content: ""; flex: none; width: calc(16 * var(--ms)); height: calc(16 * var(--ms)); background: url("../../assets/third-party/graveyard-1bit/haunted/icons/candle/play.png") 0 0 / 100% 100%; image-rendering: pixelated; }
+#movie .continue::after { background-image: url("../../assets/third-party/graveyard-1bit/haunted/icons/candle/next.png"); }
+#movie .play:hover, #movie .continue:hover, #movie .play:focus-visible, #movie .continue:focus-visible { border-image-source: url("../../assets/third-party/dragon-regalia-gui/haunted/button-hover.png"); color: var(--m-bright); }
+#movie .play:focus-visible, #movie .continue:focus-visible { outline: calc(2 * var(--ms)) solid var(--ghost); outline-offset: var(--ms); }
+#movie .play:active, #movie .continue:active { border-image-source: url("../../assets/third-party/dragon-regalia-gui/haunted/button-press.png"); color: var(--candle-light); }
+#movie .continue { position: absolute; right: max(24px, env(safe-area-inset-right)); bottom: max(24px, env(safe-area-inset-bottom)); }
+@keyframes pulse { 50% { filter: drop-shadow(0 0 calc(4 * var(--ms)) rgba(255, 212, 122, 0.5)); } }
+
+@media (prefers-reduced-motion: reduce) {
+  #movie .frame, #movie .play, #movie .continue { animation: none; }
+}
