@@ -22,19 +22,22 @@ const DRAIN = 0.26;
 const WASH = 0.34;
 const WASH_COLOUR = "#8552E8";
 
-/** A fog bank's outline: [x, width] of each row from the top, in scene pixels. Drawn as flat bars. */
-const BANK: [number, number][] = [[8, 12], [3, 24], [0, 32], [2, 27], [10, 13]];
-const BANK_W = 32;
-/** The banks: top row, row height, width stretch, start x, and drift in scene pixels a second. */
+/** A fog bank's outline: [x, width] of each one-pixel row from the top, in scene pixels. Drawn as flat bars. */
+const BANK: [number, number][] = [[12, 10], [6, 22], [2, 30], [0, 34], [1, 31], [5, 24], [11, 12]];
+const BANK_W = 34;
+/** How far the bank's denser heart sits inside its outline. */
+const BANK_CORE = 4;
+/** The banks: top row, width stretch, start x, and drift in scene pixels a second. */
 const FOG = [
-  { y: 46, tall: 2, stretch: 1.5, x: 6, speed: 1.5 },
-  { y: 51, tall: 2, stretch: 1.9, x: 48, speed: -1.0 },
-  { y: 42, tall: 1, stretch: 1.2, x: 70, speed: 0.7 },
-  { y: 54, tall: 2, stretch: 1.3, x: 96, speed: 2.1 },
-  { y: 33, tall: 1, stretch: 0.9, x: 24, speed: -0.5 },
+  { y: 45, stretch: 1.3, x: 4, speed: 1.4 },
+  { y: 50, stretch: 1.6, x: 52, speed: -0.9 },
+  { y: 41, stretch: 0.9, x: 78, speed: 0.6 },
+  { y: 53, stretch: 1.2, x: 104, speed: 1.9 },
+  { y: 48, stretch: 1.0, x: 30, speed: -1.6 },
+  { y: 31, stretch: 0.8, x: 22, speed: -0.4 },
 ];
 const FOG_COLOUR = "#B4A8DC";
-const FOG_ALPHA = 0.085;
+const FOG_ALPHA = 0.06;
 
 /** The ghost in its memory: how solid it gets, and the pale wash that turns the sprite spectral. */
 const CAMEO_ALPHA = 0.34;
@@ -195,7 +198,11 @@ export class MoviePainter {
       const w = BANK_W * b.stretch;
       const span = STAGE_W + w;
       const x = ((((b.x + (this.still ? 0 : (b.speed * t) / 1000)) % span) + span) % span) - w;
-      BANK.forEach(([rx, rw], i) => g.fillRect(Math.round((x + rx * b.stretch) * K), (b.y + i * b.tall) * K, Math.round(rw * b.stretch * K), b.tall * K));
+      BANK.forEach(([rx, rw], i) => {
+        const left = Math.round((x + rx * b.stretch) * K), width = Math.round(rw * b.stretch * K);
+        g.fillRect(left, (b.y + i) * K, width, K);
+        if (i > 0 && i < BANK.length - 1) g.fillRect(left + BANK_CORE * K, (b.y + i) * K, width - 2 * BANK_CORE * K, K);
+      });
     }
     g.globalAlpha = 1;
 

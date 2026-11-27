@@ -43,7 +43,7 @@
 #movie .chip { position: absolute; z-index: 1; left: 50%; top: 0; transform: translate(-50%, -50%); white-space: nowrap; font: 8px/1 "Press Start 2P", monospace; color: var(--m-wick); background: var(--candle); padding: 6px 8px; box-shadow: 0 0 0 var(--ms) var(--m-outline); }
 
 /* caption and progress under the picture. movie.ts fixes the caption's min-height to the movie's tallest. */
-#movie .caption { width: calc(var(--stage-w, 640px) + var(--m-rim)); max-width: calc(100vw - 24px); margin: 12px 0 0; font-size: var(--m-body); line-height: 1.12; text-align: center; text-wrap: balance; color: var(--ink); text-shadow: var(--ms) 0 0 #000, calc(-1 * var(--ms)) 0 0 #000, 0 var(--ms) 0 #000, 0 calc(-1 * var(--ms)) 0 #000; }
+#movie .caption { width: calc(var(--stage-w, 640px) + var(--m-rim)); max-width: calc(100vw - 24px); display: flex; align-items: center; justify-content: center; margin: 12px 0 0; font-size: var(--m-body); line-height: 1.12; text-align: center; text-wrap: balance; color: var(--ink); text-shadow: var(--ms) 0 0 #000, calc(-1 * var(--ms)) 0 0 #000, 0 var(--ms) 0 #000, 0 calc(-1 * var(--ms)) 0 #000; }
 #movie.framed .caption { margin-top: 6px; }
 #movie .caption.measure { position: absolute; left: 50%; top: 0; margin: 0; transform: translateX(-50%); visibility: hidden; pointer-events: none; }
 #movie .pips { display: flex; justify-content: center; gap: calc(3 * var(--ms)); margin-top: 10px; height: calc(16 * var(--ms)); }
@@ -57,7 +57,7 @@
 #movie .titlecard h2 { max-width: 100%; margin: 0; font-family: "Jacquard 12", "Jersey 10", monospace; font-weight: 400; font-size: 42px; line-height: 0.9; text-wrap: balance; color: var(--candle-light); text-shadow: 0 calc(2 * var(--ms)) 0 var(--violet-deep), 0 0 24px rgba(232, 154, 46, 0.35); }
 #movie.grand .titlecard h2 { font-family: "Jacquard 24", "Jersey 10", monospace; font-size: 86px; }
 #movie .divider { display: block; flex: none; width: calc(192 * var(--ms)); max-width: 100%; height: calc(18 * var(--ms)); margin: 12px auto; background: url("../../assets/third-party/fantasy-ui-borders/haunted/divider.png") center / calc(192 * var(--ms)) 100% no-repeat; image-rendering: pixelated; }
-#movie .titlecard .sub { margin: 0 0 16px; font-size: var(--m-body); line-height: 1.1; color: var(--ink); }
+#movie .titlecard .sub { margin: 0 0 16px; font-size: var(--m-body); line-height: 1.1; text-wrap: balance; color: var(--ink); }
 #movie.compact .divider { width: 192px; height: 18px; margin: 8px auto; background-size: 192px 100%; }
 #movie.portrait .titlecard { inset: calc(100% + 16px) 0 auto; padding: 0 8px; background: none; }
 #movie.portrait.waiting .pips { visibility: hidden; }
