@@ -1,0 +1,3140 @@
+{
+  "source": "Euphoria, course 'Investing Fundamentals', lessons 1-5 (euphoriaweb src/features/pathway/courses/investingFundamentals.ts)",
+  "exportedOn": "2026-11-27",
+  "note": "Pre-existing Euphoria content, reused with credit. See README.",
+  "lessons": [
+    {
+      "num": 1,
+      "title": "Introduction to Investing",
+      "xp": 30,
+      "steps": [
+        {
+          "type": "hookOpener",
+          "title": "The safest place for your money is not safe",
+          "fact": "Put $100 in a drawer in 1995 and it is still $100 today. It just buys about 40 dollars worth of what it used to. Nobody stole it. Inflation averaged roughly 2.5% a year and quietly took two thirds of it.",
+          "outcome": "By the end of this lesson you will know what investing actually is, why time matters more than picking well, and what you are really being paid for when you take risk.",
+          "visualDescription": "What one hundred dollars still buys after thirty years in a drawer",
+          "visual": {
+            "type": "bars",
+            "title": "What $100 from 1995 buys today",
+            "items": [
+              {
+                "label": "Kept as cash",
+                "value": 40,
+                "displayValue": "$40",
+                "sprite": "inflation",
+                "explain": "The bill still says $100. Nobody took anything. Prices simply went up around it for thirty years, and it lost the race."
+              },
+              {
+                "label": "Earning 3% a year",
+                "value": 97,
+                "displayValue": "$97",
+                "sprite": "coin",
+                "explain": "Almost exactly break-even. Three percent roughly matched inflation, so this money survived without ever getting ahead."
+              },
+              {
+                "label": "Earning 8% a year",
+                "value": 414,
+                "displayValue": "$414",
+                "sprite": "tree",
+                "explain": "Four times what you started with, in real buying power. Same $100, same thirty years. The only thing that changed is where it sat."
+              }
+            ],
+            "footer": "Same $100. The only difference is where it sat.",
+            "sentiment": "positive"
+          }
+        },
+        {
+          "type": "stakesCard",
+          "without": {
+            "label": "If you leave it in the account",
+            "detail": "A savings account paying 1% turns $10,000 into $11,050 over ten years. Inflation over the same decade needs about $13,000 just to break even, so the safe choice quietly loses about $2,000 of what the money could buy."
+          },
+          "with": {
+            "label": "If you put it to work",
+            "detail": "The same $10,000 in a broad index fund at roughly 10% a year becomes about $25,937. You did not pick a single stock and you did not time anything. You just stopped holding cash."
+          },
+          "withoutVisual": {
+            "type": "metric",
+            "title": "Savings Account at 1%",
+            "value": "$11,050",
+            "detail": "$10,000 after ten years, while $13,000 is needed to break even on inflation",
+            "footer": "About $2,000 of buying power quietly lost",
+            "sentiment": "negative",
+            "sprite": "inflation"
+          },
+          "withVisual": {
+            "type": "metric",
+            "title": "Index Fund at 10%",
+            "value": "$25,937",
+            "detail": "Same $10,000, same ten years, no stock picked and nothing timed",
+            "footer": "The only decision was to stop holding cash",
+            "sentiment": "positive",
+            "sprite": "chart-up"
+          }
+        },
+        {
+          "type": "explorable",
+          "widget": "inflationEroder",
+          "title": "Watch the drawer empty",
+          "prompt": "Set the years and the inflation rate, then watch what your cash can still buy. Guess before you drag.",
+          "insight": "Cash is not neutral. Holding it is a decision to lose a few percent a year, quietly, forever.",
+          "params": {
+            "billAmount": 100,
+            "inflation": 3,
+            "years": 30,
+            "itemName": "movie tickets",
+            "itemPrice": 12,
+            "predict": {
+              "question": "That $100 buys 8 tickets today. After 30 years at 3% inflation, how many?",
+              "options": [
+                "All 8, cash holds its value",
+                "7 tickets",
+                "5 tickets",
+                "3 tickets"
+              ]
+            }
+          },
+          "check": {
+            "question": "Why does the same $100 buy less each year?",
+            "options": [
+              "Banks quietly deduct a holding fee from savings",
+              "Prices rise while the number on the bill stays fixed",
+              "Money physically wears out and loses value",
+              "The government reissues currency at a lower rate"
+            ],
+            "correct": 1,
+            "explanationCorrect": "Exactly. The bill never changes. Everything it buys gets more expensive, so its purchasing power falls.",
+            "explanationWrong": "The $100 bill is still $100. What changes is the price of everything else, so the same note buys less each year."
+          }
+        },
+        {
+          "type": "teachingSlide",
+          "sectionLabel": "The idea",
+          "title": "Investing is buying a claim on something that earns",
+          "paragraphs": [
+            "To invest is to trade money now for a claim on money later. You can own, or you can lend. Owning means buying a piece of a business, so you get a share of what it earns.",
+            "A stock is that claim: when Apple sells a phone, part of the profit is yours. Owners get paid last, so they take the risk. A bond is a loan: lenders get paid first and earn only the promised interest."
+          ],
+          "highlightedTerms": [
+            {
+              "term": "Share",
+              "definition": "A unit of ownership in a company, entitling the holder to a portion of its profits and assets.",
+              "example": "One Apple share is roughly a 15-billionth of the company."
+            },
+            {
+              "term": "Bond",
+              "definition": "A loan to a company or government that pays fixed interest and returns the principal on a set date.",
+              "example": "A 10-year Treasury bond pays interest twice a year, then repays the face value."
+            },
+            {
+              "term": "Return",
+              "definition": "What an investment pays you, as a percentage of what you put in.",
+              "example": "Turning $100 into $108 over a year is an 8% return."
+            }
+          ],
+          "diagramDescription": "Two paths from your money to a return: ownership, which is unlimited and last in line, and lending, which is capped and first in line",
+          "realExample": {
+            "company": "Amazon",
+            "metric": "IPO May 1997 at $18 a share",
+            "outcome": "Owners shared in every dollar Amazon earned afterwards. Anyone who lent Amazon money instead got their interest and nothing more.",
+            "explanation": "Owners shared in every dollar Amazon earned afterwards. Anyone who lent Amazon money instead got their interest and nothing more."
+          },
+          "diagramVisual": {
+            "type": "comparison",
+            "title": "Two ways to put money to work",
+            "rows": [
+              {
+                "label": "Own a share",
+                "value": "Paid last, upside uncapped",
+                "explain": "You get whatever is left after everyone else is paid, which some years is nothing. In exchange, nobody caps how good that leftover can get."
+              },
+              {
+                "label": "Lend it",
+                "value": "Paid first, upside fixed",
+                "explain": "You get paid before any owner does, even if the company is struggling. In exchange, you get exactly the promised interest and never a cent more."
+              }
+            ],
+            "footer": "Every investment you will ever meet is a version of one of these two.",
+            "sentiment": "positive"
+          },
+          "atlas": {
+            "hint": "Tap each one. Notice they are opposites, not steps",
+            "recap": "There is no third option hiding somewhere. Every fund, every account, every product you will ever be sold is built out of owning things, lending things, or a mix of the two. Once you can ask which one you are doing, most of investing stops being mysterious."
+          }
+        },
+        {
+          "type": "microCheck",
+          "question": "You buy a government bond. What have you actually done?",
+          "options": [
+            "Bought a small ownership stake in the government",
+            "Lent money in exchange for fixed interest payments",
+            "Purchased a claim on the growth of future tax revenue",
+            "Acquired a share of the country's economic output"
+          ],
+          "correct": 1,
+          "explanationCorrect": "Right. A bond is a loan. You are promised interest and your money back, and that promise is the whole of your upside.",
+          "explanationWrong": "A bond is lending, not owning. You are promised interest and the return of your principal, which is also the most you can make."
+        },
+        {
+          "type": "keyTermsCards",
+          "terms": [
+            {
+              "term": "Share",
+              "definition": {
+                "middle": "A small piece of a company that you own. If the company does well, your piece is worth more.",
+                "high": "A unit of ownership in a company, giving you a claim on a slice of its profits and assets.",
+                "adult": "A unit of equity ownership in a company, entitling the holder to a proportional claim on its earnings and assets."
+              },
+              "example": "One Apple share is roughly a 15-billionth of the whole company.",
+              "sentence": "Owning a share means you get paid last, and nobody puts a ceiling on how much that can be."
+            },
+            {
+              "term": "Bond",
+              "definition": {
+                "middle": "A loan you give to a company or a government. They pay you interest, then give the money back.",
+                "high": "A loan to a company or government that pays fixed interest and returns your money on a set date.",
+                "adult": "A debt instrument under which the issuer owes the holder periodic interest and repayment of principal at maturity."
+              },
+              "example": "A 10-year Treasury bond pays interest twice a year, then repays the face value.",
+              "sentence": "A bond pays you before any owner gets anything, and the promised interest is the most you will ever make."
+            },
+            {
+              "term": "Return",
+              "definition": {
+                "middle": "How much money an investment made you, written as a percent of what you put in.",
+                "high": "What an investment pays you over a period, expressed as a percentage of the amount invested.",
+                "adult": "The gain or loss on an investment over a period, expressed as a percentage of the capital invested."
+              },
+              "example": "Turning $100 into $108 over a year is an 8% return.",
+              "sentence": "Return is the number that lets you compare a savings account and an index fund in the same breath."
+            }
+          ]
+        },
+        {
+          "type": "fillBlank",
+          "sentence": "Buying a share makes you an owner, so you are paid ___ and your upside has no ceiling.",
+          "options": [
+            "first",
+            "last",
+            "monthly",
+            "in bonds"
+          ],
+          "correct": 1
+        },
+        {
+          "type": "explorable",
+          "widget": "compoundGrowthLab",
+          "title": "Three levers. One is not like the others",
+          "prompt": "You have three ways to end up with more: a better return, a bigger monthly deposit, or more years. Predict which wins, then try all three.",
+          "insight": "Time is the lever almost nobody pulls hard enough, because it is the only one that compounds on itself.",
+          "params": {
+            "startingAmount": 1000,
+            "annualReturn": 8,
+            "years": 25,
+            "monthlyContribution": 50,
+            "predict": {
+              "question": "Which single change adds the most by the end?",
+              "options": [
+                "Raise the return from 8% to 10%",
+                "Double the deposit to $100 a month",
+                "Add 10 more years"
+              ]
+            }
+          },
+          "check": {
+            "question": "Why does adding years beat improving the return here?",
+            "options": [
+              "Longer periods have historically had higher average returns",
+              "Each year compounds on every year before it, so growth accelerates",
+              "Fees fall the longer an account is held open",
+              "Markets are less volatile over longer holding periods"
+            ],
+            "correct": 1,
+            "explanationCorrect": "Yes. Growth is applied to a balance that already includes past growth, so the curve steepens the longer you leave it.",
+            "explanationWrong": "The return rate is not what changes. Each year earns on a balance that already contains every prior year of growth, so late years add far more than early ones."
+          }
+        },
+        {
+          "type": "calculator",
+          "title": "The rule of 72",
+          "formula": "Years to double = 72 / annual return (%)",
+          "blanks": [
+            {
+              "label": "At 8% a year, money doubles in how many years?",
+              "answer": 9,
+              "tolerance": 0.5
+            },
+            {
+              "label": "At 3% in a savings account, how many years?",
+              "answer": 24,
+              "tolerance": 1
+            },
+            {
+              "label": "At 12%, how many years?",
+              "answer": 6,
+              "tolerance": 0.5
+            }
+          ]
+        },
+        {
+          "type": "tapReveal",
+          "title": "What the last century actually paid",
+          "cards": [
+            [
+              "Average S&P 500 return since 1957",
+              "About 10.7% a year, including every crash in that span.",
+              {
+                "stat": "10.7%",
+                "sprite": "chart-up"
+              }
+            ],
+            [
+              "Years for money to double at 8%",
+              "About 9, from the rule of 72 you just used.",
+              {
+                "stat": "9 years",
+                "sprite": "hourglass"
+              }
+            ],
+            [
+              "Bear markets since 1928",
+              "27, and the index recovered from all 27 of them.",
+              {
+                "stat": "27 / 27",
+                "sprite": "bear"
+              }
+            ],
+            [
+              "Chance stocks lost money over any 20-year stretch",
+              "Zero, historically. Time is what turns the swings into a return.",
+              {
+                "stat": "0%",
+                "sprite": "vault"
+              }
+            ],
+            [
+              "Cash left in a drawer since 1995",
+              "Still $100 on paper, worth about $40 in what it buys.",
+              {
+                "stat": "-60%",
+                "sprite": "inflation"
+              }
+            ]
+          ]
+        },
+        {
+          "type": "explorable",
+          "widget": "portfolioMixer",
+          "title": "The price of that return",
+          "prompt": "Slide the mix between stocks and bonds. Watch what happens to the ending value, and to how rough the ride gets.",
+          "insight": "Higher expected return and bigger swings are the same setting. You cannot buy one without the other.",
+          "params": {
+            "startingAmount": 10000,
+            "years": 20,
+            "predict": {
+              "question": "Moving from all bonds to all stocks, what happens to the worst single year?",
+              "options": [
+                "It gets noticeably worse",
+                "It stays about the same",
+                "It improves as returns rise"
+              ]
+            }
+          },
+          "check": {
+            "question": "What is a long-term investor actually paid for?",
+            "options": [
+              "Predicting which companies will beat expectations",
+              "Sitting through declines without selling out",
+              "Trading often enough to catch short-term moves",
+              "Choosing the moments to enter and exit markets"
+            ],
+            "correct": 1,
+            "explanationCorrect": "That is the deal. The extra return on stocks is compensation for tolerating drops that lenders never have to face.",
+            "explanationWrong": "The premium is paid for enduring volatility, not for skill at forecasting. Investors who sell during declines give that premium back."
+          }
+        },
+        {
+          "type": "quiz",
+          "question": "You have $10,000 you will not touch for twenty years. Which choice is the risky one?",
+          "options": [
+            "A broad index fund, because it can fall 30% in a bad year",
+            "A savings account, as inflation erodes it every year",
+            "Neither, as twenty years smooths out any risk",
+            "Both carry exactly the same risk over a long hold"
+          ],
+          "correct": 1,
+          "explanation": "Over twenty years the roles flip. The index fund swings hard year to year but has never lost money over a stretch that long. The savings account never swings, and loses purchasing power every single year with certainty."
+        },
+        {
+          "type": "dragSort",
+          "prompt": "Order these from paid first to paid last if a company runs into trouble:",
+          "items": [
+            "Bondholders, who lent the company money",
+            "Preferred shareholders",
+            "Ordinary shareholders, who own the company"
+          ]
+        },
+        {
+          "type": "trueFalse",
+          "statements": [
+            {
+              "s": "A bond pays you a fixed interest rate no matter how well the company does.",
+              "a": true
+            },
+            {
+              "s": "Holding cash is the one choice that carries no risk at all.",
+              "a": false
+            },
+            {
+              "s": "Most of the growth in a long investment arrives in the final years.",
+              "a": true
+            },
+            {
+              "s": "You are paid the extra return on stocks for picking the right companies.",
+              "a": false
+            }
+          ]
+        },
+        {
+          "type": "slider",
+          "question": "At 8% a year, roughly how many years does it take for money to double?",
+          "min": 2,
+          "max": 20,
+          "correct": 9,
+          "unit": "years",
+          "explanation": "The rule of 72: divide 72 by the return. 72 / 8 = 9 years. At 3% it is 24 years, which is why a savings account never quite catches up."
+        },
+        {
+          "type": "scenario",
+          "situation": "The market drops 30% in your third year of investing. Your $200 monthly transfer is due on Friday.",
+          "choices": [
+            {
+              "label": "Pause the transfer until things settle down",
+              "outcome": "You skip the cheapest shares you will ever be offered. Nobody rings a bell at the bottom, so \"settled down\" almost always means \"more expensive again\".",
+              "correct": false
+            },
+            {
+              "label": "Send the $200 exactly as planned",
+              "outcome": "Your $200 now buys far more shares than it did last month. This is the whole mechanism by which patient money gets ahead.",
+              "correct": true
+            },
+            {
+              "label": "Sell what you hold to stop the losses growing",
+              "outcome": "The paper loss becomes a real one, and you now need a second correct decision about when to come back. Most people get that one wrong too.",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "type": "decisionTree",
+          "scenario": "It is March 2009. You invested $10,000 in an index fund two years ago. Your statement shows $5,100. Every headline says this time is different.",
+          "decisions": [
+            {
+              "prompt": "What do you do?",
+              "options": [
+                {
+                  "label": "Sell now and wait for things to calm down",
+                  "next": 1,
+                  "feedback": "You locked in the loss. The S&P 500 bottomed that same month and more than doubled over the next five years, without you.",
+                  "correct": false
+                },
+                {
+                  "label": "Hold, and keep the monthly contribution going",
+                  "next": 1,
+                  "feedback": "You bought your remaining shares at the cheapest prices in a decade. This is the single decision that separates outcomes over a lifetime.",
+                  "correct": true
+                },
+                {
+                  "label": "Move it all into a savings account until it recovers",
+                  "next": 1,
+                  "feedback": "A savings account paid under 1%. You swapped a temporary paper loss for a permanent one, and had to guess when to return.",
+                  "correct": false
+                }
+              ]
+            },
+            {
+              "prompt": "A friend asks how you knew it would recover. What is the honest answer?",
+              "options": [
+                {
+                  "label": "I did not know. I owned businesses that kept operating",
+                  "next": 2,
+                  "feedback": "The honest one. Nobody knew the date. Owning productive assets pays off over decades, not on a schedule you pick.",
+                  "correct": true
+                },
+                {
+                  "label": "The charts clearly showed the bottom was in",
+                  "next": 2,
+                  "feedback": "Nothing showed that at the time. Bottoms are only obvious afterwards, which is why timing them is not a strategy.",
+                  "correct": false
+                },
+                {
+                  "label": "Everyone knew the government would step in",
+                  "next": 2,
+                  "feedback": "Plenty of people expected exactly that and still sold. Confidence about the news is not the same as staying invested.",
+                  "correct": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "simulationFinale",
+          "title": "Your first $5,000",
+          "setup": "You are 25. You have $5,000 you will not need for at least twenty years, and $200 a month you can add. Three decisions decide most of the outcome.",
+          "decisions": [
+            {
+              "prompt": "Where does the $5,000 go?",
+              "options": [
+                {
+                  "label": "A savings account paying about 3%",
+                  "consequence": "Safe and legible. Over twenty years it roughly doubles, and inflation eats most of that gain.",
+                  "score": 1
+                },
+                {
+                  "label": "A broad index fund of many companies",
+                  "consequence": "You own a slice of hundreds of businesses. Volatile year to year, and historically the strongest twenty-year outcome.",
+                  "score": 3
+                },
+                {
+                  "label": "One company you believe will win",
+                  "consequence": "Possibly the best outcome, possibly zero. A single company can fail entirely in a way the whole market has not.",
+                  "score": 2
+                }
+              ]
+            },
+            {
+              "prompt": "What do you do with the $200 a month?",
+              "options": [
+                {
+                  "label": "Hold it as cash and buy in after a price dip",
+                  "consequence": "You have to be right twice, on the way out and the way back. Most of the cash sits idle while prices drift up.",
+                  "score": 1
+                },
+                {
+                  "label": "Add it on the same day every month, regardless",
+                  "consequence": "You buy more shares when prices are low and fewer when high, and you never have to guess.",
+                  "score": 3
+                },
+                {
+                  "label": "Wait for months the news feels calm to add it",
+                  "consequence": "Calm months tend to be expensive months. You systematically buy at the least useful times.",
+                  "score": 1
+                }
+              ]
+            },
+            {
+              "prompt": "Year three arrives and the market falls 30%.",
+              "options": [
+                {
+                  "label": "Stop contributing until the market recovers",
+                  "consequence": "You skip the cheapest shares you will ever be offered, which is the opposite of the plan you wrote.",
+                  "score": 1
+                },
+                {
+                  "label": "Keep contributing on the same schedule",
+                  "consequence": "Your monthly $200 now buys far more shares. Declines are the mechanism by which patient money gets ahead.",
+                  "score": 3
+                },
+                {
+                  "label": "Sell to stop the losses getting worse",
+                  "consequence": "The paper loss becomes real, and you now need a second correct decision about when to return.",
+                  "score": 0
+                }
+              ]
+            }
+          ],
+          "optimalOutcome": "Broad ownership, funded on a schedule, held through the drop. That combination has beaten nearly every cleverer plan over twenty-year stretches.",
+          "principle": "You are not paid for being smart about markets. You are paid for owning productive things and not interrupting them."
+        },
+        {
+          "type": "summaryCards",
+          "lessonTitle": "Introduction to Investing",
+          "cards": [
+            {
+              "takeaway": "Cash is a decision, not a default",
+              "detail": "Holding cash loses a few percent of purchasing power every year. Doing nothing is itself a position."
+            },
+            {
+              "takeaway": "You can own or you can lend",
+              "detail": "Shares are ownership, paid last with unlimited upside. Bonds are lending, paid first with a fixed ceiling."
+            },
+            {
+              "takeaway": "Time does most of the work",
+              "detail": "Growth compounds on growth. Ten extra years usually beats a better return or a bigger deposit."
+            },
+            {
+              "takeaway": "Volatility is the fee",
+              "detail": "The extra return on stocks is what you are paid for sitting through declines. Selling during one is how you pay the fee without collecting."
+            }
+          ]
+        }
+      ],
+      "challenge": [
+        {
+          "question": "Inflation averages about 3% a year. What happens to $100 left in a drawer for 30 years?",
+          "options": [
+            "It is still worth $100 in real terms",
+            "It buys roughly 40 dollars worth of goods",
+            "It buys roughly 90 dollars worth of goods",
+            "It loses value only if rates are high"
+          ],
+          "correct": 1,
+          "explanation": "At 3% a year, prices roughly two and a half times over 30 years. The bill is unchanged at $100, so it buys about $41 of what it once did."
+        },
+        {
+          "question": "What is the difference between owning a share and holding a bond?",
+          "options": [
+            "Shares must be repaid by the company, which makes them safer",
+            "Owners are paid last but keep the upside, lenders paid first",
+            "Bonds reliably out-earn shares over any long holding period",
+            "Shares pay a fixed interest rate and bonds pay a variable one"
+          ],
+          "correct": 1,
+          "explanation": "Ownership is a residual claim: you get what is left after everyone else is paid, which is why the upside is unlimited and the risk is higher. Lending is a fixed claim with priority."
+        },
+        {
+          "question": "Using the rule of 72, roughly how long does money take to double at 6% a year?",
+          "options": [
+            "Six years",
+            "Twelve years",
+            "Eighteen years",
+            "Twenty-four years"
+          ],
+          "correct": 1,
+          "explanation": "72 divided by 6 is 12. The rule is an approximation, but it is close enough to do in your head and it makes the cost of a low rate obvious."
+        },
+        {
+          "question": "Why does starting ten years earlier usually beat earning a slightly higher return?",
+          "options": [
+            "Early years are when markets have historically performed best",
+            "Growth compounds on prior growth, so late years add the most",
+            "Fees are lower on accounts that have been open for longer",
+            "Younger investors are permitted to hold riskier assets"
+          ],
+          "correct": 1,
+          "explanation": "Compounding applies growth to a balance that already includes prior growth. The final years of a long run add far more in absolute terms than the first ones, so extending the run is powerful."
+        },
+        {
+          "question": "A broad index fund falls 30%. For a long-term investor, what has actually changed?",
+          "options": [
+            "The businesses are now permanently worth less",
+            "The price fell and future shares got cheaper to buy",
+            "The fund has failed and should be exited",
+            "Expected long-run returns have fallen with the price"
+          ],
+          "correct": 1,
+          "explanation": "A price drop is not the same as a permanent loss unless you sell. For someone still contributing, the same monthly amount now buys more of the same businesses."
+        }
+      ]
+    },
+    {
+      "num": 2,
+      "title": "Risk vs. Reward",
+      "xp": 30,
+      "steps": [
+        {
+          "type": "hookOpener",
+          "title": "Risk vs. Reward",
+          "fact": "Since 1928, the S&P 500 has crashed into 27 separate bear markets. It clawed back from all 27. The investors who lost money were not the ones who got hit. They were the ones who sold.",
+          "outcome": "By the end of this lesson you will be able to read the risk-return tradeoff, measure risk with volatility and drawdown, and judge how much risk fits your own time horizon.",
+          "visualDescription": "Risk-return spectrum showing asset classes from savings to stocks over 30 years",
+          "visual": {
+            "type": "metric",
+            "title": "S&P 500 Resilience",
+            "value": "27 / 27",
+            "detail": "Bear markets survived and recovered since 1928",
+            "footer": "Higher risk has meant higher long-term reward",
+            "sentiment": "positive",
+            "sprite": "bull"
+          }
+        },
+        {
+          "type": "caseStudy",
+          "title": "Amazon: A 94% Crash, Then a 545x Recovery",
+          "events": [
+            {
+              "date": "December 1999",
+              "event": "Amazon stock peaks at $113 per share",
+              "context": "The dotcom bubble has inflated Amazon's price to absurd levels. The company has never turned a profit. Revenue is $1.6 billion, but losses keep mounting."
+            },
+            {
+              "date": "September 2001",
+              "event": "Stock crashes to $5.51, a 94% decline",
+              "context": "The dotcom bust wipes out trillions. Amazon loses 94% of its value. Analysts predict bankruptcy. In his shareholder letter, Jeff Bezos sums up the year in one word: \"Ouch.\""
+            },
+            {
+              "date": "2003 to 2006",
+              "event": "Slow recovery as Amazon builds AWS and Prime",
+              "context": "Most dotcom companies are already dead. Amazon pivots toward cloud computing and subscriptions. The stock grinds back to $40 to $50."
+            },
+            {
+              "date": "2020 to 2021",
+              "event": "Stock surpasses $3,000, a 545x return from the bottom",
+              "context": "An investor who held through the 94% crash watched $5.51 shares become worth more than $3,000. A $1,000 stake bought at the bottom turned into $545,000."
+            }
+          ],
+          "lesson": "Amazon shows the hard part of investing. The biggest gains came from holding through the worst drop. Selling during the 94% crash felt safe, but it locked in the loss and gave up a 54,500% recovery."
+        },
+        {
+          "type": "stakesCard",
+          "without": {
+            "label": "A single stock losing 80% in a crash",
+            "detail": "Investors who put everything into one company, like Enron, Lehman Brothers, or Peloton, lost 80-100% of their money. Concentration risk is the fastest way to destroy wealth."
+          },
+          "with": {
+            "label": "A diversified portfolio losing only 20% in the same crash",
+            "detail": "During the 2008 crisis, a diversified 60/40 portfolio lost roughly 20%, recovered within 2 years, and went on to triple in value by 2024. Diversification turns catastrophic losses into temporary setbacks."
+          },
+          "withoutVisual": {
+            "type": "bars",
+            "title": "Single Stock in a Crash",
+            "items": [
+              {
+                "label": "Before",
+                "value": 100,
+                "displayValue": "$50,000",
+                "sprite": "stock-ticker",
+                "explain": "One company, one bet. On the way up this feels like conviction rather than risk."
+              },
+              {
+                "label": "Crash",
+                "value": 20,
+                "displayValue": "−80%",
+                "sprite": "chart-down",
+                "explain": "A single company can fall this far on its own news. The wider market almost never does."
+              },
+              {
+                "label": "After",
+                "value": 20,
+                "displayValue": "$10,000",
+                "sprite": "piggy-crack",
+                "explain": "To get back to $50,000 from here the stock must rise 400%, not 80%. That asymmetry is why big losses matter more than big gains."
+              }
+            ],
+            "footer": "Concentration risk destroys wealth fast",
+            "sentiment": "negative"
+          },
+          "withVisual": {
+            "type": "bars",
+            "title": "Diversified 60/40 in 2008",
+            "items": [
+              {
+                "label": "Before",
+                "value": 100,
+                "displayValue": "$100,000",
+                "sprite": "pie-slice",
+                "explain": "Hundreds of companies plus bonds. No single name can decide your outcome."
+              },
+              {
+                "label": "Crash",
+                "value": 80,
+                "displayValue": "−20%",
+                "sprite": "chart-down",
+                "explain": "The worst crash since the Depression, and this portfolio lost a fifth. The single stock lost four fifths in an ordinary bad year."
+              },
+              {
+                "label": "2 yrs later",
+                "value": 100,
+                "displayValue": "Recovered",
+                "sprite": "chart-up",
+                "explain": "A 20% fall only needs a 25% rise to undo. That is why staying diversified is what makes staying invested survivable."
+              }
+            ],
+            "footer": "Diversification turns disaster into a setback",
+            "sentiment": "positive"
+          }
+        },
+        {
+          "type": "teachingSlide",
+          "sectionLabel": "The fundamentals",
+          "title": "Understanding the Risk-Return Tradeoff",
+          "paragraphs": [
+            "Savings accounts risk almost nothing but lose to inflation. Stocks can return 20%+ yearly, or fall 50%. Risk means volatility, how much value swings: the S&P 500 averaged 10% a year since 1926, but years swing +30% or -30%.",
+            "Your time horizon, how long you stay invested, matters most. In any single year, stocks lose money about 26% of the time. Over any 10-year period, 6%. Over any 20-year period in U.S. history, stocks have never lost money."
+          ],
+          "highlightedTerms": [
+            {
+              "term": "Volatility",
+              "definition": "A statistical measure of how much an investment's price fluctuates over time. Higher volatility = wider price swings.",
+              "example": "Bitcoin has ~80% annual volatility vs ~15% for the S&P 500, meaning its price swings 5x more wildly."
+            },
+            {
+              "term": "Risk Premium",
+              "definition": "The extra return investors earn for taking on additional risk compared to a risk-free asset like Treasury bills.",
+              "example": "Stocks have historically earned a ~7% risk premium over Treasury bills, the reward for accepting volatility."
+            },
+            {
+              "term": "Time Horizon",
+              "definition": "The length of time you plan to hold an investment before needing the money.",
+              "example": "A 25-year-old saving for retirement has a 40-year time horizon, allowing them to take more risk."
+            },
+            {
+              "term": "Drawdown",
+              "definition": "The peak-to-trough decline in the value of an investment during a specific period.",
+              "example": "The S&P 500's maximum drawdown during 2008 was -57%, it took until 2013 to fully recover."
+            }
+          ],
+          "diagramDescription": "Horizontal risk-return spectrum with five asset classes plotted as labeled dots from left (safe, low return) to right (risky, high return): Savings, Bonds, Real Estate, Index Funds, Individual Stocks.",
+          "diagramVisual": {
+            "type": "comparison",
+            "title": "Time Horizon Crushes Risk",
+            "rows": [
+              {
+                "label": "Odds stocks lose money over 1 year",
+                "value": "~26%",
+                "percent": 26,
+                "explain": "Roughly one year in four ends lower than it started. Over a single year, stocks genuinely are a gamble."
+              },
+              {
+                "label": "Odds stocks lose money over 10 years",
+                "value": "~6%",
+                "percent": 6,
+                "explain": "Same asset, same volatility, one quarter of the risk. Nothing changed except how long you were willing to wait."
+              },
+              {
+                "label": "Odds stocks lose money over 20 years",
+                "value": "0%",
+                "percent": 0,
+                "explain": "Not one 20-year stretch in the historical record has lost money. The bar is empty, and that is the actual reading."
+              }
+            ],
+            "footer": "Time transforms volatility into reward",
+            "sentiment": "positive"
+          },
+          "atlas": {
+            "hint": "Tap each row. The asset never changes, only the wait",
+            "recap": "This is the most useful table in the course, because it says risk is not a property of the stock. It is a property of how long you are willing to hold it. Same S&P 500 in all three rows: a coin flip over a year, a near certainty over twenty."
+          }
+        },
+        {
+          "type": "microCheck",
+          "question": "An investor holds $50,000 in a single tech stock. The stock drops 75% during a sector crash. Meanwhile, a diversified index fund dropped only 30% in the same period. What was the primary difference?",
+          "options": [
+            "The index fund investor simply got lucky, the single stock could just as easily have outperformed",
+            "The single stock had concentrated risk while the index fund spread risk across hundreds of companies",
+            "Tech stocks always lose value, so picking any single tech name was the original mistake here",
+            "Index funds are structured so they can never post a loss, even in a deep sector crash"
+          ],
+          "correct": 1,
+          "explanationCorrect": "Correct! Concentration in a single stock exposes you to company-specific risk, one bad earnings report, one scandal, one industry shift can destroy 75%+ of your value. A diversified index fund spreads that risk across hundreds of companies, so no single failure can be catastrophic.",
+          "explanationWrong": "Not quite. The key difference is diversification. A single stock carries company-specific risk, one bad event can cause a 75%+ loss. A diversified index fund spreads risk across hundreds of companies, limiting any single stock's impact to a fraction of a percent."
+        },
+        {
+          "type": "interactiveGraph",
+          "sectionLabel": "Risk in action",
+          "title": "Conservative vs. Aggressive: 30-Year Comparison",
+          "graphType": "comparison",
+          "description": "Watch how two portfolios, one conservative (40% stocks / 60% bonds) and one aggressive (90% stocks / 10% bonds), perform over 30 years including crashes and recoveries.",
+          "paragraphs": [
+            "A conservative portfolio experiences smaller drawdowns during crashes but lower overall growth. During the 2008 crisis, a 40/60 portfolio lost about 20% while a 90/10 portfolio lost 45%. But over 30 years, the aggressive portfolio ended up with roughly 3x more wealth.",
+            "The key insight is that short-term pain leads to long-term gain, but only if you can actually hold through the pain. The best portfolio is the one you won't sell during a crash. If a 45% drawdown would make you panic-sell, a conservative allocation will actually perform better for you.",
+            "Risk tolerance isn't just about math, it's about psychology. An investor who sleeps well during a 20% drop and one who panic-sells during the same drop will have dramatically different outcomes, even if they started with identical portfolios."
+          ],
+          "highlightedTerms": [
+            {
+              "term": "Asset Allocation",
+              "definition": "The percentage of your portfolio dedicated to each asset class (stocks, bonds, cash, etc.).",
+              "example": "A 60/40 portfolio means 60% stocks and 40% bonds."
+            },
+            {
+              "term": "Drawdown",
+              "definition": "The decline from a portfolio's peak value to its lowest point during a downturn.",
+              "example": "A portfolio worth $100,000 that drops to $55,000 has a 45% drawdown."
+            }
+          ],
+          "insights": [
+            "Over any 20-year period since 1926, a 100% stock portfolio has never lost money.",
+            "The average bear market lasts 9.6 months. The average bull market lasts 2.7 years.",
+            "Missing just the 10 best trading days in a 20-year period cuts your total return by more than half."
+          ],
+          "sliders": [
+            {
+              "label": "Stock Allocation",
+              "min": 10,
+              "max": 100,
+              "default": 60,
+              "unit": "%"
+            },
+            {
+              "label": "Time Period",
+              "min": 5,
+              "max": 40,
+              "default": 30,
+              "unit": " years"
+            }
+          ]
+        },
+        {
+          "type": "misconceptions",
+          "title": "Risk myths",
+          "subtitle": "What most people get wrong about investment risk",
+          "items": [
+            {
+              "myth": "Risk means you'll lose your money.",
+              "truth": "Risk means the value of your investment fluctuates in the short term. For diversified portfolios held long-term, this volatility has always resulted in positive returns.",
+              "explanation": "The S&P 500 has been negative in roughly 26% of calendar years, but over every 20-year rolling period since 1926, it has been positive. Short-term fluctuation is not the same as permanent loss."
+            },
+            {
+              "myth": "The safest strategy is keeping money in cash.",
+              "truth": "Cash is \"safe\" from volatility but guaranteed to lose purchasing power. At 3% inflation, cash loses half its value every 24 years.",
+              "explanation": "$100,000 in cash in 2000 has the purchasing power of about $57,000 today. \"Safe\" cash investors have silently lost 43% of their wealth. The real risk isn't volatility, it's inflation."
+            },
+            {
+              "myth": "Higher risk always means higher returns.",
+              "truth": "Higher risk means higher potential returns, but only with proper diversification and time. Concentrated bets in a single stock can, and do, go to zero.",
+              "explanation": "The risk premium only applies to systematic (market) risk. Company-specific risk, like putting everything in one stock, is unrewarded risk. Diversification eliminates this unrewarded risk while preserving the risk premium."
+            }
+          ]
+        },
+        {
+          "type": "keyTermsCards",
+          "terms": [
+            {
+              "term": "Volatility",
+              "definition": "A statistical measure of how much an investment's value fluctuates over time, usually expressed as standard deviation of returns.",
+              "example": "The S&P 500 has about 15% annual volatility, meaning returns typically range from -5% to +25% in any given year.",
+              "sentence": "Despite the short-term volatility, her diversified portfolio delivered a steady 9% average annual return over 20 years."
+            },
+            {
+              "term": "Risk Premium",
+              "definition": "The additional return an investor receives for bearing risk above the risk-free rate (typically Treasury bills).",
+              "example": "If Treasury bills yield 3% and stocks return 10%, the equity risk premium is 7%.",
+              "sentence": "The risk premium for stocks has averaged about 7% over Treasury bills, compensating investors for enduring market volatility."
+            },
+            {
+              "term": "Drawdown",
+              "definition": "The peak-to-trough decline in the value of an investment or portfolio during a specific period, expressed as a percentage.",
+              "example": "During the 2008 financial crisis, the S&P 500 experienced a maximum drawdown of 57% from its October 2007 peak to March 2009 trough.",
+              "sentence": "She stress-tested her portfolio to ensure she could handle a 40% drawdown without panicking and selling."
+            },
+            {
+              "term": "Time Horizon",
+              "definition": "The total length of time an investor expects to hold their portfolio before needing to withdraw the money.",
+              "example": "A 25-year-old saving for retirement at 65 has a 40-year time horizon.",
+              "sentence": "With a 30-year time horizon, he could afford to take more risk because his portfolio had decades to recover from any crash."
+            },
+            {
+              "term": "Beta",
+              "definition": "A measure of how much an investment's price moves relative to the overall market. Beta of 1 means it moves with the market.",
+              "example": "Tesla has a beta of about 2.0, meaning if the market drops 10%, Tesla typically drops 20%.",
+              "sentence": "He chose low-beta utility stocks to reduce portfolio volatility during the uncertain economic outlook."
+            },
+            {
+              "term": "Standard Deviation",
+              "definition": "A statistical measure of how spread out returns are from the average. Higher standard deviation = more volatility.",
+              "example": "A fund with 8% average return and 12% standard deviation means returns usually fall between -4% and +20%.",
+              "sentence": "The fund's low standard deviation of 6% indicated very consistent, predictable returns year over year."
+            }
+          ]
+        },
+        {
+          "type": "fillBlank",
+          "sentence": "The extra return investors earn for accepting higher risk is called the risk ___.",
+          "options": [
+            "premium",
+            "penalty",
+            "guarantee",
+            "discount"
+          ],
+          "correct": 0
+        },
+        {
+          "type": "quiz",
+          "question": "During the 2008 financial crisis, an investor with a 90/10 stock-bond portfolio saw a 45% decline. An investor with a 40/60 portfolio saw only a 20% decline. Five years later, which investor had more money?",
+          "options": [
+            "The conservative 40/60 investor, because losing less in the crash meant more money left to grow",
+            "The aggressive 90/10 investor, stocks recovered and their higher allocation produced more growth",
+            "They ended up with exactly the same amount once both portfolios fully recovered their losses",
+            "Neither, a 45% drawdown is permanent and that investor never got their money back"
+          ],
+          "correct": 1,
+          "explanation": "The 90/10 investor ended up ahead. While they experienced a deeper drawdown, the stock market recovered all losses by 2013 and then continued climbing. By 2013, the aggressive portfolio had surpassed its pre-crash high, while the conservative portfolio's lower stock allocation meant it captured less of the recovery. Over any 10+ year period, higher stock allocation has historically produced higher total returns."
+        },
+        {
+          "type": "tapReveal",
+          "title": "Risk and Reward Facts",
+          "cards": [
+            [
+              "What percentage of calendar years has the S&P 500 been positive?",
+              "About 74%, the market goes up roughly three out of every four years. But the 26% of down years create the volatility that most investors fear.",
+              {
+                "stat": "74%",
+                "sprite": "dice"
+              }
+            ],
+            [
+              "What's the longest the market has taken to recover from a crash?",
+              "About 5.5 years (2007-2013). Even after the worst crash since the Great Depression, patient investors fully recovered and then went on to triple their money.",
+              {
+                "stat": "5.5 years",
+                "sprite": "hourglass"
+              }
+            ],
+            [
+              "How much would you have lost by missing the 10 best days in 20 years?",
+              "Over half your total return. The best days often come right after the worst days, selling during crashes means missing the recovery.",
+              {
+                "stat": "Half",
+                "sprite": "crowd"
+              }
+            ],
+            [
+              "What's the average length of a bear market vs a bull market?",
+              "Bear markets average 9.6 months. Bull markets average 2.7 years. Markets spend roughly 3x more time going up than going down.",
+              {
+                "stat": "3x longer",
+                "sprite": "chart-up"
+              }
+            ]
+          ]
+        },
+        {
+          "type": "dragSort",
+          "prompt": "Order these investments from lowest risk to highest risk:",
+          "items": [
+            "U.S. Treasury Bills (3-month government debt)",
+            "Investment-grade corporate bonds",
+            "S&P 500 index fund (500 large U.S. stocks)",
+            "Individual growth stock (e.g., Tesla)",
+            "Cryptocurrency (e.g., Bitcoin)",
+            "Leveraged options trading"
+          ]
+        },
+        {
+          "type": "scenario",
+          "situation": "You're building a portfolio and need to choose between four approaches. Which balances risk and reward most effectively for a 30-year time horizon?",
+          "choices": [
+            {
+              "label": "100% high-yield savings account, so no volatility and no losses",
+              "outcome": "After 30 years at 2% return with 3% inflation, you actually lose purchasing power. Zero volatility = zero real growth. This is the most dangerous \"safe\" choice.",
+              "correct": false
+            },
+            {
+              "label": "80% diversified stock index, 20% bonds, riding out the swings",
+              "outcome": "Historically optimal for a 30-year horizon. Expected return ~8-9% annually with manageable drawdowns. You'll experience 4-5 bear markets but recover from each one.",
+              "correct": true
+            },
+            {
+              "label": "100% in a single high-growth stock, maximum return potential",
+              "outcome": "Concentrated single-stock risk means a 30-50% chance of catastrophic permanent loss. Even Amazon dropped 94%. Most individual stocks actually underperform the index.",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "type": "slider",
+          "question": "Over any 20-year period since 1926, what is the WORST total return of the S&P 500?",
+          "min": -20,
+          "max": 30,
+          "correct": 6,
+          "unit": "%"
+        },
+        {
+          "type": "trueFalse",
+          "statements": [
+            {
+              "s": "The S&P 500 has lost money over every 20-year rolling period in history",
+              "a": false
+            },
+            {
+              "s": "Missing the 10 best trading days in 20 years cuts your return by more than half",
+              "a": true
+            },
+            {
+              "s": "Cash in a savings account is risk-free",
+              "a": false
+            },
+            {
+              "s": "Higher volatility is always bad for investors",
+              "a": false
+            },
+            {
+              "s": "A 25-year-old should generally take more investment risk than a 60-year-old",
+              "a": true
+            }
+          ]
+        },
+        {
+          "type": "match",
+          "title": "Match the Risk Concept",
+          "pairs": [
+            [
+              "Volatility",
+              "How much an investment's price swings up and down over time"
+            ],
+            [
+              "Beta",
+              "Measures how a stock moves relative to the overall market"
+            ],
+            [
+              "Drawdown",
+              "Peak-to-trough decline during a downturn"
+            ],
+            [
+              "Risk Premium",
+              "Extra return earned for accepting higher risk above the safe rate"
+            ]
+          ]
+        },
+        {
+          "type": "quiz",
+          "question": "Your colleague James is 28 years old and just started his first job. He says: \"I'm putting 100% of my 401(k) in a money market fund because I don't want to risk losing any money.\" Using what you know about the risk-return tradeoff, time horizons, and inflation, what is the most accurate response?",
+          "options": [
+            "He is right, protecting his principal from any short-term loss is the smartest priority at age 28",
+            "He should add stock exposure, since a 37-year horizon erases loss risk while cash bleeds to inflation",
+            "He should move the whole 401(k) into cryptocurrency, since a young investor can chase the biggest returns",
+            "He should keep it in the money market fund until his salary is much higher, then switch into stocks"
+          ],
+          "correct": 1,
+          "explanation": "James has 37 years until retirement. Over any 20-year period in history, diversified stocks have never lost money. Meanwhile, his money market fund earning 2-3% will lose purchasing power every year to 3%+ inflation. Over 37 years, $10,000 in cash becomes worth only $3,300 in real terms. The same $10,000 in a stock index fund historically becomes $140,000+. His \"safe\" choice virtually guarantees he'll retire with far less wealth."
+        },
+        {
+          "type": "simulationFinale",
+          "title": "Allocate $10,000 Across Risk Levels",
+          "setup": "You have $10,000 to invest for retirement in 25 years. You need to allocate it across five risk levels, then watch what happens during a major market crash and recovery.",
+          "decisions": [
+            {
+              "prompt": "Decision 1: How do you allocate your $10,000?",
+              "options": [
+                {
+                  "label": "All in stocks (100% equity index fund)",
+                  "consequence": "Bold choice. Maximum growth potential but you'll experience the full force of every crash. Over 25 years, historical average outcome: ~$68,000.",
+                  "score": 3
+                },
+                {
+                  "label": "70% stocks, 30% bonds, balanced growth",
+                  "consequence": "Solid allocation for a 25-year horizon. You'll capture most of the stock market growth with reduced volatility. Historical average: ~$50,000.",
+                  "score": 3
+                },
+                {
+                  "label": "50% stocks, 50% bonds, balanced",
+                  "consequence": "More conservative than needed for a 25-year horizon. Reduced volatility but also reduced growth. Historical average: ~$38,000.",
+                  "score": 2
+                },
+                {
+                  "label": "100% savings account, no risk",
+                  "consequence": "At 2% interest with 3% inflation, you're losing 1% of purchasing power per year. After 25 years: ~$12,800 nominal but only ~$6,100 in real purchasing power.",
+                  "score": 0
+                }
+              ]
+            },
+            {
+              "prompt": "Decision 2: A severe recession hits. Your portfolio drops 40% in 6 months. Headlines say \"worst crash since 2008.\" What do you do?",
+              "options": [
+                {
+                  "label": "Sell everything, this could get worse",
+                  "consequence": "You just locked in your losses permanently. The market recovered within 3 years. You'll need to decide when to re-enter, and most people wait too long.",
+                  "score": 0
+                },
+                {
+                  "label": "Hold steady, do nothing and wait",
+                  "consequence": "Smart discipline. Markets have recovered from every crash in history. Your portfolio will likely recover within 2-4 years.",
+                  "score": 2
+                },
+                {
+                  "label": "Buy more, stocks are 40% off",
+                  "consequence": "Contrarian but historically optimal. Buying during maximum fear has produced the highest 5-year forward returns. You're getting stocks at a 40% discount.",
+                  "score": 3
+                }
+              ]
+            },
+            {
+              "prompt": "Decision 3: Two years later, markets have fully recovered. Your portfolio is back to its pre-crash value. A financial advisor suggests changing your strategy. What do you do?",
+              "options": [
+                {
+                  "label": "Switch to all bonds, you never want to go through that again",
+                  "consequence": "Emotional decision. You have 23 years left, moving to bonds now means missing decades of stock market growth. The crash is exactly what your time horizon was designed to handle.",
+                  "score": 0
+                },
+                {
+                  "label": "Stay the course with your original allocation",
+                  "consequence": "Perfect. Your allocation was chosen for your time horizon, not for current market conditions. Recovery proves the strategy works.",
+                  "score": 3
+                },
+                {
+                  "label": "Move to 100% stocks, you can handle it now",
+                  "consequence": "Confidence after recovery is good, but chasing risk after gains is the mirror image of panic-selling during losses. Stick to your plan.",
+                  "score": 1
+                }
+              ]
+            },
+            {
+              "prompt": "Decision 4: Fifteen years have passed. Your portfolio has grown significantly. You now have 10 years until retirement. Should you adjust your risk?",
+              "options": [
+                {
+                  "label": "Gradually shift toward more bonds as retirement approaches",
+                  "consequence": "Exactly right. As your time horizon shortens, you have less time to recover from crashes. Gradually reducing stock exposure protects your accumulated wealth.",
+                  "score": 3
+                },
+                {
+                  "label": "Keep the same allocation, since what has worked will keep working",
+                  "consequence": "The allocation that was right at 25 years isn't right at 10 years. A crash now could delay retirement by years if you're too aggressive.",
+                  "score": 1
+                },
+                {
+                  "label": "Move everything to cash now, since you're close enough to retirement",
+                  "consequence": "Too extreme. With 10 years left, you still need some growth to keep pace with inflation. A moderate allocation protects while still growing.",
+                  "score": 1
+                }
+              ]
+            }
+          ],
+          "optimalOutcome": "The optimal path: Choose an age-appropriate stock-heavy allocation, buy more during the crash, stay the course during recovery, and gradually reduce risk approaching retirement, scoring 12/12.",
+          "principle": "Risk management is not about avoiding risk, it's about matching the right amount of risk to your time horizon and adjusting as that horizon changes. Young investors should embrace volatility because time transforms short-term risk into long-term reward. As retirement approaches, gradually reducing risk protects accumulated wealth."
+        },
+        {
+          "type": "summaryCards",
+          "lessonTitle": "Risk vs. Reward",
+          "cards": [
+            {
+              "takeaway": "Risk and return are inseparable",
+              "detail": "Every asset class sits on a spectrum: higher potential returns require accepting higher short-term volatility. The risk premium, the extra return for bearing risk, has averaged ~7% for stocks over cash."
+            },
+            {
+              "takeaway": "Time transforms risk into reward",
+              "detail": "Over any 20-year period in history, diversified U.S. stocks have never lost money. Short-term volatility is the price of admission for long-term wealth. Your time horizon determines how much risk you should take."
+            },
+            {
+              "takeaway": "The biggest risk is taking no risk",
+              "detail": "Cash loses purchasing power every year to inflation. Over 30 years, a \"safe\" savings account loses nearly half its real value. Accepting appropriate investment risk is the only way to build real wealth."
+            }
+          ]
+        },
+        {
+          "type": "whatsNext",
+          "currentLessonTitle": "Risk vs. Reward",
+          "nextTitle": "The Magic of Compound Interest",
+          "preview": "You'll discover the mathematical force behind all wealth building, how your returns generate their own returns, and why starting early creates an almost unfair advantage.",
+          "estimatedTime": 25
+        }
+      ],
+      "challenge": [
+        {
+          "question": "An investor has a 30-year time horizon. Which allocation has historically produced the highest total return?",
+          "options": [
+            "100% savings account",
+            "50% stocks / 50% bonds",
+            "80% stocks / 20% bonds",
+            "100% bonds, since steady income beats volatile stocks over the long run"
+          ],
+          "correct": 2,
+          "explanation": "Over 30-year periods, stock-heavy portfolios have consistently produced the highest returns. An 80/20 portfolio balances growth with some downside protection."
+        },
+        {
+          "question": "During the 2008 financial crisis, the S&P 500 dropped 57%. How long did it take to fully recover?",
+          "options": [
+            "About 6 months, since markets bounce back quickly after a panic",
+            "About 2 years, roughly the length of a typical recession",
+            "About 5.5 years",
+            "It never recovered to its 2007 peak"
+          ],
+          "correct": 2,
+          "explanation": "The S&P 500 peaked in October 2007 and fully recovered by March 2013, about 5.5 years. Investors who held were rewarded with a subsequent tripling of value."
+        },
+        {
+          "question": "What is the equity risk premium?",
+          "options": [
+            "A fee that stock brokers charge for executing trades on an exchange",
+            "The extra return stocks earn over risk-free assets like Treasury bills",
+            "A minimum return on stocks that the government guarantees to investors",
+            "The total price an investor pays to buy one share of a company"
+          ],
+          "correct": 1,
+          "explanation": "The equity risk premium is the additional return (~7% historically) that stocks earn above risk-free Treasury bills, compensating investors for accepting volatility."
+        },
+        {
+          "question": "Why is a 100% cash portfolio actually risky over 30 years?",
+          "options": [
+            "Physical cash can be lost or stolen more easily than stock certificates",
+            "Inflation erodes purchasing power, cash loses ~3% real value per year",
+            "Banks frequently fail, so deposits above a small balance are unsafe",
+            "Cash earns so much interest that it triggers a heavy annual tax bill"
+          ],
+          "correct": 1,
+          "explanation": "At 3% inflation, cash loses half its purchasing power every 24 years. Over 30 years, $100,000 in cash is worth only about $41,000 in real purchasing power."
+        },
+        {
+          "question": "An investor who missed the 10 best trading days in the S&P 500 over a 20-year period lost approximately:",
+          "options": [
+            "About 10% of total return, a minor cost for sitting out the worst days",
+            "About 25% of total return, since only a quarter of gains cluster on big days",
+            "More than half of total return",
+            "Almost nothing, because 10 days out of 5,000 barely move the average"
+          ],
+          "correct": 2,
+          "explanation": "Missing just the 10 best days in 20 years cuts total returns by more than half. The best days often come right after the worst. Selling during panic means missing the recovery."
+        }
+      ]
+    },
+    {
+      "num": 3,
+      "title": "The Magic of Compound Interest",
+      "xp": 30,
+      "steps": [
+        {
+          "type": "hookOpener",
+          "title": "The Magic of Compound Interest",
+          "fact": "Warren Buffett earned 97% of his $100+ billion net worth after age 65. His secret? He started investing at age 11 and let compound interest work for 70+ years.",
+          "outcome": "By the end of this lesson, you'll understand exactly how compounding works, why starting early creates an almost unfair advantage, and how ordinary people build extraordinary wealth.",
+          "visualDescription": "Exponential growth curve showing $10,000 growing to $450,000 over 40 years at 10%",
+          "visual": {
+            "type": "line",
+            "title": "$10,000 at 10% Over 40 Years",
+            "points": [
+              {
+                "label": "Year 0",
+                "value": "$10K",
+                "explain": "One deposit, then nothing else is ever added. Every number after this is the same $10,000 working."
+              },
+              {
+                "label": "Year 10",
+                "value": "$26K",
+                "explain": "It has more than doubled and the line still looks almost flat. This is the stretch that convinces people compounding is overrated."
+              },
+              {
+                "label": "Year 20",
+                "value": "$67K",
+                "explain": "The second decade added $41K where the first added $16K. Same rate, bigger base."
+              },
+              {
+                "label": "Year 30",
+                "value": "$174K",
+                "explain": "This decade alone added more than the first two combined. The curve is now visibly bending upward."
+              },
+              {
+                "label": "Year 40",
+                "value": "$452K",
+                "explain": "The final decade added $278K, more than the previous thirty years put together. That is why leaving it alone is the whole strategy."
+              }
+            ],
+            "trend": "up",
+            "footer": "Most growth happens in the final decades",
+            "sentiment": "positive"
+          }
+        },
+        {
+          "type": "stakesCard",
+          "without": {
+            "label": "Starting at age 32, investing $400/month",
+            "detail": "Total contributions by age 65: $158,400. Final balance at 10% return: ~$850,000. You contributed 19% of the final amount. Compound returns did the rest, but you missed 10 crucial years of exponential growth."
+          },
+          "with": {
+            "label": "Starting at age 22, investing $400/month",
+            "detail": "Total contributions by age 65: $206,400. Final balance at 10% return: ~$2,500,000. You contributed just 8% of the final amount. That extra decade of compounding generated $1.65 million more, from only $48,000 more in contributions."
+          },
+          "withoutVisual": {
+            "type": "metric",
+            "title": "Starting at Age 32",
+            "value": "~$850,000",
+            "detail": "$400/mo, $158,400 contributed by age 65",
+            "footer": "Missed 10 crucial years of compounding",
+            "sentiment": "negative",
+            "sprite": "hourglass"
+          },
+          "withVisual": {
+            "type": "metric",
+            "title": "Starting at Age 22",
+            "value": "~$2,500,000",
+            "detail": "$400/mo, $206,400 contributed by age 65",
+            "footer": "One extra decade adds $1.65M",
+            "sentiment": "positive",
+            "sprite": "seedling"
+          }
+        },
+        {
+          "type": "misconceptions",
+          "title": "Compounding myths",
+          "subtitle": "What most people get wrong about compound interest",
+          "items": [
+            {
+              "myth": "You need a lot of money to benefit from compound interest.",
+              "truth": "$100/month at 10% for 40 years becomes $632,000. The amount matters far less than the time. Starting with $100 at age 22 beats starting with $1,000 at age 35.",
+              "explanation": "Einstein may never have said it, but calling compound interest the eighth wonder fits. $100 a month for 40 years is $48,000 of your money, and it grows to $632,000. That is 13x."
+            },
+            {
+              "myth": "It is too late to start if you are already 30, 40, or 50.",
+              "truth": "It is never too late, but every year you wait makes it harder. Starting at 40 with $500/month still produces $380,000 by 65.",
+              "explanation": "Starting earlier is better, but the second best time is today. Investing from age 40 to 65 still builds serious wealth. The real mistake is deciding it is too late and never starting."
+            },
+            {
+              "myth": "Compound interest only works in savings accounts.",
+              "truth": "Compounding works anywhere returns get reinvested: stocks, bonds, mutual funds, ETFs, real estate. Stock market compounding at 10% dwarfs savings compounding at 1%.",
+              "explanation": "A savings account at 1% turns $10,000 into $13,489 in 30 years. The stock market at 10% turns the same $10,000 into $174,494. Identical principle, 13x the result."
+            }
+          ]
+        },
+        {
+          "type": "teachingSlide",
+          "sectionLabel": "The core concept",
+          "title": "How Compound Interest Works",
+          "paragraphs": [
+            "Compound interest means earning returns on your returns. At 10% yearly, $10,000 stays $10,000 in year 0, then $11,000 in year 1, $12,100 in year 2, $13,310, $25,937 in year 10, $67,275 in year 20, $174,494 in year 30.",
+            "That is exponential growth: slow at first, then steep. The Rule of 72 estimates doubling time, divide 72 by your return. At 8% money doubles every 9 years, at 10% every 7.2 years, at 12% every 6 years."
+          ],
+          "highlightedTerms": [
+            {
+              "term": "Compound Interest",
+              "definition": "Interest calculated on both the initial principal and the accumulated interest from previous periods.",
+              "example": "$1,000 at 10%: Year 1 = $1,100, Year 2 = $1,210, Year 3 = $1,331. Each year earns more than the last."
+            },
+            {
+              "term": "Principal",
+              "definition": "The original amount of money invested or deposited before any returns are added.",
+              "example": "If you invest $5,000, your principal is $5,000. All returns are calculated on this base initially."
+            },
+            {
+              "term": "Rule of 72",
+              "definition": "A quick formula to estimate how long it takes to double your money: divide 72 by the annual return rate.",
+              "example": "At 8% return: 72 ÷ 8 = 9 years to double. At 10%: 72 ÷ 10 = 7.2 years."
+            },
+            {
+              "term": "Exponential Growth",
+              "definition": "Growth that accelerates over time because each period's growth builds on the previous period's accumulated total.",
+              "example": "Compound interest creates exponential growth, $10,000 grows faster in year 30 than in year 1 because the base is much larger."
+            }
+          ],
+          "diagramDescription": "SVG snowball rolling downhill, growing larger at each stage: a small snowball labeled \"$10K\" at the top, medium labeled \"$25K\" at the middle, and a massive snowball labeled \"$175K\" at the bottom, with curved arrow showing acceleration.",
+          "diagramVisual": {
+            "type": "bars",
+            "title": "Compounding $10,000 at 10%",
+            "items": [
+              {
+                "label": "Yr 0",
+                "value": 6,
+                "displayValue": "$10K",
+                "sprite": "coin",
+                "explain": "The starting bar is almost invisible next to the last one. Same money, just earlier in its life."
+              },
+              {
+                "label": "Yr 10",
+                "value": 15,
+                "displayValue": "$26K",
+                "sprite": "seedling",
+                "explain": "One doubling and a bit. At 10% the rule of 72 says every 7.2 years the balance doubles."
+              },
+              {
+                "label": "Yr 20",
+                "value": 39,
+                "displayValue": "$67K",
+                "sprite": "tree",
+                "explain": "Two and a half doublings in. Notice the gap to the next bar is bigger than this whole bar was at year 10."
+              },
+              {
+                "label": "Yr 30",
+                "value": 100,
+                "displayValue": "$174K",
+                "sprite": "chart-up",
+                "explain": "Seventeen times the original deposit, with nothing added. Every dollar of it came from leaving the previous dollars alone."
+              }
+            ],
+            "footer": "Rule of 72: at 10%, money doubles every ~7.2 years",
+            "sentiment": "positive"
+          },
+          "atlas": {
+            "hint": "Tap each bar. Watch the gaps get bigger, not the rate",
+            "recap": "Nobody changed the return. It is 10% in every single bar. The only thing that grew is what the 10% was being applied to, which is why the last decade of any investment does more work than the first two put together. Waiting is not passive here, it is the mechanism."
+          }
+        },
+        {
+          "type": "microCheck",
+          "question": "You invest $10,000 at 10% annual compound return. After 7 years, your money has doubled to $20,000. If you hold for another 7 years (14 years total), approximately how much will you have?",
+          "options": [
+            "$30,000, it grows by $10,000 every 7 years",
+            "$40,000, it doubles again from $20,000",
+            "$35,000, growth slows over time",
+            "$25,000, returns decrease as the investment ages"
+          ],
+          "correct": 1,
+          "explanationCorrect": "Correct! Compound growth means your money doubles every 7 years at 10%. After 7 years: $20,000. After 14 years: $40,000. After 21 years: $80,000. After 28 years: $160,000. Each doubling produces more money than the previous one because the base keeps growing.",
+          "explanationWrong": "Not quite. At 10%, money doubles every 7.2 years (Rule of 72). After 7 years: $20,000. After 14 years: $40,000. It doesn't grow linearly, it doubles again from $20K to $40K. After 21 years: $80K. After 28 years: $160K. That's exponential growth."
+        },
+        {
+          "type": "interactiveGraph",
+          "sectionLabel": "Build your wealth",
+          "title": "The Compound Growth Calculator",
+          "graphType": "exponential",
+          "description": "Adjust the starting amount, monthly contribution, and annual return to see how your wealth grows exponentially over time. Watch how small changes create massive differences over decades.",
+          "paragraphs": [
+            "The three levers of compound growth are: principal (starting amount), rate (annual return), and time. Of these three, time is by far the most powerful. Doubling your return rate doubles your final amount, but doubling your time can multiply it by 10x or more.",
+            "Monthly contributions turbocharge compounding. Investing $400/month at 10% for 40 years produces $2.5 million, but only $192,000 of that came from your contributions. Over 93% of your final wealth came from compound returns. Your money literally created more money.",
+            "The visual difference between simple interest (linear growth) and compound interest (exponential growth) is dramatic. At 10% for 30 years, $10,000 with simple interest becomes $40,000. With compound interest, it becomes $174,494. Compounding produced 4.4x more wealth."
+          ],
+          "highlightedTerms": [
+            {
+              "term": "Simple Interest",
+              "definition": "Interest calculated only on the original principal amount, not on accumulated interest.",
+              "example": "$10,000 at 10% simple interest earns $1,000 per year, always $1,000, never more."
+            },
+            {
+              "term": "Compounding Frequency",
+              "definition": "How often interest is calculated and added to the balance. More frequent compounding produces slightly higher returns.",
+              "example": "Daily compounding produces about 0.5% more than annual compounding at the same rate."
+            }
+          ],
+          "insights": [
+            "At 10%, $10,000 becomes $174,494 in 30 years, but $452,593 in 40 years. The last decade alone added $278,000.",
+            "Investing $400/month for 40 years at 10% produces $2.5 million, 93% from compound returns.",
+            "A one-time $10,000 investment at birth at 10% becomes $1.17 million by age 50."
+          ],
+          "sliders": [
+            {
+              "label": "Starting Amount",
+              "min": 1000,
+              "max": 50000,
+              "default": 10000,
+              "unit": "$"
+            },
+            {
+              "label": "Monthly Contribution",
+              "min": 0,
+              "max": 2000,
+              "default": 400,
+              "unit": "$"
+            },
+            {
+              "label": "Annual Return",
+              "min": 1,
+              "max": 15,
+              "default": 10,
+              "unit": "%"
+            }
+          ]
+        },
+        {
+          "type": "caseStudy",
+          "title": "Ronald Read: The Janitor Who Died with $8 Million",
+          "events": [
+            {
+              "date": "1940s",
+              "event": "Ronald Read grows up in rural Vermont, first in his family to finish high school",
+              "context": "Read has no financial education, no wealthy connections, and no high-paying career ahead. He works as a gas station attendant and later as a janitor at JCPenney."
+            },
+            {
+              "date": "1950s-1960s",
+              "event": "Read begins buying blue-chip stocks and reinvesting dividends",
+              "context": "Living extremely frugally, Read invests small amounts consistently. He buys stocks in companies he understands, AT&T, Bank of America, CVS, Procter & Gamble, and never sells."
+            },
+            {
+              "date": "1970s-2000s",
+              "event": "Read holds through every crash, 1973, 1987, 2000, 2008",
+              "context": "While others panic-sell, Read simply holds. His dividends get reinvested automatically, buying more shares at lower prices during every crash. His portfolio compounds quietly for decades."
+            },
+            {
+              "date": "2014",
+              "event": "Read dies at 92. His estate reveals $8 million in stocks",
+              "context": "He held his coat together with safety pins and had $8 million. He gave $6 million to his local library and hospital. Small investments grew over 60+ years."
+            }
+          ],
+          "lesson": "Ronald Read proves wealth does not need a big income, perfect timing, or genius. Start early, invest steadily, never stop. He held blue-chip stocks, big stable companies, for 60+ years. Time can make a janitor richer than most doctors."
+        },
+        {
+          "type": "keyTermsCards",
+          "terms": [
+            {
+              "term": "Compound Interest",
+              "definition": "Interest earned on both the original investment and on all previously accumulated interest, earning returns on your returns.",
+              "example": "$1,000 at 10%: Year 1 = $1,100, Year 2 = $1,210, Year 3 = $1,331. Each year earns more dollars than the previous year.",
+              "sentence": "Thanks to compound interest, her $50,000 investment at age 25 grew to over $1 million by retirement without any additional contributions."
+            },
+            {
+              "term": "Rule of 72",
+              "definition": "A quick formula to estimate how many years it takes to double your money: divide 72 by the annual return rate.",
+              "example": "At 8% return: 72 ÷ 8 = 9 years to double. At 12%: 72 ÷ 12 = 6 years to double.",
+              "sentence": "Using the Rule of 72, he calculated that his 10% return would double his money in about 7.2 years."
+            },
+            {
+              "term": "Exponential Growth",
+              "definition": "Growth that accelerates over time because each period's growth is calculated on a larger base than the period before.",
+              "example": "$10,000 grows by $1,000 in year 1 at 10%, but by $17,000 in year 30, because the base has grown from $10K to $170K.",
+              "sentence": "The exponential growth curve of her portfolio showed that the last decade of compounding generated more wealth than the first three decades combined."
+            },
+            {
+              "term": "Time Value of Money",
+              "definition": "The concept that money available now is worth more than the same amount in the future because it can be invested and earn compound returns.",
+              "example": "$10,000 today at 10% becomes $174,494 in 30 years. Therefore, $10,000 today is \"worth\" $174,494 in future value.",
+              "sentence": "Understanding the time value of money convinced him to start investing immediately rather than waiting for a \"better time.\""
+            },
+            {
+              "term": "Dollar-Cost Averaging",
+              "definition": "Investing a fixed amount at regular intervals regardless of market price, automatically buying more shares when prices are low and fewer when high.",
+              "example": "$400 a month into an index fund buys 10 shares at $40, 13.3 shares when it drops to $30, and 8 shares at $50.",
+              "sentence": "Dollar-cost averaging removed the stress of market timing, she simply invested $500 every month and let compounding do the work."
+            },
+            {
+              "term": "Future Value",
+              "definition": "The value of a current investment at a specified date in the future, assuming a specific rate of compound growth.",
+              "example": "The future value of $10,000 at 10% annual return after 20 years is $67,275.",
+              "sentence": "He used a future value calculator to see that his $200/month investment would be worth $1.5 million in 40 years."
+            }
+          ]
+        },
+        {
+          "type": "fillBlank",
+          "sentence": "The Rule of 72 says that at 8% annual return, your money doubles approximately every ___ years.",
+          "options": [
+            "9",
+            "6",
+            "12",
+            "15"
+          ],
+          "correct": 0
+        },
+        {
+          "type": "quiz",
+          "question": "Two twins each invest $400/month at 10% return. Twin A starts at age 22 and stops contributing at age 32 (10 years of contributions). Twin B starts at age 32 and contributes until age 65 (33 years of contributions). At age 65, who has more money?",
+          "options": [
+            "Twin B, they contributed for 33 years versus only 10, so they simply put in far more money",
+            "Twin A, despite contributing for only 10 years, their money compounded for 33 extra years",
+            "They end up with exactly the same amount, since both invested the same $400 every month",
+            "Neither, the twin who stopped contributing early sees that money stop growing entirely"
+          ],
+          "correct": 1,
+          "explanation": "Twin A has more money! Twin A contributed $48,000 over 10 years and let it compound for 43 years total: ~$2.5M. Twin B contributed $158,400 over 33 years: ~$1.8M. Twin A invested 3.3x less money but ended up with 40% more because those early dollars had decades more to compound. This is the most powerful demonstration of why starting early matters more than contributing more."
+        },
+        {
+          "type": "tapReveal",
+          "title": "Compound Interest Mind-Blowers",
+          "cards": [
+            [
+              "How much of your retirement wealth comes from compound returns vs your contributions after 40 years?",
+              "Over 93%. If you invest $400/month for 40 years at 10%, you contribute $192,000. Your final balance: ~$2.5 million. 93% of your wealth was created by compound returns, not your own money.",
+              {
+                "stat": "93%",
+                "sprite": "tree"
+              }
+            ],
+            [
+              "How much more does a 22-year-old accumulate vs a 32-year-old by age 65?",
+              "About 2.5-3x more with the same monthly investment. That single decade of extra compounding creates over $1.5 million in additional wealth.",
+              {
+                "stat": "2.5-3x",
+                "sprite": "hourglass"
+              }
+            ],
+            [
+              "If you put $10,000 in an S&P 500 index fund at birth, how much would it be worth at age 50?",
+              "About $1.17 million at 10% average annual return, from a single $10,000 investment. That's the power of 50 years of compounding.",
+              {
+                "stat": "$1.17M",
+                "sprite": "seedling"
+              }
+            ],
+            [
+              "A penny doubled every day for 30 days equals how much?",
+              "$10.7 million. It starts tiny, day 10 is just $5.12. But by day 20 it's $5,242. Day 30: $10,737,418. This illustrates how exponential growth accelerates dramatically in later periods.",
+              {
+                "stat": "$10.7M",
+                "sprite": "coin"
+              }
+            ]
+          ]
+        },
+        {
+          "type": "dragSort",
+          "prompt": "Order these scenarios from LEAST to MOST total wealth at age 65:",
+          "items": [
+            "$1,000/month from age 55 to 65 (10 years of investing)",
+            "$400/month from age 40 to 65 (25 years of investing)",
+            "$200/month from age 30 to 65 (35 years of investing)",
+            "$100/month from age 22 to 65 (43 years of investing)",
+            "$400/month from age 22 to 65 (43 years of investing)",
+            "$10,000 lump sum at age 22, untouched until 65"
+          ]
+        },
+        {
+          "type": "scenario",
+          "situation": "You receive a $10,000 bonus. You're 25 years old. Which option produces the most wealth by age 65?",
+          "choices": [
+            {
+              "label": "Invest $10,000 now in an index fund at ~10% return",
+              "outcome": "Correct! $10,000 at 10% for 40 years = $452,593. By investing the full amount immediately, you maximize the time compound interest has to work.",
+              "correct": true
+            },
+            {
+              "label": "Put $10,000 in a savings account for a safe, steady 2%",
+              "outcome": "$10,000 at 2% for 40 years = $22,080. After inflation, you've barely grown. You sacrificed $430,000 in potential compound growth for the \"safety\" of 2%.",
+              "correct": false
+            },
+            {
+              "label": "Spend $10,000 now, you can invest more later",
+              "outcome": "You'd need to invest about $45,000 at age 35 to match the $452,593 that $10,000 at age 25 would have produced. Delayed investing costs exponentially more.",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "type": "slider",
+          "question": "$10,000 invested at 10% annual return for 40 years grows to approximately:",
+          "min": 50000,
+          "max": 600000,
+          "correct": 452593,
+          "unit": "$"
+        },
+        {
+          "type": "trueFalse",
+          "statements": [
+            {
+              "s": "Starting 10 years earlier can double or triple your final wealth",
+              "a": true
+            },
+            {
+              "s": "You need at least $10,000 to benefit from compound interest",
+              "a": false
+            },
+            {
+              "s": "A penny doubled daily for 30 days becomes over $10 million",
+              "a": true
+            },
+            {
+              "s": "Simple interest grows money faster than compound interest",
+              "a": false
+            },
+            {
+              "s": "After 40 years of investing, over 90% of your wealth comes from compound returns",
+              "a": true
+            }
+          ]
+        },
+        {
+          "type": "match",
+          "title": "Match the Compounding Concept",
+          "pairs": [
+            [
+              "Rule of 72",
+              "Divide 72 by return rate to estimate doubling time"
+            ],
+            [
+              "Simple Interest",
+              "Returns calculated only on the original principal"
+            ],
+            [
+              "Future Value",
+              "What a current investment will be worth at a future date"
+            ],
+            [
+              "Dollar-Cost Averaging",
+              "Investing fixed amounts at regular intervals"
+            ]
+          ]
+        },
+        {
+          "type": "quiz",
+          "question": "Your friend Sarah is 28. She says: \"I know I should invest, but I'll start when I'm 35, I want to enjoy my money now and I'll have a higher salary by then.\" She plans to invest $600/month starting at 35. Using compound interest math, what's the most important thing she needs to understand?",
+          "options": [
+            "She is right: a higher salary at 35 lets her invest twice as much, which will make up for the seven years she skipped",
+            "Starting now at 28, even $300/month likely ends up with more money by 65 than $600/month starting at 35",
+            "The start date barely matters, what counts is the total dollar amount she invests over her career",
+            "She should wait until she has saved $50,000 in cash, then invest it all at once so she starts with a stronger base"
+          ],
+          "correct": 1,
+          "explanation": "$300/month from age 28 at 10% = ~$1.05 million by 65. $600/month from age 35 at 10% = ~$986,000 by 65. Even investing HALF as much, starting 7 years earlier produces MORE wealth. She'd need to invest $660/month starting at 35 just to match $300/month starting at 28. Every year of delay requires exponentially more money to catch up. Compounding rewards early starters so dramatically that time beats money."
+        },
+        {
+          "type": "simulationFinale",
+          "title": "The Compounding Race",
+          "setup": "You and a friend both earn the same salary and want to become millionaires by age 65. You'll each make a series of decisions about when and how much to invest. Let's see who gets there first.",
+          "decisions": [
+            {
+              "prompt": "Decision 1: You're 22, just got your first job. Your friend says \"Let's start investing later when we earn more.\" What do you do?",
+              "options": [
+                {
+                  "label": "Start investing $200/month now, even though it's tight",
+                  "consequence": "Smart move. $200/month at 10% from age 22 to 65 = ~$1.16 million. You'll be a millionaire from just $200/month because of 43 years of compounding.",
+                  "score": 3
+                },
+                {
+                  "label": "Agree with your friend and wait until you earn more",
+                  "consequence": "Waiting costs more than you think. Every year you delay, you'd need to invest about 10% more per month to reach the same goal. Those early dollars are the most powerful.",
+                  "score": 0
+                },
+                {
+                  "label": "Save in a high-yield savings account instead, where it's safe",
+                  "consequence": "$200/month at 3% for 43 years = $222,000. The same money in stocks at 10% = $1.16 million. Your \"safe\" choice cost you nearly $1 million.",
+                  "score": 1
+                }
+              ]
+            },
+            {
+              "prompt": "Decision 2: You're 30 now. Your investments have grown to $25,000, but a friend asks you to invest in their startup instead. What do you do?",
+              "options": [
+                {
+                  "label": "Keep your $25,000 in diversified index funds and continue monthly investing",
+                  "consequence": "Consistency wins. That $25,000 alone at 10% for 35 more years becomes $703,000. Plus your continued $200/month adds another $650,000. Stay the course.",
+                  "score": 3
+                },
+                {
+                  "label": "Pull out $25,000 for the startup, it could be the next big thing and grow faster",
+                  "consequence": "90% of startups fail. You just gambled 43 years of compound growth, $703,000 in future value, on a 10% chance. Even if you keep contributing $200/month, you've lost years of compounding.",
+                  "score": 0
+                },
+                {
+                  "label": "Take a break from investing, you have $25,000, that's enough for now",
+                  "consequence": "Stopping contributions disrupts the compounding engine. That $25,000 will grow, but without continued fuel, you'll need to invest much more later to reach your goal.",
+                  "score": 1
+                }
+              ]
+            },
+            {
+              "prompt": "Decision 3: You're 40. Your portfolio is at $150,000. You get a $10,000 raise. How do you use it?",
+              "options": [
+                {
+                  "label": "Raise your monthly investing by $400, from $200 to $600",
+                  "consequence": "Excellent. That extra $400/month at 10% for 25 more years adds ~$530,000 to your final balance. Increasing contributions as income grows is the key accelerator.",
+                  "score": 3
+                },
+                {
+                  "label": "Lifestyle upgrade, you worked hard and deserve it",
+                  "consequence": "Understandable, but that $400/month in increased spending costs you ~$530,000 in future wealth. Each dollar of lifestyle inflation has a hidden 10-25x compound cost.",
+                  "score": 0
+                },
+                {
+                  "label": "Put the raise in savings to top up your emergency fund first",
+                  "consequence": "Emergency funds are important, but if yours is already adequate, excess cash loses to inflation. Consider a split: some to emergency fund, most to investments.",
+                  "score": 1
+                }
+              ]
+            },
+            {
+              "prompt": "Decision 4: You're 55. Your portfolio is at $800,000. Market crashes 35%. Your balance drops to $520,000. What do you do?",
+              "options": [
+                {
+                  "label": "Hold steady and keep investing, with 10 years to go",
+                  "consequence": "Historically, markets recover within 3-5 years. With 10 years left, staying invested allows your $520,000 to recover and grow past the pre-crash level.",
+                  "score": 3
+                },
+                {
+                  "label": "Sell everything and protect what's left in cash",
+                  "consequence": "You just permanently locked in a $280,000 loss. Markets recovered within 3 years after every major crash. Selling at the bottom is the single most expensive mistake.",
+                  "score": 0
+                },
+                {
+                  "label": "Reduce stock allocation, you're too old for so much risk",
+                  "consequence": "Some reduction is reasonable at 55, but panic-selling during a crash isn't strategic allocation, it's emotional reaction. A gradual shift is better than a fear-based one.",
+                  "score": 1
+                }
+              ]
+            }
+          ],
+          "optimalOutcome": "Start early at 22, stay consistent, increase contributions with raises, and hold through crashes, scoring 12/12. This path turns $200/month into over $2 million.",
+          "principle": "Compound interest is the most democratic wealth-building tool in existence. It doesn't require a high income, market expertise, or luck. It requires three simple behaviors: start now, invest consistently, and never interrupt the compounding process. Time is the irreplaceable ingredient, no amount of money can compensate for lost time."
+        },
+        {
+          "type": "summaryCards",
+          "lessonTitle": "The Magic of Compound Interest",
+          "cards": [
+            {
+              "takeaway": "Compounding is exponential, not linear",
+              "detail": "Returns generate their own returns, creating accelerating growth. At 10%, $10,000 becomes $174K in 30 years but $452K in 40 years, the last decade alone added $278K."
+            },
+            {
+              "takeaway": "Time is more powerful than money",
+              "detail": "Starting 10 years earlier with half the monthly contribution produces more wealth than starting later with double the amount. Every year of delay requires exponentially more money to catch up."
+            },
+            {
+              "takeaway": "Small amounts create extraordinary wealth",
+              "detail": "$200/month from age 22 at 10% = $1.16 million by 65. $100/month from age 22 = $632,000. You don't need large sums, you need consistent time in the market."
+            }
+          ]
+        },
+        {
+          "type": "whatsNext",
+          "currentLessonTitle": "The Magic of Compound Interest",
+          "nextTitle": "Stocks vs. Bonds",
+          "preview": "Now that you understand compounding, you'll learn about the two most important asset classes, stocks and bonds, how they differ, when each shines, and how to combine them in a portfolio.",
+          "estimatedTime": 25
+        }
+      ],
+      "challenge": [
+        {
+          "question": "Twin A invests $200/month from age 22-32, then stops. Twin B invests $200/month from age 32-65. At 10% return, who has more at 65?",
+          "options": [
+            "Twin B, because investing for 33 years simply puts far more money to work",
+            "Twin A, their early start gave compounding more time",
+            "They finish with the same amount, since both invested the identical $200 a month",
+            "It depends entirely on which decades the market happened to perform best in"
+          ],
+          "correct": 1,
+          "explanation": "Twin A's 10 years of early investing plus 33 years of compounding beats Twin B's 33 years of investing. Early dollars have exponentially more compounding power."
+        },
+        {
+          "question": "The Rule of 72 says that at 10% return, money doubles every:",
+          "options": [
+            "5 years",
+            "7.2 years",
+            "10 years",
+            "12 years"
+          ],
+          "correct": 1,
+          "explanation": "72 ÷ 10 = 7.2 years to double. So $10K becomes $20K in 7.2 years, $40K in 14.4 years, $80K in 21.6 years, and $160K in 28.8 years."
+        },
+        {
+          "question": "After 40 years of investing $400/month at 10%, approximately what percentage of your wealth came from compound returns (not your contributions)?",
+          "options": [
+            "About 50%",
+            "About 70%",
+            "About 93%",
+            "About 100%"
+          ],
+          "correct": 2,
+          "explanation": "You'd contribute $192,000 over 40 years, but your balance would be ~$2.5 million. Over 93% of your wealth was created by compound returns, not your own money."
+        },
+        {
+          "question": "Ronald Read, a janitor, died with $8 million. His strategy was:",
+          "options": [
+            "Aggressive day trading, jumping in and out of stocks to catch every short-term move",
+            "Concentrated crypto bets that he timed perfectly across several speculative bull runs",
+            "Consistently investing in blue-chip stocks for 60+ years and reinvesting dividends",
+            "A large inheritance from wealthy relatives that he simply parked in a brokerage account"
+          ],
+          "correct": 2,
+          "explanation": "Read invested small amounts in stable companies for decades and never sold. Compound interest turned modest investments into $8 million over 60+ years."
+        },
+        {
+          "question": "$10,000 invested at 10% at birth is worth approximately how much at age 50?",
+          "options": [
+            "About $100,000, since 50 years of 10% growth roughly multiplies the money tenfold",
+            "About $500,000, because the money doubles a handful of times over five decades",
+            "About $1.17 million",
+            "About $10 million, since exponential growth runs away in the final years"
+          ],
+          "correct": 2,
+          "explanation": "$10,000 × 1.10^50 is about $1,173,909. Fifty years of compounding at 10% turns $10K into over $1 million, a vivid demonstration of long time horizons."
+        }
+      ]
+    },
+    {
+      "num": 4,
+      "title": "Stocks vs. Bonds",
+      "xp": 30,
+      "steps": [
+        {
+          "type": "hookOpener",
+          "title": "Stocks vs. Bonds",
+          "fact": "In 2008 the S&P 500 lost 38.5%, its worst year since the Great Depression. In that exact same year, U.S. Treasury bonds gained 25.9%. One investor was bleeding wealth while another, holding the opposite asset, was getting richer.",
+          "outcome": "By the end of this lesson you will be able to explain how stocks and bonds work, why they often move in opposite directions, and how mixing them builds a portfolio stronger than either one alone.",
+          "visualDescription": "Dual-line chart showing stocks vs bonds performance 2006-2012 with 2008 divergence highlighted",
+          "visual": {
+            "type": "comparison",
+            "title": "2008: Stocks vs. Bonds",
+            "rows": [
+              {
+                "label": "S&P 500",
+                "value": "−38.5%",
+                "percent": 38.5,
+                "explain": "The worst year for stocks since 1931. Owners are paid last, and in 2008 there was very little left over."
+              },
+              {
+                "label": "Treasury Bonds",
+                "value": "+25.9%",
+                "percent": 25.9,
+                "explain": "The same twelve months, up 26%. Frightened money ran toward the thing that pays first, which pushed bond prices up."
+              }
+            ],
+            "footer": "The two asset classes can move in opposite directions",
+            "sentiment": "negative"
+          }
+        },
+        {
+          "type": "stakesCard",
+          "without": {
+            "label": "100% stocks portfolio in 2008",
+            "detail": "A $100,000 all-stock portfolio dropped to $61,500 by March 2009. The psychological pressure was immense, many investors panic-sold at the bottom and locked in permanent losses."
+          },
+          "with": {
+            "label": "60% stocks / 40% bonds portfolio in 2008",
+            "detail": "A $100,000 60/40 portfolio dropped to only $76,000. The bonds cushioned the blow, and the portfolio recovered to $100,000 a full year earlier than all-stocks. Balanced investors slept better and stayed invested."
+          },
+          "withoutVisual": {
+            "type": "metric",
+            "title": "100% Stocks in 2008",
+            "value": "$61,500",
+            "detail": "A $100,000 portfolio fell to $61,500 by March 2009",
+            "footer": "Many investors panic-sold at the bottom",
+            "sentiment": "negative",
+            "sprite": "chart-down"
+          },
+          "withVisual": {
+            "type": "metric",
+            "title": "60/40 Portfolio in 2008",
+            "value": "$76,000",
+            "detail": "A $100,000 portfolio fell only to $76,000",
+            "footer": "Bonds cushioned the blow, recovered a year earlier",
+            "sentiment": "positive",
+            "sprite": "scales"
+          }
+        },
+        {
+          "type": "interactiveGraph",
+          "sectionLabel": "Divergence in action",
+          "title": "Stocks vs. Bonds: 20-Year Performance",
+          "graphType": "comparison",
+          "description": "Watch how stocks and bonds perform over 20 years. Toggle the recession overlay to see how they diverge during downturns. When stocks crash, bonds often rally.",
+          "paragraphs": [
+            "Over long periods, stocks significantly outperform bonds. $10,000 in stocks at 10% becomes $67,275 in 20 years. The same in bonds at 5% becomes $26,533. The journeys look nothing alike, though. Stocks take a violent roller-coaster path while bonds climb a gentle ramp.",
+            "The interesting part happens during recessions. When the economy contracts, investors flee stocks and buy bonds, considered safer. That pushes stock prices down and bond prices up at the same time. In 2008, stocks fell 38% while long-term Treasuries gained 26%. That negative correlation is exactly why combining them reduces portfolio risk.",
+            "A 60/40 portfolio (60% stocks, 40% bonds) has historically captured about 80% of stock market returns with only 60% of the volatility. During the 2008 crisis, all-stocks lost 38% while the 60/40 lost only 22%, and it recovered a full year faster. The bonds acted as a shock absorber."
+          ],
+          "highlightedTerms": [
+            {
+              "term": "Negative Correlation",
+              "definition": "When two assets tend to move in opposite directions, one goes up while the other goes down.",
+              "example": "In 2008, stocks fell 38% while Treasury bonds gained 26%, nearly perfect negative correlation."
+            },
+            {
+              "term": "Flight to Safety",
+              "definition": "During market stress, investors sell risky assets (stocks) and buy safe assets (bonds), driving bond prices up.",
+              "example": "After the COVID crash in March 2020, Treasury bond yields hit record lows as investors raced to buy bonds for safety."
+            }
+          ],
+          "insights": [
+            "Over every 20-year period since 1926, stocks have outperformed bonds.",
+            "In 2008, the S&P 500 lost 38.5% while long-term Treasury bonds gained 25.9%.",
+            "A 60/40 portfolio has captured ~80% of stock returns with ~60% of the volatility."
+          ],
+          "sliders": [
+            {
+              "label": "Stock Allocation",
+              "min": 0,
+              "max": 100,
+              "default": 60,
+              "unit": "%"
+            },
+            {
+              "label": "Time Period",
+              "min": 5,
+              "max": 30,
+              "default": 20,
+              "unit": " years"
+            }
+          ]
+        },
+        {
+          "type": "teachingSlide",
+          "sectionLabel": "The fundamentals",
+          "title": "Stocks = Ownership, Bonds = Loans",
+          "paragraphs": [
+            "A stock is partial ownership in a company: you own a tiny piece of its assets and earnings. You gain from the price rising, called capital appreciation, and dividends, cash paid from profits. Stocks can also lose all value.",
+            "A bond is a loan to a company or government. They must pay a fixed rate, the coupon, and return your money at maturity. Predictable but limited: stocks are equity, bonds are fixed income."
+          ],
+          "highlightedTerms": [
+            {
+              "term": "Equity",
+              "definition": "Ownership stake in a company. Stocks represent equity, you own a share of the company's value.",
+              "example": "Buying 100 shares of Apple at $150 means you own $15,000 of equity in a $2.8 trillion company."
+            },
+            {
+              "term": "Fixed Income",
+              "definition": "Investments that pay a predetermined rate of return on a set schedule. Bonds are the primary fixed-income instrument.",
+              "example": "A 10-year U.S. Treasury bond paying 4% coupon gives you $40 per year per $1,000 of face value, guaranteed."
+            },
+            {
+              "term": "Coupon Rate",
+              "definition": "The annual interest rate paid by a bond, expressed as a percentage of the face value.",
+              "example": "A bond with $1,000 face value and 5% coupon pays $50 per year in interest."
+            },
+            {
+              "term": "Dividend",
+              "definition": "A cash payment made by a company to its shareholders, typically from profits.",
+              "example": "Apple pays a quarterly dividend of $0.24 per share, about $960 per year for someone holding 1,000 shares."
+            }
+          ],
+          "diagramDescription": "Two-column comparison: left side shows a stock certificate with key attributes (ownership, variable returns, higher risk, no maturity date); right side shows a bond certificate with key attributes (loan, fixed returns, lower risk, maturity date).",
+          "diagramVisual": {
+            "type": "bars",
+            "title": "Stocks vs. Bonds (1926-2023)",
+            "items": [
+              {
+                "label": "Stocks, ownership",
+                "value": 103,
+                "displayValue": "10.3%/yr",
+                "sprite": "bull",
+                "explain": "Twice the return of bonds, and the bar is twice as long because that is honestly the ratio. You are paid this for sitting through the drops."
+              },
+              {
+                "label": "Bonds, lending",
+                "value": 51,
+                "displayValue": "5.1%/yr",
+                "sprite": "shield",
+                "explain": "Half the return, and roughly a third of the swing. Lenders get paid first, so they are paid less for it."
+              }
+            ],
+            "footer": "Higher stock return is compensation for higher risk",
+            "sentiment": "positive"
+          },
+          "atlas": {
+            "hint": "Tap each one. The gap between them is the whole trade",
+            "recap": "Lesson 1 said you can own or you can lend. This is the price list for that choice. Stocks pay about twice as much because owners absorb the bad years first, and bonds pay about half as much because lenders are protected from them. Neither one is the smart pick; the mix is the decision."
+          }
+        },
+        {
+          "type": "microCheck",
+          "question": "A company issues a 10-year bond with a 5% coupon and $1,000 face value. An investor buys it. One year later, the company's stock price has tripled. How does this affect the bond?",
+          "options": [
+            "The bond triples in value too, since it tracks the rising fortunes of the company",
+            "The bond is unaffected, it still pays $50/year and returns $1,000 at maturity",
+            "The bondholder now receives a share of stock for every bond they hold",
+            "The bond automatically converts into company stock once the price tripled"
+          ],
+          "correct": 1,
+          "explanationCorrect": "Correct! Bonds have a fixed contractual return regardless of the company's stock performance. The bondholder receives $50/year and gets $1,000 back at maturity, period. This is both the advantage (predictable income) and disadvantage (no upside participation) of bonds compared to stocks.",
+          "explanationWrong": "Not quite. A bond is a loan contract, it pays fixed interest regardless of stock performance. The bondholder gets $50/year and $1,000 back at maturity. While stockholders tripled their money, the bondholder's return is locked in. Bonds don't participate in a company's upside."
+        },
+        {
+          "type": "caseStudy",
+          "title": "The 2008 Financial Crisis: Stocks vs. Bonds Month by Month",
+          "events": [
+            {
+              "date": "October 2007",
+              "event": "S&P 500 peaks at 1,565. Economy appears strong",
+              "context": "Housing prices are at record highs. Banks are lending freely. Investors are euphoric. The stock market has been climbing for five years straight. Few see trouble ahead."
+            },
+            {
+              "date": "March 2008",
+              "event": "Bear Stearns collapses. S&P drops to 1,316 (-16%)",
+              "context": "The first major bank failure. Treasury bond yields plummet as investors flee to safety. 10-year Treasury yields drop from 4.6% to 3.5%, meaning bond prices are surging."
+            },
+            {
+              "date": "September 2008",
+              "event": "Lehman Brothers bankrupt. S&P crashes to 1,106 (-29%)",
+              "context": "The financial system nearly collapses. Treasury bonds become the ultimate safe haven, yields crash to 2.2% as prices spike. Government bonds gain ~15% while stocks lose 29%."
+            },
+            {
+              "date": "March 2009",
+              "event": "S&P hits bottom at 677 (-57% from peak). Bonds up 25%",
+              "context": "Stocks have lost 57%. Many investors sell in panic. But Treasury bonds have gained 25%+ since the crisis began. A 60/40 portfolio lost \"only\" 22%, painful but survivable."
+            },
+            {
+              "date": "March 2013",
+              "event": "S&P recovers to pre-crisis highs. 60/40 already recovered in 2011",
+              "context": "All-stock took 5.5 years to recover. The 60/40 mix took 3.5 years. Bond gains softened the fall and gave cash to buy cheap stocks."
+            }
+          ],
+          "lesson": "In 2008, stocks fell 57% while bonds rose 25%. A 60/40 portfolio lost just 22% and recovered nearly two years sooner. Bonds also steadied nerves, so investors were less likely to panic-sell at the bottom."
+        },
+        {
+          "type": "misconceptions",
+          "title": "Stocks & bonds myths",
+          "subtitle": "What most people get wrong about these two asset classes",
+          "items": [
+            {
+              "myth": "Bonds are boring and not worth owning.",
+              "truth": "Bonds are the shock absorbers of your portfolio. During the 2008 crash, Treasury bonds gained 25% while stocks lost 57%. Owning bonds is what keeps investors from panic-selling stocks during crashes.",
+              "explanation": "Bonds bring stability, not excitement. A 60/40 portfolio captures 80% of stock returns with only 60% of the volatility, or price swings. Smaller swings keep investors in through crashes, which beats the return gap."
+            },
+            {
+              "myth": "You should be 100% in stocks if you're young.",
+              "truth": "While a higher stock allocation is appropriate for young investors, some bond exposure reduces volatility enough to prevent the #1 wealth destroyer: panic-selling during a crash.",
+              "explanation": "The mathematically optimal portfolio isn't useful if you can't psychologically hold it during a 50% drawdown. A 80/20 or 90/10 portfolio gives nearly all of the stock market's return with meaningfully less volatility."
+            },
+            {
+              "myth": "When stocks crash, everything crashes.",
+              "truth": "High-quality government bonds typically rally during stock crashes, they move in the opposite direction. This negative correlation is the entire reason diversification works.",
+              "explanation": "In the March 2020 COVID crash, the S&P 500 fell 34% in 33 days. Long-term Treasury bonds rose 20%. Investors fleeing stocks buy bonds, pushing bond prices up. That is the flight to safety."
+            }
+          ]
+        },
+        {
+          "type": "keyTermsCards",
+          "terms": [
+            {
+              "term": "Stock (Equity)",
+              "definition": "A security that represents partial ownership in a company. Stockholders share in profits (dividends) and price appreciation.",
+              "example": "If a company has 1 million shares and you own 1,000, you own 0.1% of the company.",
+              "sentence": "She built her portfolio around a core holding of broad market stock index funds, giving her ownership in thousands of companies."
+            },
+            {
+              "term": "Bond (Fixed Income)",
+              "definition": "A debt instrument where you lend money to an issuer (government or company) in exchange for regular interest payments and return of principal at maturity.",
+              "example": "A $10,000 Treasury bond with 4% coupon pays $400/year for 10 years, then returns your $10,000.",
+              "sentence": "He added Treasury bonds to his portfolio to provide stable income and protection during stock market downturns."
+            },
+            {
+              "term": "Coupon Rate",
+              "definition": "The annual interest rate paid by a bond, calculated as a percentage of the face value.",
+              "example": "A $1,000 bond with 5% coupon pays $50 per year until maturity.",
+              "sentence": "The bond's 6% coupon rate meant she received $60 per year for every $1,000 of face value."
+            },
+            {
+              "term": "Yield",
+              "definition": "The total return on a bond considering both coupon payments and the difference between purchase price and face value.",
+              "example": "If you buy a $1,000 bond for $950 with a 5% coupon, your yield is higher than 5% because you paid less than face value.",
+              "sentence": "Rising interest rates pushed new bond yields to 5%, making the older 3% bonds less attractive in comparison."
+            },
+            {
+              "term": "Maturity",
+              "definition": "The date on which a bond's face value is repaid to the investor. Short-term bonds mature in 1-3 years; long-term in 10-30 years.",
+              "example": "A 10-year Treasury bond issued in 2024 matures in 2034, when the government repays the full face value.",
+              "sentence": "He chose bonds with 5-year maturities to balance between higher yields and not locking up his money for too long."
+            },
+            {
+              "term": "60/40 Portfolio",
+              "definition": "A classic asset allocation of 60% stocks and 40% bonds, designed to balance growth with stability.",
+              "example": "During the 2008 crisis, a 60/40 portfolio lost 22% vs 57% for all-stocks, and recovered 2 years faster.",
+              "sentence": "The 60/40 portfolio has been the default recommendation for moderate-risk investors for decades."
+            }
+          ]
+        },
+        {
+          "type": "fillBlank",
+          "sentence": "When investors panic during a stock market crash, they often buy government bonds in a behavior called flight to ___.",
+          "options": [
+            "safety",
+            "profit",
+            "bonds",
+            "cash"
+          ],
+          "correct": 0
+        },
+        {
+          "type": "quiz",
+          "question": "In 2008, the S&P 500 fell 38.5%. An investor held a portfolio of 60% S&P 500 stocks and 40% Treasury bonds. The bonds gained 25.9% that year. Approximately how much did the total portfolio change?",
+          "options": [
+            "Lost about 38%, same as all stocks",
+            "Lost about 22%, the bonds cushioned the blow",
+            "Broke even, the bond gains offset the stock losses",
+            "Gained money, bonds more than compensated"
+          ],
+          "correct": 1,
+          "explanation": "The 60/40 portfolio lost about 22%. Math: (0.60 × -38.5%) + (0.40 × +25.9%) = -23.1% + 10.4% = -12.7% approximately. The bonds didn't eliminate losses but turned a catastrophic -38.5% into a manageable -22%. More importantly, this smaller loss meant faster recovery and less psychological pressure to panic-sell."
+        },
+        {
+          "type": "tapReveal",
+          "title": "Stocks vs. Bonds Facts",
+          "cards": [
+            [
+              "What's the historical average annual return of stocks vs bonds?",
+              "Stocks: ~10.3% per year since 1926. Bonds: ~5.1% per year. Stocks return roughly twice as much, but with 3-4x the volatility.",
+              {
+                "stat": "10.3% vs 5.1%",
+                "sprite": "scales"
+              }
+            ],
+            [
+              "How do bonds react when interest rates rise?",
+              "Bond prices fall when rates rise. A 1% rate increase causes a 10-year bond to lose about 8% of its value. This is called interest rate risk.",
+              {
+                "stat": "-8%",
+                "sprite": "chart-down"
+              }
+            ],
+            [
+              "What is the worst annual loss for U.S. Treasury bonds?",
+              "About -13% in 2022 when the Fed raised rates aggressively. Compare to stocks' worst: -43% in 1931. Bonds' downside is much more limited.",
+              {
+                "stat": "-13%",
+                "sprite": "shield"
+              }
+            ],
+            [
+              "Why does a 60/40 portfolio work so well?",
+              "Stocks and bonds often move in opposite directions during crises. When one falls, the other rises. This negative correlation smooths your total portfolio returns.",
+              {
+                "stat": "60 / 40",
+                "sprite": "pie-slice"
+              }
+            ]
+          ]
+        },
+        {
+          "type": "dragSort",
+          "prompt": "Order these from LOWEST average annual return to HIGHEST:",
+          "items": [
+            "Savings Account (~1.5%)",
+            "Short-Term Treasury Bonds (~3%)",
+            "Long-Term Corporate Bonds (~5.5%)",
+            "Real Estate Investment Trusts (~7%)",
+            "S&P 500 Index Fund (~10%)",
+            "Small-Cap Growth Stocks (~12%)"
+          ]
+        },
+        {
+          "type": "scenario",
+          "situation": "You're analyzing two portfolios. Portfolio A is 100% stocks. Portfolio B is 60% stocks and 40% bonds. A major recession hits and stocks drop 40%. Which portfolio will likely recover to its pre-crash value first?",
+          "choices": [
+            {
+              "label": "Portfolio A, stocks recover faster than bonds after any crash",
+              "outcome": "Actually, Portfolio B typically recovers first. While stocks fell 40%, Portfolio B's bonds likely gained value, so the total drop was only ~20%. A 20% recovery is faster than a 40% recovery.",
+              "correct": false
+            },
+            {
+              "label": "Portfolio B, it falls less and can rebalance into stocks",
+              "outcome": "Correct! Portfolio B lost only ~20% due to bond cushioning. Furthermore, rebalancing allows selling appreciated bonds to buy discounted stocks, buying low automatically.",
+              "correct": true
+            },
+            {
+              "label": "They recover at the same time, both ride one market",
+              "outcome": "Not typically. Portfolio B starts from a higher post-crash value and can rebalance bonds into cheap stocks, accelerating recovery.",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "type": "slider",
+          "question": "In the 2008 crisis, Treasury bonds GAINED approximately this much while stocks lost 38%:",
+          "min": 0,
+          "max": 40,
+          "correct": 26,
+          "unit": "%"
+        },
+        {
+          "type": "trueFalse",
+          "statements": [
+            {
+              "s": "Stocks represent ownership while bonds represent loans",
+              "a": true
+            },
+            {
+              "s": "Bond prices rise when interest rates rise",
+              "a": false
+            },
+            {
+              "s": "A 60/40 portfolio has captured about 80% of stock returns historically",
+              "a": true
+            },
+            {
+              "s": "You should never own bonds if you're under 40",
+              "a": false
+            },
+            {
+              "s": "During the 2008 crash, Treasury bonds gained over 25%",
+              "a": true
+            }
+          ]
+        },
+        {
+          "type": "match",
+          "title": "Match the Investment Attribute",
+          "pairs": [
+            [
+              "Stocks",
+              "Ownership in a company with unlimited upside potential"
+            ],
+            [
+              "Bonds",
+              "A loan that pays fixed interest and returns principal at maturity"
+            ],
+            [
+              "Dividend",
+              "Cash payment from a company to its shareholders"
+            ],
+            [
+              "Coupon",
+              "Interest payment from a bond issuer to bondholders"
+            ]
+          ]
+        },
+        {
+          "type": "quiz",
+          "question": "Your uncle is 60 years old and plans to retire at 65. His entire $500,000 retirement portfolio is in a single S&P 500 index fund. He says \"stocks always win long-term.\" Based on what you've learned about stocks vs bonds and time horizons, what is the most critical risk he's overlooking?",
+          "options": [
+            "He is right, stocks always recover eventually, so a 100% stock allocation is fine at any age",
+            "With only 5 years left, a major crash could erase 40% of his portfolio with no time to recover",
+            "He should move the entire $500,000 into bonds today, since any stock exposure is reckless at 60",
+            "He should sell everything now and hold cash, locking in his balance before any possible crash"
+          ],
+          "correct": 1,
+          "explanation": "With a 5-year time horizon, a 100% stock allocation is extremely risky. If stocks crash 40% like in 2008, his $500,000 becomes $300,000, and he may need to start withdrawing in 5 years regardless. The S&P 500 took 5.5 years to recover from 2008. He could be forced to sell at the bottom. A gradual shift to 50% stocks / 50% bonds would protect against catastrophic timing risk while still providing growth."
+        },
+        {
+          "type": "simulationFinale",
+          "title": "Building a Retirement Portfolio",
+          "setup": "You're managing a $100,000 retirement portfolio. You're 55 years old with 10 years until retirement. A major financial crisis is about to unfold. Your allocation decisions will determine your retirement outcome.",
+          "decisions": [
+            {
+              "prompt": "Decision 1: Choose your starting allocation for 10 years until retirement.",
+              "options": [
+                {
+                  "label": "90% stocks / 10% bonds, maximize growth",
+                  "consequence": "Aggressive for someone 10 years from retirement. Maximum growth potential but maximum crash exposure. You'll feel every market swing intensely.",
+                  "score": 1
+                },
+                {
+                  "label": "60% stocks / 40% bonds, balanced approach",
+                  "consequence": "Well-matched to your time horizon. Enough stock exposure for growth, enough bonds for stability and crash protection.",
+                  "score": 3
+                },
+                {
+                  "label": "20% stocks / 80% bonds, play it safe this late",
+                  "consequence": "Too conservative for a 10-year horizon. You'll miss significant growth that you still have time to capture. Over-protecting can cost wealth too.",
+                  "score": 1
+                }
+              ]
+            },
+            {
+              "prompt": "Decision 2: Two years in, a recession hits. Stocks drop 35%. Your bonds have gained 15%. What do you do?",
+              "options": [
+                {
+                  "label": "Rebalance: sell some bonds, buy cheap stocks",
+                  "consequence": "Textbook move. Your bonds are up, stocks are down. Rebalancing forces you to buy low and sell high automatically. This is the #1 advantage of holding both asset classes.",
+                  "score": 3
+                },
+                {
+                  "label": "Sell all stocks, move everything to safer bonds",
+                  "consequence": "You just locked in losses and abandoned the asset class that will drive your portfolio's recovery. With 8 years left, you have plenty of time for stocks to recover.",
+                  "score": 0
+                },
+                {
+                  "label": "Do nothing, ride it out until it passes",
+                  "consequence": "Holding is better than selling, but not rebalancing means you miss the opportunity to buy cheap stocks with appreciated bonds. Active rebalancing adds ~0.5% per year in returns.",
+                  "score": 2
+                }
+              ]
+            },
+            {
+              "prompt": "Decision 3: Five years before retirement. Markets have recovered and your portfolio is up. How do you adjust?",
+              "options": [
+                {
+                  "label": "Gradually shift to 40% stocks / 60% bonds over 5 years",
+                  "consequence": "Perfect glide path. As retirement approaches, you reduce stock exposure to protect accumulated gains while maintaining some growth. This is exactly how target-date funds work.",
+                  "score": 3
+                },
+                {
+                  "label": "Move to 100% stocks while the market is hot to grow it faster",
+                  "consequence": "Chasing returns near retirement is gambling with your financial future. A crash now could delay retirement by years.",
+                  "score": 0
+                },
+                {
+                  "label": "Move to 100% bonds to lock in the gains, safety comes first now",
+                  "consequence": "Too extreme. With 5 years left, you still need stock exposure to outpace inflation. All-bonds means your purchasing power erodes in retirement.",
+                  "score": 1
+                }
+              ]
+            },
+            {
+              "prompt": "Decision 4: One year before retirement. Another dip, stocks drop 15%. What's your move?",
+              "options": [
+                {
+                  "label": "Stay calm, with more in bonds a 15% stock drop barely dents your portfolio",
+                  "consequence": "Exactly right. If you're at 40% stocks / 60% bonds, a 15% stock drop only impacts ~6% of your total portfolio. Your bonds provide stability when you need it most.",
+                  "score": 3
+                },
+                {
+                  "label": "Panic, sell everything and go to cash before the drop gets any worse",
+                  "consequence": "With 60% already in bonds, your total portfolio only dropped ~6%. Panic-selling now crystallizes a small loss into a permanent one and loses bond income in retirement.",
+                  "score": 0
+                },
+                {
+                  "label": "Delay retirement by 3 years so the whole portfolio has time to fully recover",
+                  "consequence": "If you followed the glide path, a 15% stock dip affects less than 6% of your portfolio. There's likely no need to delay retirement at all.",
+                  "score": 1
+                }
+              ]
+            }
+          ],
+          "optimalOutcome": "Choose a balanced 60/40 allocation, rebalance during the crash, implement a glide path toward more bonds, and stay calm during the pre-retirement dip, scoring 12/12.",
+          "principle": "Stocks and bonds are not competing investments, they are complementary tools that serve different purposes at different times. Stocks drive long-term growth. Bonds provide stability and crash protection. The art of portfolio management is adjusting the balance between them as your time horizon changes. Young investors need more stocks. Near-retirees need more bonds. The transition between should be gradual and strategic, not emotional."
+        },
+        {
+          "type": "summaryCards",
+          "lessonTitle": "Stocks vs. Bonds",
+          "cards": [
+            {
+              "takeaway": "Stocks = ownership, Bonds = loans",
+              "detail": "Stocks give you equity with unlimited upside potential and higher volatility. Bonds give you fixed income with predictable returns and lower volatility. Both serve essential roles in a portfolio."
+            },
+            {
+              "takeaway": "They move in opposite directions during crises",
+              "detail": "In 2008, stocks lost 38% while Treasury bonds gained 26%. This negative correlation is why combining them reduces portfolio risk dramatically."
+            },
+            {
+              "takeaway": "The 60/40 portfolio is a proven foundation",
+              "detail": "60% stocks / 40% bonds has historically captured ~80% of stock returns with ~60% of the volatility. During 2008 it lost only 22% vs 38% for all-stocks and recovered 2 years faster."
+            }
+          ]
+        },
+        {
+          "type": "whatsNext",
+          "currentLessonTitle": "Stocks vs. Bonds",
+          "nextTitle": "Diversification",
+          "preview": "You'll learn how spreading investments across different asset classes, sectors, and geographies creates a portfolio that's stronger than any single investment, and why it's called the only free lunch in finance.",
+          "estimatedTime": 25
+        }
+      ],
+      "challenge": [
+        {
+          "question": "What is the fundamental difference between stocks and bonds?",
+          "options": [
+            "Stocks always beat bonds, so the difference is just expected return",
+            "Stocks represent ownership while bonds represent loans",
+            "Bonds always beat stocks, because a fixed payment is more reliable",
+            "There is no real difference, the two are just different names for the same thing"
+          ],
+          "correct": 1,
+          "explanation": "Stocks are equity, a piece of ownership. Bonds are debt, a loan you make. This single distinction drives their very different risk-return profiles."
+        },
+        {
+          "question": "During the 2008 financial crisis, long-term Treasury bonds:",
+          "options": [
+            "Lost about 38%, falling alongside the stock market",
+            "Gained approximately 25-26%",
+            "Stayed completely flat for the whole year",
+            "Lost about 10%, a milder version of the stock crash"
+          ],
+          "correct": 1,
+          "explanation": "Treasury bonds gained ~26% during 2008 as investors fled stocks for the safety of government bonds, a classic flight to safety."
+        },
+        {
+          "question": "A 60/40 portfolio (60% stocks, 40% bonds) has historically:",
+          "options": [
+            "Matched 100% stock returns with none of the downside risk",
+            "Captured ~80% of stock returns with ~60% of the volatility",
+            "Performed worse than a portfolio holding only bonds",
+            "Carried even higher volatility than an all-stock portfolio"
+          ],
+          "correct": 1,
+          "explanation": "The 60/40 portfolio captures most of the stock market's return while significantly reducing volatility through bond diversification."
+        },
+        {
+          "question": "When interest rates rise, bond prices:",
+          "options": [
+            "Rise, since higher rates make bonds more attractive",
+            "Stay the same, because the coupon is fixed",
+            "Fall",
+            "Double, tracking the jump in yields"
+          ],
+          "correct": 2,
+          "explanation": "Bond prices and interest rates move inversely. When rates rise, existing bonds with lower rates become less valuable, so their prices fall."
+        },
+        {
+          "question": "Why should a 60-year-old nearing retirement consider shifting toward more bonds?",
+          "options": [
+            "Bonds reliably return more than stocks, so they win at every age",
+            "A shorter time horizon leaves less time to recover from a stock crash",
+            "Bonds simply become more interesting to own than stocks once you reach 60",
+            "They should not, an all-stock portfolio is the best choice at every age"
+          ],
+          "correct": 1,
+          "explanation": "Shorter time horizons mean less time to recover from crashes. Bonds provide stability when you need your money within 5-10 years."
+        }
+      ]
+    },
+    {
+      "num": 5,
+      "title": "Diversification",
+      "xp": 30,
+      "steps": [
+        {
+          "type": "hookOpener",
+          "title": "Diversification",
+          "fact": "In 2022, Meta (Facebook) stock fell 64% in a single year, investors who put everything in Meta lost nearly two-thirds of their money. That same year, a diversified S&P 500 index fund fell only 18%. Diversification is the difference between a setback and a catastrophe.",
+          "outcome": "By the end of this lesson, you'll understand how diversification reduces risk, the different dimensions of diversification, and how to build a portfolio that can survive any market condition.",
+          "visualDescription": "Comparison chart: Meta stock -64% vs S&P 500 -18% in 2022",
+          "visual": {
+            "type": "bars",
+            "title": "2022: Meta vs. S&P 500",
+            "items": [
+              {
+                "label": "Meta",
+                "value": 100,
+                "displayValue": "−64%",
+                "sprite": "stock-ticker",
+                "explain": "One company, one bad year. Nothing was fraudulent and nothing collapsed. It simply had a rough twelve months."
+              },
+              {
+                "label": "S&P 500",
+                "value": 28,
+                "displayValue": "−18%",
+                "sprite": "pie-slice",
+                "explain": "Meta is inside this index. Owning all 500 turned a 64% hit into an 18% one, because the other 499 were having different years."
+              }
+            ],
+            "footer": "Diversification separates setback from catastrophe",
+            "sentiment": "negative"
+          }
+        },
+        {
+          "type": "stakesCard",
+          "without": {
+            "label": "100% in Meta stock during 2022",
+            "detail": "A $100,000 investment in Meta alone dropped to $36,000 by November 2022, a $64,000 loss. Employees who held company stock in their 401(k) saw both their job security and retirement savings threatened simultaneously."
+          },
+          "with": {
+            "label": "Diversified S&P 500 portfolio during 2022",
+            "detail": "A $100,000 S&P 500 investment dropped to $82,000, an $18,000 loss. While Meta was being destroyed, other companies in the index (energy, healthcare) were rising and offsetting the damage. The portfolio recovered fully within months."
+          },
+          "withoutVisual": {
+            "type": "metric",
+            "title": "100% in Meta (2022)",
+            "value": "$36,000",
+            "detail": "$100,000 at the start of the year, from one company having one bad year",
+            "footer": "A $64,000 loss from a single stock",
+            "sentiment": "negative",
+            "sprite": "piggy-crack"
+          },
+          "withVisual": {
+            "type": "metric",
+            "title": "Diversified S&P 500 (2022)",
+            "value": "$82,000",
+            "detail": "The same $100,000, spread across 500 companies including Meta",
+            "footer": "Only an $18,000 dip, recovered within months",
+            "sentiment": "positive",
+            "sprite": "shield"
+          }
+        },
+        {
+          "type": "teachingSlide",
+          "sectionLabel": "The principle",
+          "title": "Don't Put All Your Eggs in One Basket",
+          "paragraphs": [
+            "Diversification means spreading your money across different assets, sectors, and countries so one failure cannot sink you. Four dimensions: asset class (stocks, bonds, real estate, cash), sector (technology, healthcare, energy, finance), geography (U.S., international, emerging markets), and time.",
+            "Time diversification means investing regularly, called dollar-cost averaging. It works because of correlation: positively correlated assets move together, negatively correlated ones move opposite. Mix low or negative correlation assets, so when one falls, others hold steady and smooth your returns."
+          ],
+          "highlightedTerms": [
+            {
+              "term": "Correlation",
+              "definition": "A measure of how two investments move relative to each other, ranging from +1 (move perfectly together) to -1 (move perfectly opposite).",
+              "example": "U.S. tech stocks have ~0.85 correlation with each other but only ~0.3 correlation with Treasury bonds."
+            },
+            {
+              "term": "Systematic Risk",
+              "definition": "Market-wide risk that affects all investments and cannot be diversified away, such as recessions, inflation, or interest rate changes.",
+              "example": "The 2020 COVID crash affected every sector, that's systematic risk. Diversification can't eliminate it, but it can reduce its impact."
+            },
+            {
+              "term": "Unsystematic Risk",
+              "definition": "Risk specific to a single company or sector that can be eliminated through diversification.",
+              "example": "Meta losing 64% due to its own strategic mistakes is unsystematic risk. Owning 500 stocks eliminates this type of risk."
+            },
+            {
+              "term": "Concentration Risk",
+              "definition": "The danger of having too much of your portfolio in a single stock, sector, or asset class.",
+              "example": "Enron employees who held company stock in their 401(k) lost both their job and retirement savings when the company collapsed."
+            }
+          ],
+          "diagramDescription": "Two-by-two correlation matrix showing four asset classes: U.S. Stocks, Intl Stocks, Bonds, and Real Estate with color coding from dark red (high correlation) to dark green (negative correlation).",
+          "diagramVisual": {
+            "type": "grid",
+            "title": "Four Dimensions of Diversification",
+            "items": [
+              {
+                "label": "Asset Class",
+                "value": "Stocks, bonds, real estate, cash",
+                "sprite": "scales",
+                "explain": "The own-or-lend split from lesson 1, plus property and cash. This is the dimension that mattered most in 2008."
+              },
+              {
+                "label": "Sector",
+                "value": "Tech, healthcare, energy, finance",
+                "sprite": "factory",
+                "explain": "In 2022 tech fell 30% while energy rose 55%. Holding only one sector is a concentrated bet wearing a diversified costume."
+              },
+              {
+                "label": "Geography",
+                "value": "US, international, emerging",
+                "sprite": "network",
+                "explain": "Whole countries have flat decades. Japan’s market took over 30 years to regain its 1989 high."
+              },
+              {
+                "label": "Time",
+                "value": "Invest regularly via DCA",
+                "sprite": "calendar",
+                "explain": "The dimension people forget. Buying on a schedule spreads you across prices, so you never bet everything on one day being cheap."
+              }
+            ],
+            "footer": "Low correlation smooths total returns",
+            "sentiment": "positive"
+          },
+          "atlas": {
+            "hint": "Tap each dimension. Most people only ever use the first",
+            "recap": "Diversification is the one thing in finance that genuinely gives you something for nothing: less risk without giving up expected return. Harry Markowitz won a Nobel Prize for proving it. And it is free, which is why it is the strangest thing in the world that anyone skips it."
+          }
+        },
+        {
+          "type": "keyTermsCards",
+          "terms": [
+            {
+              "term": "Diversification",
+              "definition": "The strategy of spreading investments across different assets, sectors, and geographies to reduce the impact of any single investment's failure on the overall portfolio.",
+              "example": "Instead of buying one stock, buying an S&P 500 ETF gives instant diversification across 500 companies in 11 sectors.",
+              "sentence": "Diversification is often called the only free lunch in finance, it reduces risk without reducing expected returns."
+            },
+            {
+              "term": "Correlation",
+              "definition": "Correlation shows how two investments move together. +1 means they rise and fall as one, 0 means no link, -1 means opposite directions.",
+              "example": "U.S. stocks and Treasury bonds have historically had near-zero or negative correlation, making them ideal diversification partners.",
+              "sentence": "By selecting assets with low correlation, she built a portfolio where gains in one area offset losses in another."
+            },
+            {
+              "term": "Unsystematic Risk",
+              "definition": "Risk that is specific to a single company or sector and can be eliminated through diversification.",
+              "example": "Meta losing 64% in 2022 on its metaverse bet was unsystematic risk, it did not touch healthcare or energy stocks.",
+              "sentence": "Owning a broad index fund eliminates unsystematic risk by spreading exposure across hundreds of companies."
+            },
+            {
+              "term": "Systematic Risk",
+              "definition": "Market-wide risk that affects all investments and cannot be diversified away, such as recessions, inflation, or interest rate changes.",
+              "example": "The 2020 COVID crash hit every sector at once, that is systematic risk no amount of diversification could avoid.",
+              "sentence": "While diversification eliminates company-specific risk, systematic risk from recessions affects the entire market."
+            },
+            {
+              "term": "Concentration Risk",
+              "definition": "The elevated danger of holding too large a position in a single stock, sector, or asset class.",
+              "example": "Enron employees who held 60%+ of their 401(k) in company stock lost their retirement savings when the company collapsed.",
+              "sentence": "He reduced his concentration risk by selling half of his company stock and reinvesting in a diversified index fund."
+            },
+            {
+              "term": "Rebalancing",
+              "definition": "Periodically adjusting your portfolio back to its target asset allocation by selling winners and buying laggards.",
+              "example": "After stocks rallied 25%, his portfolio drifted from 60/40 to 70/30. He sold stocks and bought bonds to restore the 60/40 target.",
+              "sentence": "Annual rebalancing keeps a portfolio from drifting into unintended concentration as different assets grow at different rates."
+            }
+          ]
+        },
+        {
+          "type": "microCheck",
+          "question": "An investor holds 30 technology stocks including Apple, Google, Microsoft, Amazon, and Meta. A tech-industry regulation causes the entire tech sector to drop 30%. How much does the investor's portfolio lose?",
+          "options": [
+            "Almost nothing, they're diversified across 30 stocks",
+            "About 30%, because all 30 stocks are in the same sector",
+            "About 15%, partial protection from having 30 stocks",
+            "The portfolio gains because bad news creates buying opportunities"
+          ],
+          "correct": 1,
+          "explanationCorrect": "Correct! Owning 30 stocks in the same sector is NOT diversification. If the tech sector drops 30%, all 30 tech stocks drop approximately 30%. True diversification requires spreading across different sectors, technology, healthcare, energy, finance, etc. Sector concentration is one of the most common diversification mistakes.",
+          "explanationWrong": "Not quite. Having 30 stocks sounds diversified, but if they're all in the same sector, a sector-wide event hits all of them. A 30% tech drop means a ~30% portfolio loss. True diversification requires spreading across multiple sectors, healthcare, energy, finance, etc."
+        },
+        {
+          "type": "interactiveGraph",
+          "sectionLabel": "Build your mix",
+          "title": "Portfolio Diversification Simulator",
+          "graphType": "pie",
+          "description": "Adjust the allocation sliders to build a diversified portfolio. Watch how the risk score and projected volatility change as you add more asset classes and adjust their weights.",
+          "paragraphs": [
+            "A portfolio with a single asset class has the highest concentration risk. Adding a second uncorrelated asset class reduces total portfolio volatility by about 25% without reducing expected returns. Adding a third and fourth can reduce it further. This is the free lunch of diversification.",
+            "The optimal number of stocks to eliminate most unsystematic risk is about 30, spread across different sectors. Beyond 30, the diversification benefit diminishes rapidly. An S&P 500 index fund holding 500 stocks is essentially maximally diversified within U.S. equities.",
+            "International diversification adds another layer. U.S. and international markets don't always move together. During the 2000-2009 \"lost decade\" when U.S. stocks returned nearly 0%, international stocks returned 30%. Geographic diversification protects against country-specific economic problems."
+          ],
+          "highlightedTerms": [
+            {
+              "term": "Rebalancing",
+              "definition": "Periodically adjusting your portfolio back to its target allocation by selling assets that have grown and buying those that have shrunk.",
+              "example": "If your 60/40 portfolio drifts to 70/30 after stocks rally, you sell 10% of stocks and buy bonds to restore 60/40."
+            },
+            {
+              "term": "Index Fund",
+              "definition": "A fund that holds all the stocks in a market index, providing instant diversification across hundreds or thousands of companies.",
+              "example": "The Vanguard Total Stock Market Index Fund (VTSAX) holds over 3,500 U.S. stocks in a single fund."
+            }
+          ],
+          "insights": [
+            "Owning 30 stocks across different sectors eliminates ~95% of unsystematic (company-specific) risk.",
+            "Adding international stocks to a U.S.-only portfolio has historically reduced volatility by 10-15%.",
+            "During the 2000-2009 \"lost decade,\" U.S. stocks returned nearly 0% but international stocks returned 30%."
+          ],
+          "sliders": [
+            {
+              "label": "U.S. Stocks",
+              "min": 0,
+              "max": 100,
+              "default": 50,
+              "unit": "%"
+            },
+            {
+              "label": "International Stocks",
+              "min": 0,
+              "max": 50,
+              "default": 20,
+              "unit": "%"
+            },
+            {
+              "label": "Bonds",
+              "min": 0,
+              "max": 60,
+              "default": 20,
+              "unit": "%"
+            },
+            {
+              "label": "Real Estate (REITs)",
+              "min": 0,
+              "max": 30,
+              "default": 10,
+              "unit": "%"
+            }
+          ]
+        },
+        {
+          "type": "caseStudy",
+          "title": "Long-Term Capital Management: The $4.6 Billion Lesson in Concentration",
+          "events": [
+            {
+              "date": "1994",
+              "event": "LTCM launches with two Nobel Prize-winning economists and Wall Street legends",
+              "context": "The fund uses math models to spot tiny price gaps in global bond markets. It borrows hugely: $4.72 billion in capital backs $129 billion in bets (27:1 leverage)."
+            },
+            {
+              "date": "1995-1997",
+              "event": "LTCM returns 21%, 43%, and 41%, the best track record on Wall Street",
+              "context": "Everyone thinks the fund cannot lose. Its models assume markets stay rational and that extreme events almost never happen. Nearly all its money sits in one narrow bond strategy."
+            },
+            {
+              "date": "August 1998",
+              "event": "Russia defaults on its debt. Global markets panic. LTCM's concentrated bets collapse",
+              "context": "LTCM's models never predicted a Russian default. Their positions all lose money simultaneously, the correlations they assumed would hold broke down. The fund loses $4.6 billion in weeks."
+            },
+            {
+              "date": "September 1998",
+              "event": "Federal Reserve organizes a $3.6 billion bailout to prevent LTCM from crashing the global financial system",
+              "context": "LTCM was so large and so interconnected that its failure threatened to bring down major banks worldwide. Two Nobel laureates proved that even the smartest people can't outsmart diversification."
+            }
+          ],
+          "lesson": "LTCM's collapse shows no model or genius team can replace diversification. Their borrowed bets on one strategy worked until markets all moved together, then they lost everything in weeks. Spread risk across strategies and assets, not just stocks."
+        },
+        {
+          "type": "misconceptions",
+          "title": "Diversification myths",
+          "subtitle": "What most people get wrong about portfolio diversification",
+          "items": [
+            {
+              "myth": "Owning 30 stocks means you're diversified.",
+              "truth": "30 stocks in the same sector (e.g., all tech) provides almost no diversification benefit. True diversification requires spreading across different sectors, asset classes, and geographies.",
+              "explanation": "In the 2022 tech selloff, Meta fell 64%, Netflix fell 51%, and most tech stocks lost 30-50%. Owning 30 tech stocks meant losing about 40%. Adding energy, healthcare, and utilities would have cushioned that."
+            },
+            {
+              "myth": "Diversification means you'll never lose money.",
+              "truth": "Diversification eliminates unsystematic (company-specific) risk but cannot eliminate systematic (market-wide) risk. In a severe recession, even diversified portfolios lose money, just significantly less.",
+              "explanation": "During 2008, even the most diversified portfolios lost 20-30%. But concentrated portfolios lost 50-90%. Diversification doesn't prevent all losses, it prevents catastrophic losses and ensures you can recover."
+            },
+            {
+              "myth": "Too much diversification hurts returns.",
+              "truth": "Over-diversification (diworsification) is a real but rare concern. For most investors, broad index funds provide optimal diversification without diluting returns.",
+              "explanation": "A total market index fund holding 3,500 stocks has essentially identical returns to one holding 500 stocks, with marginally lower volatility. For individual investors, it's nearly impossible to be \"too diversified\" through index funds."
+            }
+          ]
+        },
+        {
+          "type": "fillBlank",
+          "sentence": "Risk specific to a single company that can be eliminated through diversification is called ___ risk.",
+          "options": [
+            "unsystematic",
+            "systematic",
+            "market",
+            "interest-rate"
+          ],
+          "correct": 0
+        },
+        {
+          "type": "quiz",
+          "question": "An investor holds three assets: U.S. stocks, international stocks, and U.S. bonds. During the 2000-2009 \"lost decade,\" U.S. stocks returned nearly 0%. Which of the following best describes what likely happened to this diversified portfolio?",
+          "options": [
+            "It also returned about 0%, since U.S. stocks dominate any global portfolio and drive its results",
+            "It still earned positive returns, with international stocks up ~30% and bonds earning ~6% a year",
+            "It performed worse than U.S. stocks alone, because adding weaker regions and bonds only dragged the average down",
+            "All three assets lost money, since a decade that bad for the U.S. hurts every market, bonds included"
+          ],
+          "correct": 1,
+          "explanation": "Correct! While U.S. stocks returned nearly 0% from 2000-2009, international stocks returned about 30% total and bonds earned steady 5-6% annually. A globally diversified portfolio earned positive returns during America's \"lost decade.\" This is exactly why geographic diversification matters, different regions experience different economic cycles."
+        },
+        {
+          "type": "tapReveal",
+          "title": "Diversification Mind-Openers",
+          "cards": [
+            [
+              "How many stocks do you need to eliminate most company-specific risk?",
+              "About 30, spread across different sectors. Beyond 30, each additional stock provides negligible additional diversification benefit. An index fund with 500 stocks is essentially fully diversified.",
+              {
+                "stat": "~30 stocks",
+                "sprite": "pie-slice"
+              }
+            ],
+            [
+              "What happened to Enron employees who held company stock in their 401(k)?",
+              "They lost $2 billion collectively. When Enron collapsed, they lost both their income (job) and retirement savings simultaneously. This is why you never concentrate investments in your employer's stock.",
+              {
+                "stat": "$2B lost",
+                "sprite": "piggy-crack"
+              }
+            ],
+            [
+              "What is the \"only free lunch\" in finance?",
+              "Diversification. Nobel laureate Harry Markowitz proved mathematically that combining uncorrelated assets reduces portfolio risk without reducing expected returns. You get lower risk for free.",
+              {
+                "stat": "Free lunch",
+                "sprite": "gift"
+              }
+            ],
+            [
+              "During 2022, Meta fell 64% while energy stocks gained 55%. What does this teach us?",
+              "Different sectors perform differently in the same market environment. A diversified portfolio that held both tech and energy would have had its tech losses partially offset by energy gains.",
+              {
+                "stat": "-64% vs +55%",
+                "sprite": "factory"
+              }
+            ]
+          ]
+        },
+        {
+          "type": "dragSort",
+          "prompt": "Order these portfolios from LEAST diversified to MOST diversified:",
+          "items": [
+            "100% in a single stock (e.g., Tesla)",
+            "10 stocks in the same sector (all tech)",
+            "30 stocks across 5 sectors",
+            "S&P 500 index fund (500 U.S. stocks)",
+            "Total World Stock Fund (8,000+ stocks globally)",
+            "3-fund portfolio: U.S. stocks + international stocks + bonds"
+          ]
+        },
+        {
+          "type": "scenario",
+          "situation": "You're building a portfolio and deciding between three strategies. Which provides the best diversification?",
+          "choices": [
+            {
+              "label": "Buy the top 10 most popular stocks, they're popular for a reason",
+              "outcome": "Popular stocks tend to be concentrated in a few sectors (mostly tech). Owning 10 popular stocks gives you heavy tech concentration, the opposite of diversification. In 2022, this portfolio would have lost ~35%.",
+              "correct": false
+            },
+            {
+              "label": "Buy a total market index fund with 3,500+ stocks across all 11 sectors",
+              "outcome": "Optimal diversification for U.S. stocks. You own everything, tech, healthcare, energy, finance, industrials, utilities. No sector concentration. During 2022, while tech fell 30%+, energy gained 55%, cushioning your portfolio.",
+              "correct": true
+            },
+            {
+              "label": "Split between 5 different tech ETFs, since more funds means more diversification",
+              "outcome": "Five tech ETFs is still 100% tech exposure. You're diversified within tech but completely undiversified across sectors. A single tech regulatory event would hit your entire portfolio.",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "type": "slider",
+          "question": "Approximately how many stocks across different sectors do you need to eliminate 95% of company-specific (unsystematic) risk?",
+          "min": 5,
+          "max": 100,
+          "correct": 30,
+          "unit": ""
+        },
+        {
+          "type": "trueFalse",
+          "statements": [
+            {
+              "s": "Owning 30 tech stocks provides good diversification",
+              "a": false
+            },
+            {
+              "s": "Diversification is called the \"only free lunch\" in finance",
+              "a": true
+            },
+            {
+              "s": "A diversified portfolio can still lose money during a recession",
+              "a": false
+            },
+            {
+              "s": "International stocks provide additional diversification beyond U.S. stocks",
+              "a": true
+            },
+            {
+              "s": "During the 2000-2009 decade, U.S. stocks returned nearly 0% while international stocks gained 30%",
+              "a": true
+            }
+          ]
+        },
+        {
+          "type": "match",
+          "title": "Match the Diversification Type",
+          "pairs": [
+            [
+              "Asset Class",
+              "Spreading across stocks, bonds, real estate, and cash"
+            ],
+            [
+              "Sector",
+              "Spreading across technology, healthcare, energy, finance"
+            ],
+            [
+              "Geographic",
+              "Spreading across U.S., international, and emerging markets"
+            ],
+            [
+              "Time",
+              "Investing regularly through dollar-cost averaging"
+            ]
+          ]
+        },
+        {
+          "type": "quiz",
+          "question": "Your coworker tells you she has 70% of her 401(k) in her employer's stock because \"I know the company well and believe in it.\" She also holds 20% in a tech-sector ETF and 10% in cash. Based on what you've learned about diversification and concentration risk, what is the most critical issue with her portfolio?",
+          "options": [
+            "She is fine, knowing her own employer well means she can judge that stock better than any other",
+            "She has extreme concentration risk, with 90% of her savings tied to her employer's sector",
+            "Her real problem is too little cash, a 10% buffer is too thin to cover an emergency",
+            "She should swap the tech ETF for a handful of individual tech stocks she has personally researched"
+          ],
+          "correct": 1,
+          "explanation": "This is the Enron trap. If her company has problems, she loses her income AND 70% of her retirement. The tech ETF adds another 20% of correlated exposure. She effectively has 90% in a single sector. Enron employees lost $2 billion this exact way. She should: (1) reduce employer stock to maximum 10%, (2) replace with a total market index fund across all sectors, and (3) add bonds for stability. Familiarity with a company creates a false sense of safety."
+        },
+        {
+          "type": "simulationFinale",
+          "title": "Stress-Test Your Portfolio",
+          "setup": "You've built a $200,000 portfolio. A financial crisis similar to 2008 is about to hit. Your diversification decisions will determine whether you experience a temporary setback or a retirement-threatening catastrophe.",
+          "decisions": [
+            {
+              "prompt": "Decision 1: Before the crisis, how is your $200,000 allocated?",
+              "options": [
+                {
+                  "label": "50% U.S. stocks, 20% international stocks, 25% bonds, 5% REITs",
+                  "consequence": "Well-diversified across asset classes and geographies. During a 2008-style crisis, you'd lose about 22% ($44,000), painful but recoverable. Your bonds would rally, partially offsetting stock losses.",
+                  "score": 3
+                },
+                {
+                  "label": "80% in your 5 favorite tech stocks for growth, 20% cash as a safety net",
+                  "consequence": "Extremely concentrated. In a 2008-style crisis, tech stocks fell 45%+. Your $160,000 in tech becomes ~$88,000. Total portfolio down 36% ($72,000). And it takes years longer to recover.",
+                  "score": 0
+                },
+                {
+                  "label": "100% in a single stock you believe in, for the biggest possible upside",
+                  "consequence": "Maximum concentration risk. Individual stocks can lose 80-100% permanently. In 2008, Bear Stearns, Lehman Brothers, and Washington Mutual went to zero. Your entire retirement could be wiped out.",
+                  "score": 0
+                }
+              ]
+            },
+            {
+              "prompt": "Decision 2: The crisis hits. Your diversified portfolio is down 22%. Headlines are apocalyptic. What do you do?",
+              "options": [
+                {
+                  "label": "Rebalance: sell bonds that rose to buy cheap stocks",
+                  "consequence": "This is the power of diversification in action. Your bonds went up while stocks went down. Selling bonds to buy cheap stocks means you're automatically buying low. This alone can add 1-2% annual return over time.",
+                  "score": 3
+                },
+                {
+                  "label": "Sell everything, the world is ending and cash is safest",
+                  "consequence": "You just turned a temporary 22% paper loss into a permanent loss. The market recovered within 4 years and tripled within 10 years. Panic-selling during a crisis is the most expensive mistake an investor can make.",
+                  "score": 0
+                },
+                {
+                  "label": "Do nothing, wait for it to pass as markets recover",
+                  "consequence": "Better than selling, but you're missing the opportunity to rebalance. Your bonds are up, stocks are cheap, swapping some of each optimizes your recovery.",
+                  "score": 2
+                }
+              ]
+            },
+            {
+              "prompt": "Decision 3: During recovery, one sector (technology) is surging ahead of everything else. A friend suggests moving everything to tech. What do you do?",
+              "options": [
+                {
+                  "label": "Maintain your diversified allocation, don't chase one sector",
+                  "consequence": "Wise decision. In the 2000s, tech crashed and energy boomed. In the 2010s, tech boomed and energy crashed. In 2022, tech crashed and energy boomed again. Chasing sectors is a losing game.",
+                  "score": 3
+                },
+                {
+                  "label": "Move 50% to tech, it's clearly the future and leads the recovery",
+                  "consequence": "Concentration in last year's winner is one of the most reliable ways to underperform. Tech surged in the 2010s but crashed in 2000 and 2022. Sector rotation is unpredictable.",
+                  "score": 0
+                },
+                {
+                  "label": "Sell all international stocks to buy more U.S. tech, where growth is",
+                  "consequence": "You're abandoning geographic diversification to chase a single sector in a single country. During the 2000-2009 U.S. \"lost decade,\" international stocks gained 30%.",
+                  "score": 0
+                }
+              ]
+            },
+            {
+              "prompt": "Decision 4: Five years later, your portfolio has recovered and grown to $300,000. How do you optimize your diversification?",
+              "options": [
+                {
+                  "label": "Rebalance to your target mix and add a new asset class (commodities or TIPS)",
+                  "consequence": "Perfect. Rebalancing after growth ensures you don't drift into concentration. Adding another uncorrelated asset class (commodities, TIPS, or real assets) further reduces portfolio volatility.",
+                  "score": 3
+                },
+                {
+                  "label": "Leave it as-is, it has grown well, so the mix must still be working",
+                  "consequence": "If stocks outperformed, your allocation has drifted (maybe 65% stocks now instead of 50%). Without rebalancing, you're taking more risk than intended. Drift is stealth concentration.",
+                  "score": 1
+                },
+                {
+                  "label": "Move everything to bonds, lock in the gains so a new crash can't take them back",
+                  "consequence": "Switching to all-bonds abandons the growth engine that produced your recovery. With years until retirement, you still need equity exposure for long-term wealth building.",
+                  "score": 0
+                }
+              ]
+            }
+          ],
+          "optimalOutcome": "Build a broadly diversified portfolio, rebalance into cheap stocks during the crisis, resist sector-chasing during recovery, and rebalance back to target with additional diversification, scoring 12/12.",
+          "principle": "Diversification is not about maximizing returns, it's about surviving the inevitable crises that destroy concentrated portfolios. Every year brings a story of investors who lost everything because they put too much into a single stock, sector, or strategy. Diversification ensures you're never one bad event away from financial devastation. It's the difference between a setback you recover from and a catastrophe you don't."
+        },
+        {
+          "type": "summaryCards",
+          "lessonTitle": "Diversification",
+          "cards": [
+            {
+              "takeaway": "Diversification is the only free lunch in finance",
+              "detail": "Combining uncorrelated assets reduces portfolio risk without reducing expected returns. It's the only strategy in finance that gives you something for nothing, lower risk for free."
+            },
+            {
+              "takeaway": "Four dimensions: asset class, sector, geography, and time",
+              "detail": "True diversification means spreading across stocks/bonds/real estate (asset class), tech/healthcare/energy (sector), U.S./international (geography), and regular investing (time)."
+            },
+            {
+              "takeaway": "Concentration risk is the real danger",
+              "detail": "Enron, Lehman Brothers, Meta 2022, concentration in a single stock can destroy decades of savings. An index fund with 500+ stocks eliminates this risk entirely."
+            }
+          ]
+        },
+        {
+          "type": "whatsNext",
+          "currentLessonTitle": "Diversification",
+          "nextTitle": "ETFs & Index Funds",
+          "preview": "You'll discover the investment vehicles that make diversification easy and cheap, how ETFs and index funds work, why Warren Buffett recommends them, and how to pick the right ones for your portfolio.",
+          "estimatedTime": 25
+        }
+      ],
+      "challenge": [
+        {
+          "question": "In 2022, Meta stock fell 64%. A diversified S&P 500 index fund fell:",
+          "options": [
+            "64%, same as Meta",
+            "About 18%",
+            "About 5%",
+            "It gained money"
+          ],
+          "correct": 1,
+          "explanation": "The S&P 500 lost about 18% in 2022, painful but manageable. Meta's 64% loss was company-specific risk that diversification eliminates."
+        },
+        {
+          "question": "How many stocks across different sectors eliminate ~95% of company-specific risk?",
+          "options": [
+            "5",
+            "10",
+            "30",
+            "500"
+          ],
+          "correct": 2,
+          "explanation": "Research shows about 30 stocks spread across different sectors eliminate approximately 95% of unsystematic (company-specific) risk."
+        },
+        {
+          "question": "Harry Markowitz called diversification:",
+          "options": [
+            "A waste of time that mostly just dilutes your best ideas",
+            "The only free lunch in finance",
+            "A tool useful only for beginners who lack confidence",
+            "Too complex for individual investors to use well"
+          ],
+          "correct": 1,
+          "explanation": "Markowitz's Nobel Prize-winning work proved that diversification reduces risk without reducing expected returns, the only \"free lunch\" in finance."
+        },
+        {
+          "question": "What happened to Enron employees who concentrated their 401(k) in company stock?",
+          "options": [
+            "They became millionaires when the stock briefly spiked before the collapse",
+            "They lost $2 billion in retirement savings when the company collapsed",
+            "Their investments were fully protected by federal deposit insurance",
+            "Nothing, because 401(k) balances are guaranteed against company failure"
+          ],
+          "correct": 1,
+          "explanation": "Enron employees collectively lost $2 billion in retirement savings. They had concentration risk in its worst form. Their income and their savings both depended on one company."
+        },
+        {
+          "question": "During the 2000-2009 U.S. stock market \"lost decade,\" international stocks:",
+          "options": [
+            "Also returned roughly 0%, since global markets tend to move in lockstep",
+            "Lost money too, because a weak U.S. economy pulls down every region",
+            "Gained approximately 30%",
+            "Were effectively unavailable to ordinary U.S. investors at the time"
+          ],
+          "correct": 2,
+          "explanation": "While U.S. stocks returned nearly 0% from 2000-2009, international stocks gained about 30%. Geographic diversification protects against country-specific underperformance."
+        }
+      ]
+    }
+  ]
+}
