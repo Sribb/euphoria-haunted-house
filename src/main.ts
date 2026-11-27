@@ -79,6 +79,7 @@ const enterRoom = (i: number, found: string[] = [], wasFreed = false) => {
   if (wasFreed) { freed = true; ghostGone = true; ghost.group.visible = false; ghostLight.intensity = 0; room.celebrate(); }
   document.getElementById("room-num")!.textContent = `Room ${script.num} of ${TOTAL_ROOMS}`;
   document.getElementById("room-name")!.textContent = script.name;
+  canvas.setAttribute("aria-label", `${script.name} of the haunted house`);
   showProgress();
 };
 
@@ -119,7 +120,7 @@ function showProgress() {
     ? `${script.ghost.name} is free. Walk through the door.`
     : lit < 3
       ? "Find the glowing clues to light the candles."
-      : `Face ${script.ghost.name} at the door.`;
+      : `Face ${ghostName()} at the door.`;
 }
 
 // ---- feedback helpers
@@ -128,6 +129,8 @@ const flash = (amount: number, color: string) => {
   pipeline.effects.flashColor.set(color);
 };
 const pick = <T,>(xs: T[]) => xs[Math.floor(Math.random() * xs.length)];
+/** "The Miser" as it reads mid-sentence: "the Miser". */
+const ghostName = () => script.ghost.name.replace(/^The /, "the ");
 const ghostTop = () => ghost.position.clone().add(new THREE.Vector3(0, ghost.lift + 1.2, 0));
 
 // ---- interactions
@@ -157,7 +160,7 @@ const examine = async (clue: Clue) => {
   cam.shake(0.18);
   lit++;
   showProgress();
-  ui.toast(lit < 3 ? `Candle lit: ${lit} of 3` : `All three candles are lit. Face ${script.ghost.name}.`);
+  ui.toast(lit < 3 ? `Candle lit: ${lit} of 3` : `All three candles are lit. Face ${ghostName()}.`);
   if (lit === 3) setTimeout(() => { sound.boo(); cam.shake(0.35); flash(0.18, "#D63A3A"); }, 900);
   save();
 };
@@ -165,6 +168,7 @@ const examine = async (clue: Clue) => {
 const encounter = async () => {
   phase = "battle";
   input.locked = true;
+  ui.prompt(null);
   sound.encounter();
   cam.shake(0.45);
   await ui.wipe(true);
@@ -178,12 +182,13 @@ const encounter = async () => {
   flash(0.9, "#FFFBEF");
   await ui.wipe(false);
   await ui.dialog(script.lines.intro);
-  const questions = script.questions;
-  ui.openBattle(script.ghost.name, questions.length);
-  let unrest = questions.length;
-  let qi = 0;
+  // A missed question goes to the back of the queue. Asking it again at once would hand over the answer
+  // (on a true-or-false question, one wrong guess guarantees the next one).
+  const queue = [...script.questions];
+  ui.openBattle(script.ghost.name, queue.length);
+  let unrest = queue.length;
   while (unrest > 0) {
-    const q = questions[qi];
+    const q = queue[0];
     const chosen = await ui.ask(q);
     const good = chosen === q.correct;
     if (good) {
@@ -202,12 +207,14 @@ const encounter = async () => {
       cam.shake(0.6);
     }
     await ui.answer(q, chosen, pick(good ? script.lines.right : script.lines.wrong));
-    if (good) qi++;
+    queue.shift();
+    if (!good) queue.push(q);
   }
   ui.closeBattle();
 
   // freed: the ghost glows, thanks you, and rises away; warm light fills the room and the door unseals
   freed = true;
+  showProgress();
   ghost.setSprite(script.ghost.freed);
   ghost.loop = false;
   ghost.play(true);
@@ -242,6 +249,8 @@ const talkToGhost = async () => {
 const leaveRoom = async () => {
   phase = "moving";
   input.locked = true;
+  ui.prompt(null);
+  ui.clearToast();
   await ui.fade(1, 900);
   const next = roomIndex + 1;
   if (ROOMS[next]) {
@@ -284,11 +293,6 @@ const start = () => {
 };
 document.getElementById("start")!.addEventListener("click", start);
 document.getElementById("begin")!.addEventListener("click", begin);
-if (input.hasTouch) {
-  const touch = "Drag on the left side of the screen to move. Tap the button to look at things.";
-  document.getElementById("controls-hint")!.textContent = touch;
-  document.getElementById("intro-controls")!.textContent = touch;
-}
 const muteBtn = document.getElementById("mute")!;
 muteBtn.addEventListener("click", () => {
   sound.setMuted(!sound.muted);
@@ -302,6 +306,11 @@ document.getElementById("restart")!.addEventListener("click", () => {
 document.getElementById("act")!.addEventListener("click", () => input.pressAction());
 player.onStep = () => sound.step();
 load();
+// the game is ready: the title's button was "Loading..." until now
+const startBtn = document.getElementById("start") as HTMLButtonElement;
+startBtn.textContent = "Enter the house";
+startBtn.disabled = false;
+startBtn.focus();
 
 // ---- the frame loop
 const projectToScreen = (p: THREE.Vector3) => {
@@ -358,7 +367,10 @@ const frame = (now: number) => {
   pipeline.effects.vignette = 0.32 + 0.33 * dread;
   pipeline.effects.flash = Math.max(0, pipeline.effects.flash - dt * 2.6);
   flicker = Math.max(0, flicker - dt);
-  pipeline.effects.exposure = (freed ? 1.04 : 1) * (flicker > 0 && Math.sin(t * 55) > 0 ? 0.45 : 1);
+  // A wrong answer dims the room once and lets it recover (one dip in 0.6 s, well under 3 flashes a second).
+  // The old version strobed at about 9 Hz, and did so even under reduced motion.
+  const dip = flicker > 0 && !reducedMotion ? 0.5 * Math.sin(Math.PI * (1 - flicker / 0.6)) : 0;
+  pipeline.effects.exposure = (freed ? 1.04 : 1) * (1 - dip);
 
   if (phase !== "battle") cam.target.copy(phase === "title" ? new THREE.Vector3(0, 0, -1.5) : player.position);
   cam.update(dt, viewW, viewH, reducedMotion);
@@ -374,7 +386,7 @@ const frame = (now: number) => {
       if (cd < c.radius && cd < bestD) { bestD = cd; best = { label: script.clueLabels[c.id], at: c.wisp.position, run: () => void examine(c) }; }
     }
     if (!ghostGone && !freed && dist < 1.9 && dist < bestD) {
-      best = { label: lit < 3 ? "Speak to the ghost" : `Face ${script.ghost.name}`, at: ghostTop(), run: () => void talkToGhost() };
+      best = { label: lit < 3 ? "Speak to the ghost" : `Face ${ghostName()}`, at: ghostTop(), run: () => void talkToGhost() };
     }
     if (best) {
       const s = projectToScreen(best.at.clone().add(new THREE.Vector3(0, 0.35, 0)));

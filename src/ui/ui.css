@@ -96,6 +96,10 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .card button:hover, .card button:focus-visible { background: var(--violet); outline: none; }
 .card .hint { font-size: 22px; color: var(--muted); margin: 18px 0 0; }
 #title { background: rgba(21, 16, 36, 0.92); }
+/* the right controls hint for the device, chosen in CSS so it is correct before the script loads */
+.hint-touch { display: none; }
+@media (pointer: coarse) { .hint-keys { display: none; } .hint-touch { display: inline; } }
+.card button:disabled { opacity: 0.6; cursor: wait; }
 #intro { width: min(620px, calc(100% - 32px)); text-align: left; max-height: calc(100% - 32px); overflow: auto; }
 #intro .kicker, #intro h2 { text-align: center; }
 #intro h2 { font-family: "Press Start 2P", monospace; font-weight: 400; font-size: clamp(18px, 4vw, 28px); line-height: 1.35; margin: 0 0 14px; color: var(--candle-light); text-shadow: 3px 3px 0 var(--violet-deep); }

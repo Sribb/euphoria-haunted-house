@@ -118,6 +118,9 @@ const DRESSING: Record<string, Spot[]> = {
   "coin-plus": [[bat, 56, 3, drift(5, 3200)], [gravestone, 66, 45], [jackOLantern, 72, 52]],
   stacks: [[bat, 50, 3, drift(5, 3200)], [jackOLantern, 72, 52]],
   board: [[cobweb, 0, 0], [spider, 74, 0, bob(3, 2600)]],
+  ground: [[bat, 44, 3, drift(5, 3300)], [gravestone, 72, 45], [jackOLantern, 2, 52]],
+  doublings: [[bat, 52, 3, drift(5, 3200)], [jackOLantern, 72, 52]],
+  sooner: [[bat, 46, 4, drift(4, 3000)], [tinyGhost, 60, 14, bob(2, 2400)], [jackOLantern, 72, 52]],
   "orchard-moon": [[bat, 40, 3, drift(5, 3200)], [gravestone, 46, 45], [tinyGhost, 36, 16, bob(2, 2400)], [jackOLantern, 71, 53]],
 };
 

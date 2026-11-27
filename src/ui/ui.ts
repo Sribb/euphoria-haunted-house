@@ -59,22 +59,29 @@ export class UI {
     this.toastTimer = window.setTimeout(() => t.classList.remove("on"), 2200);
   }
 
+  clearToast() {
+    clearTimeout(this.toastTimer);
+    $("#toast").classList.remove("on");
+  }
+
   /** Waits for one advance: a click on `el`, or E, Space or Enter. */
   private waitAdvance(el: HTMLElement) {
     return new Promise<void>((resolve) => {
       const done = () => {
         removeEventListener("keydown", onKey);
-        el.removeEventListener("pointerdown", onClick);
+        el.removeEventListener("click", onClick);
         resolve();
       };
       const onKey = (e: KeyboardEvent) => {
         if (ADVANCE.has(e.code) && !e.repeat) { e.preventDefault(); done(); }
       };
-      const onClick = (e: PointerEvent) => { e.stopPropagation(); done(); };
+      // `click` fires after the finger lifts, so the whole tap is spent here. Listening on pointerdown let the
+      // same tap's click land on whatever appeared next (on a phone it auto-picked an answer).
+      const onClick = (e: MouseEvent) => { e.stopPropagation(); done(); };
       // a tick later, so the key press that opened this does not also close it
       setTimeout(() => {
         addEventListener("keydown", onKey);
-        el.addEventListener("pointerdown", onClick);
+        el.addEventListener("click", onClick);
       }, 60);
     });
   }
@@ -178,10 +185,9 @@ export class UI {
         mark();
       };
       setTimeout(() => addEventListener("keydown", onKey), 60);
-      buttons.forEach((btn, i) => {
-        btn.addEventListener("click", () => pick(i));
-        btn.addEventListener("pointerenter", () => { sel = i; mark(); });
-      });
+      // taps arm a moment after the answers appear, so a tap already in flight can never choose one
+      setTimeout(() => buttons.forEach((btn, i) => btn.addEventListener("click", () => pick(i))), 350);
+      buttons.forEach((btn, i) => btn.addEventListener("pointerenter", () => { sel = i; mark(); }));
     });
   }
 
@@ -190,6 +196,7 @@ export class UI {
     const b = this.battleEl;
     const buttons = [...b.querySelectorAll<HTMLButtonElement>(".options button")];
     const good = chosen === q.correct;
+    buttons.forEach((btn) => btn.classList.remove("sel"));
     buttons[chosen].classList.add(good ? "right" : "wrong");
     if (!good) buttons[q.correct].classList.add("right");
     const fb = b.querySelector(".feedback") as HTMLElement;
