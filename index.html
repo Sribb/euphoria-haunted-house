@@ -7,10 +7,19 @@
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 9 16' shape-rendering='crispEdges'%3E%3Crect x='4' y='0' width='1' height='2' fill='%23E8661C'/%3E%3Crect x='3' y='2' width='3' height='4' fill='%23FF9A3C'/%3E%3Crect x='4' y='3' width='1' height='2' fill='%23FFE3A0'/%3E%3Crect x='2' y='8' width='5' height='6' fill='%23E6E1D3'/%3E%3Crect x='0' y='14' width='9' height='2' fill='%23A8641A'/%3E%3C/svg%3E" />
     <title>Euphoria Haunted House</title>
     <meta name="description" content="A haunted pixel-art house where every room is an investing lesson. Free the ghosts by learning how money works." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Euphoria" />
+    <meta property="og:title" content="Euphoria Haunted House" />
+    <meta property="og:description" content="A haunted pixel-art house where every room is an investing lesson. Free the ghosts by learning how money works." />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Euphoria Haunted House" />
+    <meta name="twitter:description" content="A haunted pixel-art house where every room is an investing lesson. Free the ghosts by learning how money works." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Jersey+10&family=Press+Start+2P&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=Jacquard+24&family=Jersey+10&family=Press+Start+2P&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/src/ui/ui.css" />
+    <link rel="stylesheet" href="/src/ui/cards.css" />
+    <link rel="stylesheet" href="/src/ui/encounter.css" />
   </head>
   <body>
     <div id="stage">
@@ -23,40 +32,54 @@
         <div class="status">
           <div class="room"><span class="label" id="room-num">Room 1 of 5</span><span class="name" id="room-name">The Foyer</span></div>
           <div class="goal">
-            <div class="goal-head"><span class="label">Candles</span><div id="candles" aria-label="Candles lit"></div><span class="label" id="candle-count">0 of 3</span></div>
+            <div class="goal-head"><span class="label">Candles</span><div id="candles" role="img" aria-label="Candles lit"></div><span class="label" id="candle-count">0 of 3</span></div>
             <p id="objective" aria-live="polite">Find the glowing clues to light the candles.</p>
           </div>
         </div>
-        <button id="mute" type="button" aria-label="Mute sound">Sound on</button>
+        <button id="mute" type="button" aria-label="Mute sound" aria-pressed="false">Sound on</button>
       </header>
 
       <div id="prompt" hidden><kbd>E</kbd><span></span></div>
       <button id="act" type="button" hidden>Examine</button>
       <div id="toast" role="status" aria-live="polite"></div>
+      <div id="stick-hint" aria-hidden="true"><i></i><span>Drag here to move</span></div>
+      <!-- each full line of dialog and feedback is announced here once; the typed text itself is hidden from screen readers -->
+      <p id="say" class="sr-only" aria-live="polite"></p>
 
-      <section id="dialog" hidden aria-live="polite">
+      <section id="dialog" hidden>
         <div class="speaker"></div>
-        <h2 class="title"></h2>
-        <p class="text"></p>
-        <div class="more">Next <span aria-hidden="true">&#9662;</span></div>
+        <div class="row">
+          <div class="portrait" aria-hidden="true"></div>
+          <div class="body">
+            <h2 class="title"></h2>
+            <p class="text" aria-hidden="true"></p>
+          </div>
+        </div>
+        <div class="more">Next <i aria-hidden="true"></i></div>
       </section>
 
       <section id="battle" hidden>
         <div class="foe">
           <span class="name"></span>
-          <div class="unrest" aria-label="Unrest"></div>
+          <div class="unrest" role="img" aria-label="Unrest"></div>
         </div>
         <div class="panel">
           <p class="question"></p>
-          <div class="options" role="group"></div>
-          <p class="feedback" aria-live="polite"></p>
-          <div class="more" hidden>Next <span aria-hidden="true">&#9662;</span></div>
+          <div class="options" role="group" aria-label="Answers"></div>
+          <div class="reply">
+            <div class="portrait" aria-hidden="true"></div>
+            <div class="words">
+              <div class="head"><p class="verdict"></p><div class="more" hidden>Next <i aria-hidden="true"></i></div></div>
+              <p class="feedback" aria-hidden="true"></p>
+            </div>
+          </div>
         </div>
       </section>
 
       <section id="title" class="card">
-        <p class="kicker">Euphoria presents</p>
+        <p class="kicker"><span class="mark" data-icon="atlas" aria-hidden="true"></span>Euphoria presents</p>
         <h1>Haunted<br />House</h1>
+        <i class="divider" aria-hidden="true"></i>
         <p class="sub">Every room is a lesson. Every ghost is a question.</p>
         <button id="start" type="button" disabled>Loading...</button>
         <p class="hint"><span class="hint-keys">Move with WASD or the arrow keys. Press E to look at things.</span><span class="hint-touch">Drag on the left side of the screen to move. Tap the button to look at things.</span></p>
@@ -64,12 +87,13 @@
 
       <section id="intro" class="card" hidden>
         <p class="kicker">How to play</p>
-        <h2>Welcome to the<br />haunted house</h2>
-        <p class="sub">This house is Euphoria's investing course, haunted. Every room is one short lesson, and every ghost is stuck here until someone understands it.</p>
+        <h2>Welcome to the <br />haunted house</h2>
+        <i class="divider" aria-hidden="true"></i>
+        <p class="guide"><span class="mark" data-icon="atlas" aria-hidden="true"></span><span>I am Atlas, your guide from Euphoria. This house is our investing course, haunted. Every room is one short lesson.</span></p>
         <ol class="steps">
-          <li><span class="icon" data-icon="wisp"></span><span><b>Explore with your lantern.</b> Glowing wisps mark the clues.</span></li>
-          <li><span class="icon" data-icon="candle"></span><span><b>Look at each clue.</b> It plays a short movie and lights one of the room's three candles.</span></li>
-          <li><span class="icon" data-icon="ghost"></span><span><b>Face the ghost.</b> With all three candles lit, answer its questions to set it free and open the next door.</span></li>
+          <li><span class="icon" data-icon="wisp" aria-hidden="true"></span><span><b>Explore with your lantern.</b> Glowing wisps mark the clues.</span></li>
+          <li><span class="icon" data-icon="candle" aria-hidden="true"></span><span><b>Look at each clue.</b> It plays a short movie and lights one of the room's three candles.</span></li>
+          <li><span class="icon" data-icon="ghost" aria-hidden="true"></span><span><b>Face the ghost.</b> With all three candles lit, answer its questions to set it free and open the next door.</span></li>
         </ol>
         <button id="begin" type="button">Start exploring</button>
         <p class="hint"><span class="hint-keys">Move with WASD or the arrow keys. Press E to look at things.</span><span class="hint-touch">Drag on the left side of the screen to move. Tap the button to look at things.</span></p>
@@ -77,12 +101,18 @@
 
       <section id="end" class="card" hidden>
         <p class="kicker" id="end-kicker">Rooms complete</p>
-        <h1 id="end-title">The ghosts<br />are at peace</h1>
-        <p class="sub" id="end-sub">You learned what investing is, why cash is not safe, why time does most of the work, and how risk and reward go together.</p>
+        <h1 id="end-title">The ghosts <br />are at peace</h1>
+        <i class="divider" aria-hidden="true"></i>
+        <div class="score" id="end-score" hidden><div class="pips" aria-hidden="true"></div><p></p></div>
+        <p class="sub" id="end-sub">Here is what the ghosts taught you.</p>
+        <div class="recap" id="end-recap"></div>
         <p class="next" id="end-next"></p>
-        <button id="restart" type="button">Play from the start</button>
+        <p class="guide"><span class="mark" data-icon="atlas" aria-hidden="true"></span><span>Every lesson in this house comes from Euphoria, the app that teaches teens to invest.</span></p>
+        <div class="actions">
+          <a id="keep" class="btn" href="https://euphoriainv.com" target="_blank" rel="noopener">Keep learning on Euphoria<span class="sr-only"> (opens in a new tab)</span></a>
+          <button id="restart" type="button" class="quiet">Play from the start</button>
+        </div>
       </section>
-
       <section id="movie" hidden aria-live="polite">
         <div class="frame">
           <div class="chip" hidden></div>

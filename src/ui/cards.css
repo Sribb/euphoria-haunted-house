@@ -1,0 +1,132 @@
+/*
+ * Gilt: the gold picture frame, for ceremony only. The title, intro and end cards, and the gilded button
+ * for the one primary action on a screen. See .kiro/steering/ui-style.md.
+ */
+.card {
+  position: absolute; inset: 0; margin: auto; height: fit-content; width: min(560px, calc(100% - 24px));
+  max-height: calc(100% - 24px); overflow: auto; padding: 8px 8px 4px; text-align: center;
+  border-style: solid; border-color: transparent;
+  border-width: calc(24 * var(--s)) calc(24 * var(--s)) calc(25 * var(--s));
+  border-image: url("../../assets/third-party/dragon-regalia-gui/haunted/frame-gilded.png") 24 24 25 fill
+    / calc(24 * var(--s)) calc(24 * var(--s)) calc(25 * var(--s)) stretch;
+  background: none; image-rendering: pixelated; scrollbar-width: thin; scrollbar-color: var(--fog) var(--surface);
+  animation: open 160ms steps(4) backwards;
+}
+.card .kicker { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 0 0 12px; font: 8px/1 "Press Start 2P", monospace; color: var(--muted); text-transform: uppercase; }
+.card h1, .card h2 { margin: 0; font-weight: 400; color: var(--candle-light); }
+.card h1 {
+  font-family: "Jacquard 24", "Jersey 10", serif; font-size: 86px; line-height: 0.9;
+  text-shadow: 0 calc(2 * var(--s)) 0 var(--violet-deep), 0 0 24px rgba(232, 154, 46, 0.35);
+  animation: glow 3s steps(1) infinite;
+}
+/* the title's candle glow gutters twice near the end of every three seconds */
+@keyframes glow {
+  88%, 96% { text-shadow: 0 calc(2 * var(--s)) 0 var(--violet-deep), 0 0 24px rgba(232, 154, 46, 0.5); }
+  92% { text-shadow: 0 calc(2 * var(--s)) 0 var(--violet-deep), 0 0 24px rgba(232, 154, 46, 0.35); }
+}
+.card h2 { font-family: "Jacquard 12", "Jersey 10", serif; font-size: 42px; line-height: 1; text-shadow: 0 var(--s) 0 var(--violet-deep); }
+.divider { display: block; margin: 12px auto; width: calc(192 * var(--s)); max-width: 100%; height: calc(18 * var(--s)); background: url("../../assets/third-party/fantasy-ui-borders/haunted/divider.png") center / calc(192 * var(--s)) 100% no-repeat; image-rendering: pixelated; }
+.card .sub { font-size: var(--t-body); margin: 0 0 16px; line-height: 1.1; }
+.card .hint { font-size: var(--t-small); line-height: 1.1; color: var(--muted); margin: 14px 0 0; }
+/* the right controls hint for the device, chosen in CSS so it is correct before the script loads */
+.hint-touch { display: none; }
+@media (pointer: coarse) { .hint-keys { display: none; } .hint-touch { display: inline; } }
+
+/* Atlas, Euphoria's mascot, is the guide: a small mark by the kicker and a face beside his own lines */
+.mark { flex: none; display: inline-block; }
+.mark svg { display: block; }
+.kicker .mark svg { width: calc(12 * var(--s)); height: calc(12 * var(--s)); }
+.card .guide { display: flex; gap: 14px; align-items: center; margin: 0 0 14px; text-align: left; font-size: var(--t-small); line-height: 1.1; color: var(--ink); }
+
+/* the gilded button: one primary action per screen. Hover and press swap the art; the art itself rises and sinks. */
+.card button, .card .btn, #act, .gilded {
+  display: inline-flex; align-items: center; justify-content: center; gap: calc(4 * var(--s));
+  height: calc(35 * var(--s)); min-width: calc(80 * var(--s)); padding: 0 calc(4 * var(--s));
+  border-style: solid; border-color: transparent; border-width: calc(12 * var(--s)) calc(20 * var(--s));
+  border-image: url("../../assets/third-party/dragon-regalia-gui/haunted/button-rest.png") 12 20 fill
+    / calc(12 * var(--s)) calc(20 * var(--s)) repeat;
+  background: none; box-shadow: none; image-rendering: pixelated;
+  font-family: "Jersey 10", monospace; font-size: var(--t-body); line-height: 1; white-space: nowrap; text-decoration: none;
+  color: var(--candle-light); text-shadow: 0 var(--s) 0 var(--outline);
+}
+.card button:hover, .card .btn:hover, #act:hover, .gilded:hover,
+.card button:focus-visible, .card .btn:focus-visible, #act:focus-visible, .gilded:focus-visible {
+  border-image-source: url("../../assets/third-party/dragon-regalia-gui/haunted/button-hover.png"); color: var(--ink-bright);
+}
+.card button:active, .card .btn:active, #act:active, .gilded:active {
+  border-image-source: url("../../assets/third-party/dragon-regalia-gui/haunted/button-press.png"); color: var(--candle-light);
+}
+.card button:disabled, .gilded:disabled {
+  border-image-source: url("../../assets/third-party/dragon-regalia-gui/haunted/button-disabled.png"); color: var(--muted);
+}
+/* a secondary action: plain candle text with a pixel underline, so it never competes with the gilded button */
+.card button.quiet {
+  height: auto; min-width: 0; min-height: 56px; padding: 0 6px; border: 0; border-image: none;
+  font-size: var(--t-small); color: var(--candle-light); text-shadow: none;
+}
+.card button.quiet::after { content: ""; position: absolute; left: 6px; right: 6px; bottom: 14px; height: var(--s); background: var(--candle-deep); }
+.card button.quiet { position: relative; }
+.card button.quiet:hover, .card button.quiet:focus-visible { color: var(--ink-bright); }
+.card button.quiet:hover::after, .card button.quiet:focus-visible::after { background: var(--candle); }
+.card button.quiet:active { transform: translateY(var(--s)); }
+
+#act { position: absolute; right: 24px; bottom: 40px; }
+
+/* intro: Atlas explains, then three steps as rows with key-cap numbers */
+#intro { width: min(620px, calc(100% - 24px)); }
+#intro .steps { list-style: none; counter-reset: step; margin: 0 0 16px; padding: 0; text-align: left; }
+#intro .steps li { counter-increment: step; display: flex; gap: 14px; align-items: center; padding: 8px 10px 10px; font-size: var(--t-small); line-height: 1.1; background: var(--k); box-shadow: inset 0 calc(-1 * var(--s)) 0 var(--stone-light); }
+#intro .steps li::before { content: counter(step); }
+#intro .steps b { color: var(--candle-light); font-weight: 400; }
+#intro .icon { flex: 0 0 60px; display: grid; place-items: center; }
+
+/* end: the score as lit candles, what each room taught, then the way on to Euphoria */
+#end { width: min(900px, calc(100% - 24px)); }
+#end .divider { margin: 6px auto 10px; }
+#end .score { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 0 0 12px; }
+#end .score .pips { display: flex; gap: var(--s); }
+#end .score p { margin: 0; font-size: var(--t-body); line-height: 1; color: var(--ink-bright); }
+#end .sub { font-size: var(--t-small); color: var(--muted); margin: 0 0 10px; }
+#end .recap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 20px; margin: 0 0 12px; text-align: left; }
+#end .recap section { padding: 8px 10px 10px; background: var(--k); box-shadow: inset 0 calc(-1 * var(--s)) 0 var(--stone-light); }
+#end .recap h3 { margin: 0 0 8px; font: 8px/1 "Press Start 2P", monospace; color: var(--muted); text-transform: uppercase; }
+#end .recap ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+#end .recap li { display: flex; gap: 8px; align-items: flex-start; font-size: var(--t-small); line-height: 1.05; color: var(--ink); }
+#end .recap li svg { flex: none; margin-top: -6px; }
+.card .next { font-size: var(--t-small); line-height: 1.1; color: var(--ghost); margin: 0 0 12px; }
+.card .next:empty { display: none; }
+#end .guide { justify-content: center; }
+#end .actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 24px; }
+
+@media (max-width: 640px) {
+  /* The gilt rule is 11 art pixels deep; past it the frame is flat fill. On a phone the content box takes
+     back part of the 24 pixel border, and the frame is still drawn at full size. */
+  .card { border-width: 34px 28px 36px; padding: 0; }
+  .card h1 { font-family: "Jacquard 12", "Jersey 10", serif; font-size: 63px; }
+  .divider { width: 192px; height: 18px; margin: 8px auto; background-size: 192px 100%; }
+  .card .sub { margin-bottom: 12px; }
+  .card .hint { margin-top: 10px; }
+  .card button, .card .btn, #act, .gilded { padding: 0; }
+  #intro .steps { margin-bottom: 12px; }
+  #intro .steps li { gap: 10px; padding: 6px 8px 8px; }
+  #intro .icon { flex-basis: 32px; }
+  #intro [data-icon="wisp"] svg { width: 30px; height: 30px; }
+  #intro [data-icon="ghost"] svg { width: 30px; height: 32px; }
+  #end h1 { font-size: 42px; line-height: 1; }
+  #end .score { flex-direction: column; gap: 8px; }
+  #end .recap { grid-template-columns: 1fr; gap: 0; }
+  #end .recap section { padding: 6px 8px 8px; }
+  #end .recap ul { gap: 2px; }
+  #end .actions { flex-direction: column; gap: 0; }
+}
+/* short screens (a phone on its side, a small laptop): tighten the cards so the primary button stays in view */
+@media (max-height: 760px) {
+  .card .kicker { margin-bottom: 8px; }
+  .divider { margin: 6px auto; }
+  .card .sub, .card .guide { margin-bottom: 10px; }
+  #intro .steps li { padding: 4px 8px 6px; }
+  .card .hint { margin-top: 8px; }
+}
+@media (min-width: 641px) {
+  #end h1 br { display: none; }
+}

@@ -1,10 +1,21 @@
 import { candleLit, candleUnlit } from "../art/candle";
 import { spriteToSvgMarkup } from "../lib/pixel/svg";
+import type { PixelSprite } from "../lib/pixel/types";
 import type { Page, Question } from "../game/room";
 
 const $ = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector(sel) as T;
 const ADVANCE = new Set(["Space", "Enter", "KeyE"]);
 const CHARS_PER_SEC = 55;
+/** One art pixel is 2 CSS px (`--s` in ui.css), so sprites in the UI are drawn at this whole scale. */
+const ART = 2;
+/** How long the marked answers hold before the explanation starts. A press skips it. */
+const BEAT_MS = 450;
+/** Taps, and the keys that also close dialog, cannot choose an answer until this long after it appears. */
+const ARM_MS = 350;
+const coarse = () => matchMedia("(pointer: coarse)").matches;
+
+/** What the end card shows: rooms done, what comes next, the first-try score, and each room's takeaways. */
+export type EndCard = { kicker: string; next: string; score: { right: number; of: number }; recap: { room: string; points: string[] }[] };
 
 /** The DOM layer over the game: title, HUD, prompts, dialog, the encounter, and the end card. */
 export class UI {
@@ -12,6 +23,9 @@ export class UI {
   private dialogEl = $("#dialog");
   private battleEl = $("#battle");
   private toastTimer = 0;
+  private litShown = 0;
+  private unrestTotal = 0;
+  private longestReply = "";
   busy = false;
 
   constructor(private reducedMotion: boolean) {}
@@ -20,13 +34,15 @@ export class UI {
     const el = $("#candles");
     el.innerHTML = "";
     for (let i = 0; i < total; i++) {
-      const s = i < lit ? candleLit : candleUnlit;
       const wrap = document.createElement("span");
-      wrap.innerHTML = spriteToSvgMarkup(s, 3);
+      wrap.innerHTML = spriteToSvgMarkup(i < lit ? candleLit : candleUnlit, ART);
       const svg = wrap.firstElementChild as SVGElement;
       if (i < lit) svg.classList.add("lit");
+      // the candle that was just lit gains its glow in steps
+      if (i < lit && i >= this.litShown) svg.classList.add("new");
       el.append(svg);
     }
+    this.litShown = lit;
     el.setAttribute("aria-label", `${lit} of ${total} candles lit`);
   }
 
@@ -53,6 +69,9 @@ export class UI {
 
   toast(text: string) {
     const t = $("#toast");
+    // just under the HUD, however tall it is on this screen, so the toast never covers the goal line
+    const hud = $("#hud .status").getBoundingClientRect();
+    t.style.top = `${hud.height ? Math.round(hud.bottom) + 8 : 24}px`;
     t.textContent = text;
     t.classList.add("on");
     clearTimeout(this.toastTimer);
@@ -62,6 +81,23 @@ export class UI {
   clearToast() {
     clearTimeout(this.toastTimer);
     $("#toast").classList.remove("on");
+  }
+
+  /** Says a full line once to screen readers. The typewriter's own text is hidden from them. */
+  private announce(text: string) {
+    $("#say").textContent = text;
+  }
+
+  /** On a touch screen, shows a faint ring where the thumb can rest, until the first touch or six seconds. */
+  stickHint() {
+    if (!coarse()) return;
+    const off = () => {
+      this.stage.classList.remove("stick-hint");
+      this.stage.removeEventListener("pointerdown", off);
+    };
+    this.stage.classList.add("stick-hint");
+    this.stage.addEventListener("pointerdown", off);
+    setTimeout(off, 6000);
   }
 
   /** Waits for one advance: a click on `el`, or E, Space or Enter. */
@@ -86,38 +122,45 @@ export class UI {
     });
   }
 
-  /** Types `text` into `el`; an advance press while typing finishes the line at once. */
-  private async type(el: HTMLElement, text: string, box: HTMLElement) {
-    if (this.reducedMotion) { el.textContent = text; return; }
-    let shown = 0;
+  /**
+   * Types `text` into `el`; an advance press while typing finishes the line at once. With `hold`, the
+   * typing waits that long first (a press skips the wait too), and `onStart` runs as the wait ends.
+   */
+  private async type(el: HTMLElement, text: string, box: HTMLElement, hold = 0, onStart?: () => void) {
+    if (this.reducedMotion) { onStart?.(); el.textContent = text; return; }
     let skip = false;
-    const skipper = this.waitAdvance(box).then(() => (skip = true));
-    void skipper;
-    const start = performance.now();
+    let started = false;
+    let shown = -1;
+    void this.waitAdvance(box).then(() => (skip = true));
+    const begin = performance.now() + hold;
     await new Promise<void>((resolve) => {
       const step = () => {
-        shown = skip ? text.length : Math.min(text.length, Math.floor(((performance.now() - start) / 1000) * CHARS_PER_SEC));
-        el.textContent = text.slice(0, shown);
-        if (shown >= text.length) resolve();
+        const now = performance.now();
+        if (!started && (skip || now >= begin)) { started = true; onStart?.(); }
+        const n = skip ? text.length : Math.max(0, Math.min(text.length, Math.floor(((now - begin) / 1000) * CHARS_PER_SEC)));
+        if (started && n !== shown) { shown = n; el.textContent = text.slice(0, n); }
+        if (started && n >= text.length) resolve();
         else requestAnimationFrame(step);
       };
       step();
     });
-    return skip;
   }
 
-  /** Shows pages one at a time and resolves when the last is dismissed. */
-  async dialog(pages: Page[], onPage?: (i: number) => void) {
+  /** Shows pages one at a time and resolves when the last is dismissed. `face` is the speaker's portrait. */
+  async dialog(pages: Page[], face?: PixelSprite) {
     this.busy = true;
     this.prompt(null);
     const d = this.dialogEl;
+    const more = d.querySelector(".more") as HTMLElement;
     d.hidden = false;
     for (let i = 0; i < pages.length; i++) {
       const p = pages[i];
-      onPage?.(i);
       (d.querySelector(".speaker") as HTMLElement).textContent = p.speaker ?? "";
       (d.querySelector(".title") as HTMLElement).textContent = p.title ?? "";
-      const more = d.querySelector(".more") as HTMLElement;
+      // only the ghost's own lines carry its face; narration has none
+      (d.querySelector(".portrait") as HTMLElement).innerHTML = p.speaker && face ? spriteToSvgMarkup(face, ART) : "";
+      d.classList.toggle("shudder", i === 0 && !!p.speaker);
+      this.announce([p.speaker && `${p.speaker} says:`, p.title, p.text].filter(Boolean).join(" "));
       more.style.visibility = "hidden";
       // a press while typing only finishes the line; the next press turns the page
       await this.type(d.querySelector(".text") as HTMLElement, p.text, d);
@@ -125,86 +168,182 @@ export class UI {
       await this.waitAdvance(d);
     }
     d.hidden = true;
+    d.classList.remove("shudder");
     this.busy = false;
   }
 
   // ---------------------------------------------------------------- the encounter
 
-  openBattle(name: string, unrest: number) {
+  /** Opens the face-off. `replies` are the ghost's short lines, used to reserve room for its answer. */
+  openBattle(name: string, unrest: number, face?: PixelSprite, replies: string[] = []) {
     this.busy = true;
     this.prompt(null);
     this.stage.classList.add("battle");
     this.battleEl.hidden = false;
-    (this.battleEl.querySelector(".name") as HTMLElement).textContent = name;
+    // "The " is its own span so the phone layout can drop it and fit the plate beside the sound button
+    const plate = this.battleEl.querySelector(".name") as HTMLElement;
+    const [, the, rest] = /^(The )?(.*)$/.exec(name)!;
+    plate.innerHTML = `<span class="the"></span><span></span>`;
+    (plate.firstElementChild as HTMLElement).textContent = the ?? "";
+    (plate.lastElementChild as HTMLElement).textContent = rest;
+    plate.setAttribute("aria-label", name);
     const bar = this.battleEl.querySelector(".unrest") as HTMLElement;
-    bar.innerHTML = "";
-    for (let i = 0; i < unrest; i++) bar.append(document.createElement("i"));
+    bar.innerHTML = `<span class="label">Unrest</span>${"<i></i>".repeat(unrest)}`;
+    this.unrestTotal = unrest;
+    this.setUnrest(unrest);
+    this.setFace(face);
+    this.longestReply = replies.reduce((a, b) => (b.length > a.length ? b : a), "");
   }
 
   setUnrest(left: number) {
-    this.battleEl.querySelectorAll(".unrest i").forEach((el, i) => el.classList.toggle("gone", i >= left));
+    const bar = this.battleEl.querySelector(".unrest") as HTMLElement;
+    bar.querySelectorAll("i").forEach((el, i) => el.classList.toggle("gone", i >= left));
+    bar.setAttribute("aria-label", `Unrest: ${left} of ${this.unrestTotal} left`);
+  }
+
+  /** The ghost's current mood beside its reply. */
+  private setFace(face?: PixelSprite) {
+    (this.battleEl.querySelector(".portrait") as HTMLElement).innerHTML = face ? spriteToSvgMarkup(face, ART) : "";
+  }
+
+  /**
+   * Chooses the roomiest type size that keeps the panel under its cap (`--cap` in encounter.css), then locks
+   * the panel's height to the tallest it will be for this question, asking or explaining, so it never jumps.
+   */
+  private fitPanel(q: Question, panel: HTMLElement, buttons: HTMLButtonElement[]) {
+    const fb = panel.querySelector(".feedback") as HTMLElement;
+    const opts = panel.querySelector(".options") as HTMLElement;
+    const size = (b: HTMLButtonElement) => (b.textContent ?? "").length;
+    const longestWrong = buttons.filter((_, i) => i !== q.correct).reduce((a, b) => (size(b) > size(a) ? b : a));
+    const cap = parseFloat(getComputedStyle(panel).maxHeight) || innerHeight / 2;
+    panel.style.minHeight = "";
+    panel.style.maxHeight = "none";
+    const heightOf = (state: "" | "good" | "bad") => {
+      panel.classList.toggle("told", state !== "");
+      opts.classList.toggle("solo", state === "good");
+      buttons.forEach((btn, i) => {
+        btn.disabled = state !== "";
+        btn.classList.toggle("right", state !== "" && i === q.correct);
+        btn.classList.toggle("wrong", state === "bad" && btn === longestWrong);
+      });
+      fb.textContent = state ? `${this.longestReply} ${state === "good" ? q.right : q.wrong}` : "";
+      return panel.offsetHeight;
+    };
+    let need = 0;
+    for (const fit of ["panel", "panel dense", "panel dense brief"]) {
+      panel.className = fit;
+      need = Math.max(heightOf("good"), heightOf("bad"), heightOf(""));
+      if (need <= cap) break;
+    }
+    panel.style.maxHeight = "";
+    panel.style.minHeight = `${Math.min(need, cap)}px`;
   }
 
   /** Asks a question; resolves with the chosen option index. */
   ask(q: Question): Promise<number> {
     const b = this.battleEl;
+    const panel = b.querySelector(".panel") as HTMLElement;
+    const opts = b.querySelector(".options") as HTMLElement;
+    const n = q.options.length;
+    const touch = coarse();
     (b.querySelector(".question") as HTMLElement).textContent = q.prompt;
     (b.querySelector(".feedback") as HTMLElement).textContent = "";
     (b.querySelector(".more") as HTMLElement).hidden = true;
-    const opts = b.querySelector(".options") as HTMLElement;
+    (b.querySelector(".verdict") as HTMLElement).textContent = touch ? "Tap an answer." : `Press ${n > 2 ? `1 to ${n}` : "1 or 2"}, or click an answer.`;
     opts.innerHTML = "";
-    opts.style.gridTemplateColumns = q.options.length <= 2 ? "1fr 1fr" : "";
-    let sel = 0;
+    opts.classList.toggle("pair", n <= 2);
     const buttons = q.options.map((text, i) => {
       const btn = document.createElement("button");
       btn.type = "button";
-      btn.innerHTML = `<b>${i + 1}</b><span></span>`;
+      btn.style.setProperty("--i", String(i));
+      btn.innerHTML = `<b><i>${i + 1}</i></b><span></span>`;
       (btn.querySelector("span") as HTMLElement).textContent = text;
       opts.append(btn);
       return btn;
     });
+    this.fitPanel(q, panel, buttons);
+    panel.scrollTop = 0;
+    this.announce(`${q.prompt} ${q.options.map((o, i) => `${i + 1}: ${o}.`).join(" ")}`);
+    // a finger has no resting place, so nothing starts selected on a touch screen
+    let sel = touch ? -1 : 0;
     const mark = () => buttons.forEach((btn, i) => btn.classList.toggle("sel", i === sel));
     mark();
+    if (!touch) buttons[0].focus({ preventScroll: true });
+    const shownAt = performance.now();
     return new Promise((resolve) => {
+      let picked = false;
       const pick = (i: number) => {
+        if (picked || i < 0) return;
+        picked = true;
         removeEventListener("keydown", onKey);
+        // a disabled button that keeps focus can swallow the next key press, so let go of it first
+        if (document.activeElement instanceof HTMLElement && opts.contains(document.activeElement)) document.activeElement.blur();
         buttons.forEach((btn) => (btn.disabled = true));
         resolve(i);
       };
-      const cols = q.options.length <= 2 || innerWidth > 640 ? 2 : 1;
-      const onKey = (e: KeyboardEvent) => {
-        const n = Number(e.key);
-        if (n >= 1 && n <= buttons.length) return pick(n - 1);
-        if (e.code === "ArrowRight" || e.code === "KeyD") sel = Math.min(buttons.length - 1, sel + 1);
-        else if (e.code === "ArrowLeft" || e.code === "KeyA") sel = Math.max(0, sel - 1);
-        else if (e.code === "ArrowDown" || e.code === "KeyS") sel = Math.min(buttons.length - 1, sel + cols);
-        else if (e.code === "ArrowUp" || e.code === "KeyW") sel = Math.max(0, sel - cols);
-        else if (ADVANCE.has(e.code) && !e.repeat) { e.preventDefault(); return pick(sel); }
-        else return;
-        e.preventDefault();
+      const cols = n <= 2 || innerWidth > 640 ? 2 : 1;
+      const move = (to: number) => {
+        sel = Math.max(0, Math.min(n - 1, to));
         mark();
+        buttons[sel].focus({ preventScroll: true });
+      };
+      const onKey = (e: KeyboardEvent) => {
+        const k = Number(e.key);
+        if (k >= 1 && k <= n) return pick(k - 1);
+        if (e.code === "ArrowRight" || e.code === "KeyD") move(sel + 1);
+        else if (e.code === "ArrowLeft" || e.code === "KeyA") move(sel - 1);
+        else if (e.code === "ArrowDown" || e.code === "KeyS") move(sel < 0 ? 0 : sel + cols);
+        else if (e.code === "ArrowUp" || e.code === "KeyW") move(sel - cols);
+        else if (ADVANCE.has(e.code)) {
+          // these keys also close the ghost's last line, so a press already on its way must not choose
+          if (!e.repeat && performance.now() - shownAt > ARM_MS) pick(sel);
+        } else return;
+        e.preventDefault();
       };
       setTimeout(() => addEventListener("keydown", onKey), 60);
       // taps arm a moment after the answers appear, so a tap already in flight can never choose one
-      setTimeout(() => buttons.forEach((btn, i) => btn.addEventListener("click", () => pick(i))), 350);
-      buttons.forEach((btn, i) => btn.addEventListener("pointerenter", () => { sel = i; mark(); }));
+      setTimeout(() => buttons.forEach((btn, i) => btn.addEventListener("click", () => pick(i))), ARM_MS);
+      buttons.forEach((btn, i) => {
+        btn.addEventListener("pointerenter", () => { sel = i; mark(); });
+        btn.addEventListener("focus", () => { sel = i; mark(); });
+        // the keyboard chooses through onKey alone; this stops Space from also clicking the focused button
+        btn.addEventListener("keyup", (e) => { if (e.code === "Space") e.preventDefault(); });
+      });
     });
   }
 
-  /** Marks the answer, shows the explanation, and waits for Next. */
-  async answer(q: Question, chosen: number, ghostLine: string) {
+  /**
+   * Marks the answer (frame, icon and words), holds a beat, then swaps the spent answers for the ghost's
+   * explanation and waits for Next. `face` is the ghost's mood after this answer.
+   */
+  async answer(q: Question, chosen: number, ghostLine: string, face?: PixelSprite) {
     const b = this.battleEl;
-    const buttons = [...b.querySelectorAll<HTMLButtonElement>(".options button")];
+    const panel = b.querySelector(".panel") as HTMLElement;
+    const opts = b.querySelector(".options") as HTMLElement;
+    const buttons = [...opts.querySelectorAll<HTMLButtonElement>("button")];
     const good = chosen === q.correct;
+    const verdict = good ? "Right." : "Not quite.";
+    const text = `${ghostLine} ${good ? q.right : q.wrong}`;
+    const tag = (btn: HTMLButtonElement, cls: string, words: string) => {
+      btn.classList.add(cls);
+      btn.insertAdjacentHTML("beforeend", `<span class="sr-only"> ${words}</span>`);
+    };
     buttons.forEach((btn) => btn.classList.remove("sel"));
-    buttons[chosen].classList.add(good ? "right" : "wrong");
-    if (!good) buttons[q.correct].classList.add("right");
+    tag(buttons[chosen], good ? "right" : "wrong", good ? "Your answer. Right." : "Your answer. Not quite.");
+    if (!good) tag(buttons[q.correct], "right", "The right answer.");
+    if (face) this.setFace(face);
+    this.announce(`${verdict} ${text}`);
     const fb = b.querySelector(".feedback") as HTMLElement;
     fb.className = `feedback ${good ? "good" : "bad"}`;
-    await this.type(fb, `${ghostLine} ${good ? q.right : q.wrong}`, b.querySelector(".panel") as HTMLElement);
+    const reveal = () => {
+      panel.classList.add("told", good ? "good" : "bad");
+      opts.classList.toggle("solo", good);
+      (b.querySelector(".verdict") as HTMLElement).textContent = verdict;
+    };
+    await this.type(fb, text, panel, BEAT_MS, reveal);
     const more = b.querySelector(".more") as HTMLElement;
     more.hidden = false;
-    await this.waitAdvance(b.querySelector(".panel") as HTMLElement);
+    await this.waitAdvance(panel);
     more.hidden = true;
   }
 
@@ -212,6 +351,35 @@ export class UI {
     this.stage.classList.remove("battle");
     this.battleEl.hidden = true;
     this.busy = false;
+  }
+
+  /** Fills and opens the end card, with the way on to Euphoria focused as the primary action. */
+  showEnd(card: EndCard) {
+    $("#hud").hidden = true;
+    $("#end-kicker").textContent = card.kicker;
+    $("#end-next").textContent = card.next;
+    const score = $("#end-score");
+    score.hidden = card.score.of === 0;
+    (score.querySelector("p") as HTMLElement).textContent = `${card.score.right} of ${card.score.of} right on the first try.`;
+    (score.querySelector(".pips") as HTMLElement).innerHTML = Array.from({ length: card.score.of }, (_, i) =>
+      spriteToSvgMarkup(i < card.score.right ? candleLit : candleUnlit, ART)).join("");
+    const recap = $("#end-recap");
+    recap.innerHTML = "";
+    for (const r of card.recap) {
+      const sec = document.createElement("section");
+      const h = document.createElement("h3");
+      h.textContent = r.room;
+      const list = document.createElement("ul");
+      for (const point of r.points) {
+        const li = document.createElement("li");
+        li.textContent = point;
+        list.append(li);
+      }
+      sec.append(h, list);
+      recap.append(sec);
+    }
+    $("#end").hidden = false;
+    $("#keep").focus();
   }
 
   /**
