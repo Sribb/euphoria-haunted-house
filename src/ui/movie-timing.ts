@@ -9,8 +9,9 @@ import type { Movie } from "../game/movies";
  *   1. The caption is on screen from the start of a beat, so reading time runs alongside the motion
  *      instead of after it. A beat ends once the picture has settled and the caption has been read.
  *   2. The reading rate is as slow as a 17 second movie allows: 45 ms per character for a short movie,
- *      down to 30 ms per character for the longest one. Every caption gets at least 2 seconds.
- * No beat is dropped and no caption is changed.
+ *      down to 30 ms per character for a long one. Every caption gets at least 2 seconds. A movie with
+ *      more text than 17 seconds holds at the fastest rate runs longer; it is never read faster.
+ * No beat is dropped and no caption is changed. The fifteen movies run 15 to 22 seconds.
  */
 
 /** The fade up from black before the first beat, and the pause after the last one before Continue. */

@@ -34,8 +34,14 @@ const RULE = { x: 8, y: 8 };
 const CONTINUE_W = 250;
 const CONTINUE_H = 98;
 const EDGE = 12;
-/** The longest a frame may advance the clock, so a hidden tab pauses the movie instead of skipping it. */
-const MAX_STEP_MS = 100;
+/** A phone on its side: the caption column beside the picture, its width limits, and the gap between. */
+const SIDE_MIN = 240;
+const SIDE_MAX = 420;
+const SIDE_GAP = 16;
+/** The row of candles with its margin. */
+const PIPS_H = 42;
+/** The longest one frame may advance the clock. A hidden tab or a stalled page pauses the movie; it never skips ahead. */
+const MAX_STEP_MS = 250;
 
 const candle = (sp: PixelSprite, rows = sp.rows) => spriteToSvgMarkup({ ...sp, rows, frames: undefined }, 2);
 const PIP_UNLIT = candle(candleUnlit);
@@ -46,6 +52,31 @@ const PIP_FRAME_MS = candleLit.frameMs ?? 150;
 const isGo = (e: KeyboardEvent) => e.code === "Enter" || e.code === "Space" || e.code === "KeyE";
 /** A key held down from before a button appeared must not press it. */
 const noRepeat = (e: KeyboardEvent) => { if (e.repeat) e.preventDefault(); };
+/** How long a button ignores the keyboard after it appears: the press that brought it up is not a press of it. */
+const ARM_MS = 250;
+
+/**
+ * Calls `done` once, on a deliberate press of `button`: a click or tap straight away, or Enter, Space or E
+ * (from anywhere on the page) once the button has been up for ARM_MS.
+ */
+const onPress = (button: HTMLButtonElement, done: () => void) => {
+  let armed = false;
+  let over = false;
+  const go = () => {
+    if (over) return;
+    over = true;
+    button.onclick = null;
+    removeEventListener("keydown", onKey);
+    done();
+  };
+  const onKey = (e: KeyboardEvent) => { if (isGo(e) && !e.repeat) { e.preventDefault(); go(); } };
+  // a click made by the keyboard has no click count; a mouse click or a tap does
+  button.onclick = (e) => { if (armed || e.detail > 0) go(); };
+  setTimeout(() => {
+    armed = true;
+    if (!over) addEventListener("keydown", onKey);
+  }, ARM_MS);
+};
 
 export type MovieHooks = { onStart?: () => void; onBeat?: (i: number) => void; onCue?: (c: StoryCue) => void; onEnd?: () => void };
 
@@ -56,6 +87,7 @@ export class MoviePlayer {
   private labelsEl = this.root.querySelector(".labels") as HTMLElement;
   private captionEl = this.root.querySelector(".caption") as HTMLElement;
   private pipsEl = this.root.querySelector(".pips") as HTMLElement;
+  private progressEl = this.root.querySelector(".progress") as HTMLElement;
   private chipEl = this.root.querySelector(".chip") as HTMLElement;
   private cardEl = this.root.querySelector(".titlecard") as HTMLElement;
   private playEl = this.root.querySelector(".play") as HTMLButtonElement;
@@ -82,30 +114,41 @@ export class MoviePlayer {
   /**
    * Sizes the stage: the largest whole number of device pixels per scene pixel that leaves room for the
    * frame, the movie's tallest caption, the candles and the Continue button. The caption's height is
-   * fixed here too, so the picture never moves when a caption wraps.
+   * fixed here too, so the picture never moves when a caption wraps. Three layouts: the gilt frame with
+   * the caption under it, a phone held upright (thin rule, caption under), and a phone on its side
+   * (thin rule, caption beside the picture).
    */
   private fit() {
     if (this.root.hidden) return;
     const dpr = window.devicePixelRatio || 1;
     const framed = innerWidth >= FRAME_MIN_W && innerHeight >= FRAME_MIN_H;
+    const side = !framed && innerWidth >= innerHeight * 1.4;
     const rim = framed ? GILT : RULE;
     this.root.classList.toggle("framed", framed);
+    this.root.classList.toggle("side", side);
     this.root.classList.toggle("portrait", !framed && innerHeight >= innerWidth * 1.5);
-    let n = Math.max(1, Math.floor(Math.min((innerWidth - rim.x - (framed ? 2 * EDGE : 0)) / STAGE_W, (innerHeight - rim.y - 60) / STAGE_H) * dpr));
+    const wide = innerWidth - rim.x - (framed ? 2 * EDGE : 0) - (side ? SIDE_MIN + SIDE_GAP + 2 * EDGE : 0);
+    const tall = innerHeight - rim.y - (side ? 2 * EDGE : 60);
+    let n = Math.max(1, Math.floor(Math.min(wide / STAGE_W, tall / STAGE_H) * dpr));
     for (; ; n--) {
       const w = (STAGE_W * n) / dpr;
-      const reserve = (innerWidth - w - rim.x) / 2 >= CONTINUE_W ? 0 : CONTINUE_H;
+      const sideW = Math.min(SIDE_MAX, innerWidth - w - rim.x - SIDE_GAP - 2 * EDGE);
+      const reserve = side || (innerWidth - w - rim.x) / 2 >= CONTINUE_W ? 0 : CONTINUE_H;
       this.screen.style.width = `${w}px`;
       this.screen.style.height = `${(STAGE_H * n) / dpr}px`;
       this.root.style.setProperty("--stage-w", `${w}px`);
+      this.root.style.setProperty("--side-w", `${sideW}px`);
       this.root.style.setProperty("--reserve", `${reserve}px`);
       this.root.classList.toggle("compact", w < 480);
-      this.root.classList.toggle("grand", w >= 800);
+      this.root.classList.toggle("roomy", framed && w >= 560);
+      this.root.classList.toggle("grand", framed && w >= 800);
       let capH = 0;
       for (const c of this.captions) { this.measureEl.textContent = c; capH = Math.max(capH, this.measureEl.offsetHeight); }
       this.measureEl.textContent = "";
       this.captionEl.style.minHeight = `${capH}px`;
-      if (n === 1 || this.frameEl.offsetHeight <= innerHeight - reserve - 2 * EDGE) break;
+      // beside the picture, the caption and candles must also leave the corner under them for Continue
+      const fits = this.frameEl.offsetHeight <= innerHeight - reserve - 2 * EDGE && (!side || capH + PIPS_H <= innerHeight - CONTINUE_H - 2 * EDGE);
+      if (n === 1 || fits) break;
     }
   }
 
@@ -131,11 +174,7 @@ export class MoviePlayer {
     this.painter.poster(movie);
 
     return new Promise((resolve) => {
-      let started = false;
       const start = () => {
-        if (started) return;
-        started = true;
-        removeEventListener("keydown", onKey);
         this.cardEl.hidden = true;
         this.root.classList.remove("waiting");
         this.root.focus({ preventScroll: true });
@@ -162,24 +201,16 @@ export class MoviePlayer {
           this.showPips(plan.beats.length, 0);
           this.endEl.hidden = false;
           this.endEl.focus();
-          const finish = () => {
-            this.endEl.removeEventListener("click", finish);
-            removeEventListener("keydown", onEndKey);
+          onPress(this.endEl, () => {
             this.root.hidden = true;
             resolve();
-          };
-          const onEndKey = (e: KeyboardEvent) => { if (isGo(e) && !e.repeat) { e.preventDefault(); finish(); } };
-          this.endEl.addEventListener("click", finish);
-          setTimeout(() => addEventListener("keydown", onEndKey), 250);
+          });
         };
         requestAnimationFrame(tick);
       };
-      const onKey = (e: KeyboardEvent) => { if (isGo(e) && !e.repeat) { e.preventDefault(); start(); } };
-      this.playEl.onclick = start;
       if (freezeAt !== undefined) { start(); return; }
       this.playEl.focus();
-      // the press that opened the clue must not also press Play
-      setTimeout(() => { if (!started) addEventListener("keydown", onKey); }, 250);
+      onPress(this.playEl, start);
     });
   }
 
@@ -210,7 +241,10 @@ export class MoviePlayer {
     this.captionEl.style.transform = drift ? `translateX(${drift * 2}px)` : "";
   }
 
-  /** One candle per beat: lit for the beats played, flickering on beat `now`, unlit for the rest. */
+  /**
+   * One candle per beat: lit for the beats played, flickering on beat `now`, unlit for the rest. The same
+   * progress is written once per beat as words, which a screen reader hears in place of the candles.
+   */
   private showPips(now: number, t: number) {
     const flicker = this.reducedMotion ? 0 : Math.floor(t / PIP_FRAME_MS) % PIP_FLICKER.length;
     const pips = this.pipsEl.children;
@@ -222,7 +256,7 @@ export class MoviePlayer {
       pips[i].innerHTML = html;
     }
     const label = now < 0 ? `${pips.length} parts` : now < pips.length ? `Part ${now + 1} of ${pips.length}` : "The end";
-    if (this.pipsEl.getAttribute("aria-label") !== label) this.pipsEl.setAttribute("aria-label", label);
+    if (this.progressEl.textContent !== label) this.progressEl.textContent = label;
   }
 
   private clearPills() {

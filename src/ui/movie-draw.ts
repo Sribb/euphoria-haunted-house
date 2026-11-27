@@ -10,8 +10,9 @@ import type { Cameo, Movie, MovieBeat } from "../game/movies";
  * drained colour, a violet wash, banks of fog and a vignette that breathes. Every part of it is a flat
  * tone or a soft gradient; there is no grain.
  *
- * The canvas has K pixels per scene pixel, so glides and swells stay smooth. CSS scales it up by a whole
- * number. With reduced motion every beat shows its finished picture: no fog drift, no breathing, no bob.
+ * The canvas has K pixels per scene pixel, so glides and swells stay smooth. movie.ts sizes it so one
+ * scene pixel is a whole number of device pixels. With reduced motion every beat shows its finished
+ * picture: no fog drift, no breathing, no bob.
  */
 const K = 4;
 const W = STAGE_W * K;
@@ -170,7 +171,7 @@ export class MoviePainter {
     for (let k = 0; k < count; k++) {
       const x = (at.x + k * (tileW + gap)) * K;
       const top = Math.round((at.y - h) * K);
-      g.globalAlpha = shot.alpha * (k === mine ? 1 : 0.5);
+      g.globalAlpha = shot.alpha * (k === mine ? 1 : 0.62);
       g.fillStyle = k === mine ? "#E89A2E" : "#5E5870";
       g.fillRect(x, top, tileW * K, at.y * K - top);
       if (k === mine) { g.fillStyle = "#FFD47A"; g.fillRect(x, top, tileW * K, K); }

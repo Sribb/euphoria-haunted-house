@@ -46,7 +46,7 @@ export const FOYER: RoomScript = {
       "Own a piece, or lend it",
       "Two ways to put money to work",
       [...kit.toggleBeats(story.own as Toggle), ...kit.toggleBeats(story.lend as Toggle)],
-      { sprite: miserCalm, beat: 5, x: 50, y: 14 },
+      { sprite: miserCalm, beat: 5, x: 9, y: -2 },
     ),
     clock: kit.make("clock", 3, "The clock strikes", "Watch Maya's money grow", "Growth on growth", clockBeats, { sprite: miserCalm, beat: 3, x: 46, y: 3 }),
   },
