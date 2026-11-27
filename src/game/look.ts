@@ -75,16 +75,16 @@ export const canvasTexture = (w: number, h: number, draw: (g: CanvasRenderingCon
 
 /**
  * Replaces a geometry's UVs with world-space planar UVs, picked per face from its normal, measured in
- * texture tiles of `tilePx` pixels. Texels then match screen pixels on every floor, wall and tabletop,
+ * texture tiles `tilePx` pixels wide and `tileH` tall (square by default). Texels then match screen pixels on every floor, wall and tabletop,
  * whatever the box's size. Call after the geometry is translated into place.
  */
-export const worldUV = (geo: THREE.BufferGeometry, tilePx: number) => {
+export const worldUV = (geo: THREE.BufferGeometry, tilePx: number, tileH = tilePx) => {
   const pos = geo.getAttribute("position");
   const nrm = geo.getAttribute("normal");
   const uv = new Float32Array(pos.count * 2);
   const across = UNIT_PX / tilePx;
-  const deep = (UNIT_PX * SIN_P) / tilePx;
-  const tall = (UNIT_PX * COS_P) / tilePx;
+  const deep = (UNIT_PX * SIN_P) / tileH;
+  const tall = (UNIT_PX * COS_P) / tileH;
   for (let i = 0; i < pos.count; i++) {
     const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
     const nx = Math.abs(nrm.getX(i)), ny = Math.abs(nrm.getY(i)), nz = Math.abs(nrm.getZ(i));
@@ -104,11 +104,12 @@ export const box = (
   max: [number, number, number],
   material: THREE.Material,
   tilePx = 0,
+  tileH = tilePx,
 ) => {
   const size = max.map((v, i) => v - min[i]) as [number, number, number];
   const geo = new THREE.BoxGeometry(...size);
   geo.translate((min[0] + max[0]) / 2, (min[1] + max[1]) / 2, (min[2] + max[2]) / 2);
-  if (tilePx) worldUV(geo, tilePx);
+  if (tilePx) worldUV(geo, tilePx, tileH);
   const mesh = new THREE.Mesh(geo, material);
   mesh.castShadow = true;
   mesh.receiveShadow = true;

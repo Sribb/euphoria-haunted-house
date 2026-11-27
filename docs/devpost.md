@@ -42,7 +42,7 @@ Euphoria Haunted House is a 3D pixel-art game that runs in the browser, on deskt
 - With all three candles lit, the ghost faces you. It asks real questions from the lesson. Each right answer drains its unrest. A wrong answer makes the room flicker, the ghost explains the mistake, and the question comes back.
 - When the ghost is freed, warm light fills the room, the door unseals, and you walk into the next room.
 
-Three rooms are playable today. The Foyer teaches what investing is, with the Miser, who hid every dollar in a drawer and watched it buy less each year. The Cellar teaches risk and reward, with the Gambler, who bet everything on one stock. The Clock Tower teaches compound interest, with the Clockmaker, who always meant to start tomorrow. Two more rooms are planned: stocks versus bonds, and diversification.
+All five rooms are playable today. The Foyer teaches what investing is, with the Miser, who hid every dollar in a drawer and watched it buy less each year. The Cellar teaches risk and reward, with the Gambler, who bet everything on one stock. The Clock Tower teaches compound interest, with the Clockmaker, who always meant to start tomorrow. The Portrait Gallery teaches stocks versus bonds, with the Duchess, who never learned who gets paid first. The Kitchen teaches diversification, with the Cook, who carried every egg he owned in one basket.
 
 The spooky design is not decoration. Light is the progress bar. The ghost's mood is the feedback. The flicker on a wrong answer is the moment the lesson lands.
 
@@ -77,7 +77,7 @@ Fear is a good teacher when it has a shape. A ghost who lost his savings to infl
 
 ### What's next for Euphoria Haunted House
 
-- Rooms 4 and 5: the Portrait Gallery (stocks versus bonds) and the Kitchen (diversification).
+- More rooms, for the next unit of Euphoria's lessons.
 - A mansion map that shows which rooms are at peace.
 - Bringing the best of it back into Euphoria as a seasonal lesson mode.
 
