@@ -8,5 +8,5 @@ dist/
 .vercel/
 
 # local agent tooling: worktrees and session state, never part of the project
-.claude/
+.claude/worktrees/
 .claude-flow/
