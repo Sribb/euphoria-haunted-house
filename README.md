@@ -29,7 +29,7 @@ A haunted 3D pixel-art house you explore with a lantern. Every room is a real in
 | 2. The Cellar | Risk vs. Reward | The Gambler, who bet everything on one stock | Playable |
 | 3. The Clock Tower | The Magic of Compound Interest | The Clockmaker, who always meant to start tomorrow | Playable |
 | 4. The Portrait Gallery | Stocks vs. Bonds | The Duchess, who never learned who gets paid first | Playable |
-| 5. The Kitchen | Diversification | | Next |
+| 5. The Kitchen | Diversification | The Cook, who carried every egg in one basket | Playable |
 
 ## Why the spooky design does a job
 
@@ -70,7 +70,7 @@ This project is new for Kiroween 2026, but it reuses existing code and content f
 | Sprite helpers `s`, `shade`, `withRows` | `src/lib/pixel/helpers.ts` | Euphoria web app, `src/lib/pixel/sprites.ts` |
 | Lesson content: Investing Fundamentals lessons 1 to 5 | `content/euphoria/investing-fundamentals-1-5.json` | Euphoria web app, `src/features/pathway/courses/investingFundamentals.ts`, exported to JSON |
 | Story movie engine (timing, carry-over glides, label and caption swaps) | `src/lib/pixel/story/engine.ts`, `types.ts` | Euphoria web app, `src/lib/pixel/story/` (branch story-lessons), itself a port of the iPhone app's story player |
-| Story art and cards for lessons 1 to 4 | `content/euphoria/if1-story.json` to `if4-story.json` | Euphoria web app, `src/features/pathway/story/lessons/`, exported to JSON |
+| Story art and cards for lessons 1 to 5 | `content/euphoria/if1-story.json` to `if5-story.json` | Euphoria web app, `src/features/pathway/story/lessons/`, exported to JSON |
 | Pixel-art fixer passes (`true_res` grid recovery, `despeckle`, `rim_light`, `palettize`) | `scripts/art/fixer.py` | Tiny Why, Sriyan's video project, `channel/scripts/art/pixelpaint.py` |
 | 3D pixel-art renderer (low-res toon render, outline and palette-snap composite) | `src/game/pipeline.ts` | Tiny Why, `studio/src/pixel3d/pipeline.ts`, which credits three.js RenderPixelatedPass (MIT) and the Project Shadowglass write-ups |
 
@@ -82,7 +82,7 @@ Everything not listed above, including the haunted palette, the 3D rooms, every 
 
 ## How it was built
 
-The starting setup (the engine import, the lesson export, this README and the first steering docs) was prepared with Claude Code on November 27, 2026. Rooms 1 to 4 (the Foyer, the Cellar, the Clock Tower and the Portrait Gallery), the multi-room flow and the art fixer pass were also built with Claude Code that day. The `.kiro/` folder holds the project's steering docs, which describe the product, the stack, the structure and the pixel-art rules.
+The starting setup (the engine import, the lesson export, this README and the first steering docs) was prepared with Claude Code on November 27, 2026. Rooms 1 to 5 (the Foyer, the Cellar, the Clock Tower, the Portrait Gallery and the Kitchen), the multi-room flow and the art fixer pass were also built with Claude Code that day. The `.kiro/` folder holds the project's steering docs, which describe the product, the stack, the structure and the pixel-art rules.
 
 ## License
 

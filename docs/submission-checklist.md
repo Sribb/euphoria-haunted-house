@@ -6,7 +6,7 @@ This list follows the requirements on the Kiroween 2026 overview page. Read the 
 
 ## Must have, or the entry does not count
 
-- [ ] **The project uses Kiro.** Not done yet. Both playable rooms were built with Claude Code. Build the remaining rooms in Kiro and keep notes for the write-up. See "How Kiro was used" in `docs/devpost.md`.
+- [ ] **The project uses Kiro.** Not done yet. All five rooms were built with Claude Code. Kiro still has to do real work on this project before you submit: for example the mansion map, a gallery of freed ghosts, tests, or a polish pass driven by specs and hooks. Keep notes for the write-up. See "How Kiro was used" in `docs/devpost.md`.
 - [x] **Public GitHub repo** (not GitLab or Bitbucket): https://github.com/Sribb/euphoria-haunted-house
 - [x] **Open source license file, visible in the repo's About section.** MIT, detected by GitHub.
 - [x] **`/.kiro` directory at the repo root, not in `.gitignore`.** Steering docs are committed. Add specs and hooks as you use Kiro.
@@ -30,7 +30,7 @@ This list follows the requirements on the Kiroween 2026 overview page. Read the 
 | --- | --- | --- |
 | Potential Impact | Real problem, real audience, would someone use it? | Strong: teens who find investing scary, backed by a real app. |
 | Technological Implementation | How thoroughly and skilfully was Kiro used? | **Weak until Kiro is used.** This is the biggest risk. |
-| Design | Complete, coherent, polished product? | Good and improving: two full rooms, cutscenes, encounters, phone support. |
+| Design | Complete, coherent, polished product? | Good and improving: five full rooms, cutscenes, encounters, phone support. |
 | Innovation | Novel concept, unusual tech or resources? | Strong: 3D-as-pixel-art renderer, lessons as ghost stories. |
 | Presentation | Does the video show it working end to end and tell the story? | Not started. Script is ready. |
 
