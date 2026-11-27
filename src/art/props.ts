@@ -184,4 +184,52 @@ const WISP_FRAMES = [
 ];
 export const wisp = s("wisp", "Clue wisp", ["clue", "hint"], "Floats over a clue you have not found yet.", WISP_FRAMES[0], { frameMs: 160, frames: WISP_FRAMES });
 
-export const PROP_SPRITES = [portraitOwn, portraitLend, clockFace, doorSeal, smallFlame, wisp];
+const CLUE_WISP_FRAMES = [
+  [
+    "....t....",
+    "....T....",
+    "...tTt...",
+    "..tTWTt..",
+    "tTTWWWTTt",
+    "..tTWTt..",
+    "...tTt...",
+    "....T....",
+    "....t....",
+  ],
+  [
+    ".........",
+    "....t....",
+    "....T....",
+    "...TWT...",
+    ".tTWWWTt.",
+    "...TWT...",
+    "....T....",
+    "....t....",
+    ".........",
+  ],
+  [
+    ".........",
+    ".........",
+    "...tTt...",
+    "..tTWTt..",
+    "..TWWWT..",
+    "..tTWTt..",
+    "...tTt...",
+    ".........",
+    ".........",
+  ],
+  [
+    ".........",
+    "....t....",
+    "....T....",
+    "...TWT...",
+    ".tTWWWTt.",
+    "...TWT...",
+    "....T....",
+    "....t....",
+    ".........",
+  ],
+];
+export const clueWisp = s("clue-wisp", "Clue wisp, large", ["clue", "hint"], "The 3D marker over a clue you have not found yet. Loop it.", CLUE_WISP_FRAMES[0], { frameMs: 170, frames: CLUE_WISP_FRAMES });
+
+export const PROP_SPRITES = [portraitOwn, portraitLend, clockFace, doorSeal, smallFlame, wisp, clueWisp];

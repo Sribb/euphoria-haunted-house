@@ -59,6 +59,6 @@ Three bugs taught us the most:
 
 ### What is next
 
-Three more rooms: compound interest in the Clock Tower, stocks versus bonds in the Portrait Gallery, and diversification in the Kitchen. After that, we want to bring the best of it back into Euphoria.
+A mansion map that shows which rooms are at peace, and more rooms for the next unit of lessons. After that, we want to bring the best of it back into Euphoria.
 
 If investing ever felt scary to you, come free a ghost.
