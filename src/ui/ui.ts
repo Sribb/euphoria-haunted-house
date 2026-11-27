@@ -1,6 +1,6 @@
 import { candleLit, candleUnlit } from "../art/candle";
 import { spriteToSvgMarkup } from "../lib/pixel/svg";
-import type { Page, Question } from "../game/story";
+import type { Page, Question } from "../game/room";
 
 const $ = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector(sel) as T;
 const ADVANCE = new Set(["Space", "Enter", "KeyE"]);

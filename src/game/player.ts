@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { PLAYER_SPRITES, type Facing } from "../art/player";
 import { Billboard } from "./billboard";
-import type { Rect } from "./foyer";
+import type { Rect } from "./room";
 import type { Input } from "./input";
 
 const RADIUS = 0.28;

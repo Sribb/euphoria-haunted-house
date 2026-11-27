@@ -27,7 +27,7 @@ export class FollowCamera {
    * `view` is the part of the world worth showing, in screen axes: x across, and u up the screen
    * (u = y * COS_P - z * SIN_P), so the top of a tall back wall counts, not just the floor's edge.
    */
-  constructor(private camera: THREE.OrthographicCamera, private view: { x0: number; x1: number; u0: number; u1: number }) {
+  constructor(private camera: THREE.OrthographicCamera, public view: { x0: number; x1: number; u0: number; u1: number }) {
     camera.rotation.set(-Math.atan2(SIN_P, COS_P), 0, 0);
   }
 

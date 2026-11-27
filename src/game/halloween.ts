@@ -117,6 +117,7 @@ const DRESSING: Record<string, Spot[]> = {
   bank: [[bat, 46, 2, drift(5, 3300)], [bat, 58, 8, drift(3, 2900, 0.3)], [gravestone, 66, 45], [gravestone, 73, 47]],
   "coin-plus": [[bat, 56, 3, drift(5, 3200)], [gravestone, 66, 45], [jackOLantern, 72, 52]],
   stacks: [[bat, 50, 3, drift(5, 3200)], [jackOLantern, 72, 52]],
+  board: [[cobweb, 0, 0], [spider, 74, 0, bob(3, 2600)]],
   "orchard-moon": [[bat, 40, 3, drift(5, 3200)], [gravestone, 46, 45], [tinyGhost, 36, 16, bob(2, 2400)], [jackOLantern, 71, 53]],
 };
 

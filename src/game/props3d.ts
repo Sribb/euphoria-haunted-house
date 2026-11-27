@@ -241,3 +241,49 @@ export const archTrim = (cx: number, springY: number, radius: number, z: number,
   m.castShadow = true;
   return m;
 };
+
+/** A wooden barrel with iron hoops, standing, or lying on its side when `lying`. */
+export const barrel = (x: number, y: number, z: number, lying = false, turn = 0) => {
+  const g = new THREE.Group();
+  const h = 1.0;
+  const body = lathe([[0, 0], [0.32, 0], [0.38, h * 0.2], [0.41, h * 0.5], [0.38, h * 0.8], [0.32, h], [0, h]], wood, 14);
+  g.add(body);
+  const iron = toon(X.stoneLight);
+  for (const [hy, r] of [[0.08, 0.335], [0.3, 0.395], [0.7, 0.395], [0.92, 0.335]]) {
+    const hoop = new THREE.Mesh(new THREE.TorusGeometry(r, 0.025, 4, 18), iron);
+    hoop.rotation.x = Math.PI / 2;
+    hoop.position.y = hy;
+    g.add(hoop);
+  }
+  const lid = new THREE.Mesh(new THREE.CylinderGeometry(0.31, 0.31, 0.02, 14), woodDark);
+  lid.position.y = h;
+  g.add(lid);
+  if (lying) {
+    g.rotation.z = Math.PI / 2;
+    g.position.set(x + h / 2, y + 0.41, z);
+  } else {
+    g.position.set(x, y, z);
+  }
+  g.rotation.y = turn;
+  return tag(g, 185 + Math.round(Math.abs(x * 7 + z * 3)) % 10);
+};
+
+/** A slatted wooden crate, `w` x `h` x `d`, its base centred at (x, z). */
+export const crate = (x: number, y: number, z: number, w = 0.9, h = 0.7, d = 0.7) => {
+  const g = new THREE.Group();
+  const core = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), wood);
+  core.position.y = h / 2;
+  g.add(core);
+  for (const sy of [0.04, h - 0.04]) {
+    const slat = new THREE.Mesh(new THREE.BoxGeometry(w + 0.04, 0.08, d + 0.04), woodDark);
+    slat.position.y = sy;
+    g.add(slat);
+  }
+  for (const sx of [-w / 2, w / 2]) {
+    const post = new THREE.Mesh(new THREE.BoxGeometry(0.08, h, d + 0.04), woodDark);
+    post.position.set(sx, h / 2, 0);
+    g.add(post);
+  }
+  g.position.set(x, y, z);
+  return tag(g, 196 + Math.round(Math.abs(x * 5 + z)) % 10);
+};

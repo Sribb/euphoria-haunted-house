@@ -3,6 +3,7 @@ import { clockFace, doorSeal, portraitLend, portraitOwn, wisp } from "../art/pro
 import { HAUNTED_PIXEL_PALETTE as P } from "../lib/pixel/haunted-palette";
 import { Billboard } from "./billboard";
 import { Candle } from "./candles";
+import type { Clue, Rect, Room } from "./room";
 import { box, COS_P, SCENE_EXTRAS as X, toon, toonMap, UNIT_PX, worldUV } from "./look";
 import { archInfill, archTrim, armchair, candelabra, cobweb, deadPlant, jackOLantern, lathe, pedestalTable, trunk, turnedLeg } from "./props3d";
 import { books, nightSky, planks, rug, spriteTextures, wainscot, wallpaper } from "./textures";
@@ -13,9 +14,6 @@ import { books, nightSky, planks, rug, spriteTextures, wainscot, wallpaper } fro
  * (multiples of 1 / (UNIT_PX * COS_P)), so wall edges and textures line up with the pixel grid.
  */
 
-export type Rect = { x0: number; z0: number; x1: number; z1: number };
-export type ClueId = "drawer" | "portraits" | "clock";
-export type Clue = { id: ClueId; at: THREE.Vector3; radius: number; candle: number; wisp: Billboard; found: boolean };
 
 const WALL_Z = -6.25;
 const WALL_H = 5;
@@ -36,7 +34,7 @@ const wallSprite = (tex: THREE.Texture, wPx: number, hPx: number, cx: number, bo
   return m;
 };
 
-export const buildFoyer = () => {
+export const buildFoyer = (): Room => {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color("#07050C");
   const colliders: Rect[] = [];
@@ -266,7 +264,7 @@ export const buildFoyer = () => {
   for (const c of candles) scene.add(c.group);
 
   // clues, each marked by a wisp until found
-  const clue = (id: ClueId, at: [number, number], wispAt: [number, number, number], candle: number): Clue => {
+  const clue = (id: string, at: [number, number], wispAt: [number, number, number], candle: number): Clue => {
     const w = new Billboard(wisp, { noInfo: true });
     w.position.set(...wispAt);
     scene.add(w.group);
@@ -359,16 +357,15 @@ export const buildFoyer = () => {
   return {
     scene,
     colliders,
-    /** Where the player can walk (their centre), before colliders. */
     bounds: { x0: -7.7, x1: 7.7, z0: WALL_Z + 0.35, z1: 4.6 },
     clues,
     candles,
     ghostHome: new THREE.Vector3(0, 0, WALL_Z + 1.2),
-    door: { x0: -DOOR_W + 0.3, x1: DOOR_W - 0.3, z: WALL_Z },
+    door: { x0: -DOOR_W + 0.3, x1: DOOR_W - 0.3, z: WALL_Z, corridorZ: -8.0, exitZ: -7.6 },
+    spawn: new THREE.Vector3(0, 0, 3.4),
+    view: { x0: -8.6, x1: 8.6, u0: -3.3, u1: 7.9 },
     state,
     update,
     celebrate,
   };
 };
-
-export type Foyer = ReturnType<typeof buildFoyer>;

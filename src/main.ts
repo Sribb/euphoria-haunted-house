@@ -1,29 +1,28 @@
 import * as THREE from "three";
-import { miserCalm as ghostCalm, miserFreed as ghostFreed, miserRestless as ghostRestless, miserRestless } from "./art/miser";
+import { candleLit } from "./art/candle";
+import { miserRestless } from "./art/miser";
+import { wisp } from "./art/props";
 import { Sound } from "./game/audio";
 import { Billboard } from "./game/billboard";
 import { FollowCamera } from "./game/camera";
-import { buildFoyer, type Clue } from "./game/foyer";
 import { Input } from "./game/input";
 import { SCENE_PALETTE, UNIT_PX } from "./game/look";
 import { Particles } from "./game/particles";
 import { createPipeline } from "./game/pipeline";
 import { Player, type Blocker } from "./game/player";
-import { MOVIES } from "./game/movies";
-import { candleLit } from "./art/candle";
-import { wisp } from "./art/props";
-import { spriteToSvgMarkup } from "./lib/pixel/svg";
-import { CLUE_LABEL, GHOST_LINES, GHOST_NAME, QUESTIONS } from "./game/story";
+import type { Clue, Room, RoomScript } from "./game/room";
+import { NEXT_ROOMS, ROOMS, TOTAL_ROOMS } from "./game/rooms";
 import { buildPlan } from "./lib/pixel/story/engine";
+import { spriteToSvgMarkup } from "./lib/pixel/svg";
 import { MoviePlayer } from "./ui/movie";
 import { UI } from "./ui/ui";
 
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-const SAVE_KEY = "euphoria-haunted-foyer-v1";
+const SAVE_KEY = "euphoria-haunted-v2";
 const INTRO_KEY = "euphoria-haunted-intro-seen";
 const TARGET_H = 190;
 
-// ---- world
+// ---- systems shared by every room
 const canvas = document.getElementById("view") as HTMLCanvasElement;
 // Tiny Why's grade: shadows lifted toward violet, highlights pushed warm, and moonlit rim edges
 const pipeline = createPipeline(canvas, UNIT_PX, {
@@ -34,23 +33,22 @@ const pipeline = createPipeline(canvas, UNIT_PX, {
   gain: [1.06, 1.0, 0.95],
   rimLight: 1.45,
 });
-const foyer = buildFoyer();
-const { scene } = foyer;
-const player = new Player(scene);
-const ghost = new Billboard(ghostRestless, { pid: 70, lift: 0.5, shadow: 0.42 });
-ghost.position.copy(foyer.ghostHome);
-scene.add(ghost.group);
-const ghostLight = new THREE.PointLight("#D63A3A", 2.6, 4.5, 1.2);
-scene.add(ghostLight);
-const particles = new Particles(scene);
-const cam = new FollowCamera(pipeline.camera, { x0: -8.6, x1: 8.6, u0: -3.3, u1: 7.9 });
 const input = new Input(document.getElementById("stage")!);
 const sound = new Sound();
 const ui = new UI(reducedMotion);
 const movies = new MoviePlayer(reducedMotion);
+const cam = new FollowCamera(pipeline.camera, { x0: -8.6, x1: 8.6, u0: -3.3, u1: 7.9 });
 
-type Phase = "title" | "explore" | "battle" | "end";
+// ---- the current room (replaced on every walk through a door)
+type Phase = "title" | "explore" | "battle" | "moving" | "end";
 let phase: Phase = "title";
+let roomIndex = 0;
+let script: RoomScript = ROOMS[0];
+let room: Room = script.build();
+const player = new Player(room.scene);
+const particles = new Particles(room.scene);
+let ghost = new Billboard(script.ghost.restless, { pid: 70, lift: 0.5, shadow: 0.42 });
+const ghostLight = new THREE.PointLight(script.ghost.light, 2.6, 4.5, 1.2);
 let lit = 0;
 let freed = false;
 let ghostGone = false;
@@ -58,7 +56,31 @@ let flicker = 0;
 let t = 0;
 let scale = 4;
 let viewW = 2, viewH = 2;
-const base = { exposure: 1 };
+
+/** Builds room `i` and moves the player, lantern, particles and a fresh ghost into it. */
+const enterRoom = (i: number, found: string[] = [], wasFreed = false) => {
+  roomIndex = i;
+  script = ROOMS[i];
+  room = script.build();
+  room.scene.add(player.sprite.group, player.lantern, particles.points, ghostLight);
+  ghost = new Billboard(script.ghost.restless, { pid: 70, lift: 0.5, shadow: 0.42 });
+  ghost.position.copy(room.ghostHome);
+  room.scene.add(ghost.group);
+  ghostLight.color.set(script.ghost.light);
+  ghostLight.intensity = 2.6;
+  player.position.copy(room.spawn);
+  player.velocity.set(0, 0);
+  cam.view = room.view;
+  cam.jumpTo(player.position);
+  lit = 0;
+  freed = false;
+  ghostGone = false;
+  for (const c of room.clues) if (found.includes(c.id)) { c.found = true; c.wisp.group.visible = false; room.candles[c.candle].setLit(); lit++; }
+  if (wasFreed) { freed = true; ghostGone = true; ghost.group.visible = false; ghostLight.intensity = 0; room.celebrate(); }
+  document.getElementById("room-num")!.textContent = `Room ${script.num} of ${TOTAL_ROOMS}`;
+  document.getElementById("room-name")!.textContent = script.name;
+  showProgress();
+};
 
 // ---- sizing: a low-res canvas scaled up by a whole number, plus one hidden pixel of pad on each side
 const resize = () => {
@@ -78,31 +100,27 @@ resize();
 // ---- saved progress (optional: the game works the same if storage is blocked)
 const save = () => {
   try {
-    localStorage.setItem(SAVE_KEY, JSON.stringify({ found: foyer.clues.filter((c) => c.found).map((c) => c.id), freed }));
+    localStorage.setItem(SAVE_KEY, JSON.stringify({ room: roomIndex, found: room.clues.filter((c) => c.found).map((c) => c.id), freed }));
   } catch { /* storage blocked: progress just is not kept */ }
 };
 const load = () => {
   try {
-    const s = JSON.parse(localStorage.getItem(SAVE_KEY) ?? "null") as { found: string[]; freed: boolean } | null;
-    if (!s) return;
-    for (const c of foyer.clues) if (s.found.includes(c.id)) { c.found = true; c.wisp.group.visible = false; foyer.candles[c.candle].setLit(); lit++; }
-    if (s.freed) { freed = true; ghostGone = true; ghost.group.visible = false; ghostLight.intensity = 0; foyer.celebrate(); }
+    const s = JSON.parse(localStorage.getItem(SAVE_KEY) ?? "null") as { room: number; found: string[]; freed: boolean } | null;
+    if (s && ROOMS[s.room]) return enterRoom(s.room, s.found, s.freed);
   } catch { /* ignore a broken save */ }
+  enterRoom(0);
 };
-load();
 
 /** The HUD's candles and its goal line, always in step with progress. */
-const showProgress = () => {
+function showProgress() {
   ui.setCandles(lit, 3);
-  const goal = document.getElementById("objective")!;
   document.getElementById("candle-count")!.textContent = `${lit} of 3`;
-  goal.textContent = foyer.state.doorOpen || freed
-    ? "The Miser is free. Walk through the door."
+  document.getElementById("objective")!.textContent = room.state.doorOpen || freed
+    ? `${script.ghost.name} is free. Walk through the door.`
     : lit < 3
       ? "Find the glowing clues to light the candles."
-      : "Face the Miser at the door.";
-};
-showProgress();
+      : `Face ${script.ghost.name} at the door.`;
+}
 
 // ---- feedback helpers
 const flash = (amount: number, color: string) => {
@@ -114,11 +132,11 @@ const ghostTop = () => ghost.position.clone().add(new THREE.Vector3(0, ghost.lif
 
 // ---- interactions
 /** Each clue plays its cutscene: fullscreen, started with Play, unskippable, then Continue. */
-const playMovie = async (id: Clue["id"], freezeAt?: number) => {
+const playMovie = async (id: string, freezeAt?: number) => {
   ui.busy = true;
   ui.prompt(null);
   await movies.play(
-    MOVIES[id],
+    script.movies[id],
     { onStart: () => sound.movieStart(), onBeat: (i) => i > 0 && sound.beat(), onCue: (c) => sound.cue(c.do), onEnd: () => sound.movieStop() },
     freezeAt,
   );
@@ -131,7 +149,7 @@ const examine = async (clue: Clue) => {
   input.takeAction();
   clue.found = true;
   clue.wisp.group.visible = false;
-  const candle = foyer.candles[clue.candle];
+  const candle = room.candles[clue.candle];
   candle.ignite();
   sound.ignite();
   particles.burst(candle.top.clone().add(new THREE.Vector3(0, 0.45, 0)), ["#FFD47A", "#FF9A3C", "#FFE3A0", "#E8661C"], 30, 0.9, 1.4, 0.9);
@@ -139,10 +157,8 @@ const examine = async (clue: Clue) => {
   cam.shake(0.18);
   lit++;
   showProgress();
-  ui.toast(lit < 3 ? `Candle lit: ${lit} of 3` : "All three candles are lit. Face the Miser.");
-  if (lit === 3) {
-    setTimeout(() => { sound.boo(); cam.shake(0.35); flash(0.18, "#D63A3A"); }, 900);
-  }
+  ui.toast(lit < 3 ? `Candle lit: ${lit} of 3` : `All three candles are lit. Face ${script.ghost.name}.`);
+  if (lit === 3) setTimeout(() => { sound.boo(); cam.shake(0.35); flash(0.18, "#D63A3A"); }, 900);
   save();
 };
 
@@ -156,53 +172,54 @@ const encounter = async () => {
   player.position.set(ghost.position.x, 0, ghost.position.z + 2.3);
   player.velocity.set(0, 0);
   cam.zoom = 2;
-  // centre 0.7 units in front of the ghost: at 2x zoom the Miser's top hat clears the letterbox and the
+  // centre 0.7 units in front of the ghost: at 2x zoom the ghost's head clears the letterbox and the
   // player's head and shoulders stay above the question panel
   cam.jumpTo(ghost.position.clone().add(new THREE.Vector3(0, 0, 0.7)));
   flash(0.9, "#FFFBEF");
   await ui.wipe(false);
-  await ui.dialog(GHOST_LINES.intro);
-  ui.openBattle(GHOST_NAME, QUESTIONS.length);
-  let unrest = QUESTIONS.length;
+  await ui.dialog(script.lines.intro);
+  const questions = script.questions;
+  ui.openBattle(script.ghost.name, questions.length);
+  let unrest = questions.length;
   let qi = 0;
   while (unrest > 0) {
-    const q = QUESTIONS[qi];
+    const q = questions[qi];
     const chosen = await ui.ask(q);
     const good = chosen === q.correct;
     if (good) {
       unrest--;
       ui.setUnrest(unrest);
       sound.right();
-      ghost.setSprite(ghostCalm);
+      ghost.setSprite(script.ghost.calm);
       particles.burst(ghostTop(), ["#6FE3E8", "#DCC8FF", "#FFFBEF"], 24, 1.2, 0.8, 0.8, 0);
       flash(0.2, "#6FE3E8");
       cam.shake(0.15);
     } else {
       sound.wrong();
-      ghost.setSprite(ghostRestless);
+      ghost.setSprite(script.ghost.restless);
       particles.burst(ghostTop(), ["#D63A3A", "#F08A80", "#951C4C"], 24, 1.6, 0.6, 0.7, 0);
       flicker = 0.6;
       cam.shake(0.6);
     }
-    await ui.answer(q, chosen, pick(good ? GHOST_LINES.right : GHOST_LINES.wrong));
+    await ui.answer(q, chosen, pick(good ? script.lines.right : script.lines.wrong));
     if (good) qi++;
   }
   ui.closeBattle();
 
-  // freed: the ghost glows, thanks you, and rises away; the chandelier lights and the door unseals
+  // freed: the ghost glows, thanks you, and rises away; warm light fills the room and the door unseals
   freed = true;
-  ghost.setSprite(ghostFreed);
+  ghost.setSprite(script.ghost.freed);
   ghost.loop = false;
   ghost.play(true);
   sound.freed();
   flash(0.7, "#6FE3E8");
   particles.burst(ghostTop(), ["#6FE3E8", "#FFFBEF", "#DCC8FF", "#8FB8F0"], 80, 2, 1.2, 1.6, -0.3);
-  await ui.dialog(GHOST_LINES.freed);
+  await ui.dialog(script.lines.freed);
   input.takeAction();
   flash(0.6, "#FFFBEF");
   cam.zoom = 1;
   cam.jumpTo(player.position);
-  foyer.celebrate();
+  room.celebrate();
   setTimeout(() => { ui.toast("The door is open."); showProgress(); }, 1700);
   phase = "explore";
   input.locked = false;
@@ -214,26 +231,40 @@ const talkToGhost = async () => {
     sound.boo();
     cam.shake(0.3);
     flash(0.15, "#D63A3A");
-    await ui.dialog(GHOST_LINES.tooSoon);
+    await ui.dialog(script.lines.tooSoon);
     input.takeAction();
     return;
   }
   await encounter();
 };
 
-const finish = async () => {
-  phase = "end";
+/** Through the door: on to the next room, or the end card after the last one built. */
+const leaveRoom = async () => {
+  phase = "moving";
   input.locked = true;
   await ui.fade(1, 900);
+  const next = roomIndex + 1;
+  if (ROOMS[next]) {
+    enterRoom(next);
+    save();
+    await ui.fade(0, 700);
+    ui.toast(`Room ${script.num}: ${script.name}`);
+    phase = "explore";
+    input.locked = false;
+    return;
+  }
+  phase = "end";
   document.getElementById("hud")!.hidden = true;
+  document.getElementById("end-kicker")!.textContent = `${ROOMS.length} of ${TOTAL_ROOMS} rooms complete`;
+  document.getElementById("end-next")!.textContent = NEXT_ROOMS.length ? `Coming next: ${NEXT_ROOMS.join(", ")}.` : "";
   document.getElementById("end")!.hidden = false;
   await ui.fade(0, 600);
 };
 
-// ---- title, mute, restart, touch action
+// ---- title, intro, mute, restart, touch action
 const intro = document.getElementById("intro")!;
-for (const [key, sprite, scale] of [["wisp", wisp, 8], ["candle", candleLit, 3], ["ghost", miserRestless, 1.5]] as const)
-  intro.querySelector(`[data-icon="${key}"]`)!.innerHTML = spriteToSvgMarkup(sprite, scale);
+for (const [key, sprite, size] of [["wisp", wisp, 8], ["candle", candleLit, 3], ["ghost", miserRestless, 1.5]] as const)
+  intro.querySelector(`[data-icon="${key}"]`)!.innerHTML = spriteToSvgMarkup(sprite, size);
 
 const begin = () => {
   intro.hidden = true;
@@ -270,7 +301,7 @@ document.getElementById("restart")!.addEventListener("click", () => {
 });
 document.getElementById("act")!.addEventListener("click", () => input.pressAction());
 player.onStep = () => sound.step();
-cam.jumpTo(player.position);
+load();
 
 // ---- the frame loop
 const projectToScreen = (p: THREE.Vector3) => {
@@ -287,10 +318,11 @@ const frame = (now: number) => {
   input.update();
   if (phase !== "explore" || ui.busy) { input.move.x = 0; input.move.y = 0; }
 
-  // walkable area: the doorway opens into the corridor once the ghost is freed
-  const open = foyer.state.doorOpen;
-  const walk = { ...foyer.bounds, z0: open && Math.abs(player.position.x) < 0.75 ? -8.0 : foyer.bounds.z0 };
-  const colliders = open ? [...foyer.colliders, { x0: -9, z0: -9, x1: -0.8, z1: -6.2 }, { x0: 0.8, z0: -9, x1: 9, z1: -6.2 }] : foyer.colliders;
+  // walkable area: the doorway opens into the passage once the ghost is freed
+  const open = room.state.doorOpen;
+  const d = room.door;
+  const walk = { ...room.bounds, z0: open && player.position.x > d.x0 - 0.45 && player.position.x < d.x1 + 0.45 ? d.corridorZ : room.bounds.z0 };
+  const colliders = open ? [...room.colliders, { x0: -9, z0: -9, x1: d.x0 - 0.5, z1: d.z + 0.05 }, { x0: d.x1 + 0.5, z0: -9, x1: 9, z1: d.z + 0.05 }] : room.colliders;
   const blockers: Blocker[] = ghostGone ? [] : [{ x: ghost.position.x, z: ghost.position.z, r: 0.55 }];
   player.update(dt, t, input, walk, colliders, blockers, pipeline.camera, reducedMotion);
 
@@ -305,7 +337,7 @@ const frame = (now: number) => {
       if (m.opacity <= 0) { ghostGone = true; ghost.group.visible = false; }
     } else {
       ghost.lift = 0.5 + (reducedMotion ? 0 : 0.1 * Math.sin(t * 1.7));
-      ghostLight.color.set(freed ? "#6FE3E8" : "#D63A3A");
+      ghostLight.color.set(freed ? "#6FE3E8" : script.ghost.light);
       ghostLight.intensity = 2.6 * (0.85 + 0.15 * Math.sin(t * 3.1));
     }
     ghostLight.position.set(ghost.position.x, ghost.lift + 1.1, ghost.position.z + 0.6);
@@ -316,7 +348,7 @@ const frame = (now: number) => {
     ghost.update(dt, pipeline.camera, reducedMotion);
   }
 
-  foyer.update(dt, t, pipeline.camera, reducedMotion);
+  room.update(dt, t, pipeline.camera, reducedMotion);
   particles.update(dt);
 
   // dread grows as you near a restless ghost: louder drone, a tighter vignette
@@ -326,8 +358,7 @@ const frame = (now: number) => {
   pipeline.effects.vignette = 0.32 + 0.33 * dread;
   pipeline.effects.flash = Math.max(0, pipeline.effects.flash - dt * 2.6);
   flicker = Math.max(0, flicker - dt);
-  const target = (freed ? 1.04 : base.exposure) * (flicker > 0 && Math.sin(t * 55) > 0 ? 0.45 : 1);
-  pipeline.effects.exposure = target;
+  pipeline.effects.exposure = (freed ? 1.04 : 1) * (flicker > 0 && Math.sin(t * 55) > 0 ? 0.45 : 1);
 
   if (phase !== "battle") cam.target.copy(phase === "title" ? new THREE.Vector3(0, 0, -1.5) : player.position);
   cam.update(dt, viewW, viewH, reducedMotion);
@@ -337,13 +368,13 @@ const frame = (now: number) => {
   if (phase === "explore" && !ui.busy) {
     let best: { label: string; at: THREE.Vector3; run: () => void } | null = null;
     let bestD = Infinity;
-    for (const c of foyer.clues) {
+    for (const c of room.clues) {
       if (c.found) continue;
-      const d = player.position.distanceTo(c.at);
-      if (d < c.radius && d < bestD) { bestD = d; best = { label: CLUE_LABEL[c.id], at: c.wisp.position, run: () => void examine(c) }; }
+      const cd = player.position.distanceTo(c.at);
+      if (cd < c.radius && cd < bestD) { bestD = cd; best = { label: script.clueLabels[c.id], at: c.wisp.position, run: () => void examine(c) }; }
     }
     if (!ghostGone && !freed && dist < 1.9 && dist < bestD) {
-      best = { label: lit < 3 ? "Speak to the ghost" : "Face the Miser", at: ghostTop(), run: () => void talkToGhost() };
+      best = { label: lit < 3 ? "Speak to the ghost" : `Face ${script.ghost.name}`, at: ghostTop(), run: () => void talkToGhost() };
     }
     if (best) {
       const s = projectToScreen(best.at.clone().add(new THREE.Vector3(0, 0.35, 0)));
@@ -353,10 +384,10 @@ const frame = (now: number) => {
       ui.prompt(null);
       input.takeAction();
     }
-    if (open && player.position.z < -7.6) void finish();
+    if (open && player.position.z < d.exitZ) void leaveRoom();
   }
 
-  pipeline.render(scene);
+  pipeline.render(room.scene);
   requestAnimationFrame(frame);
 };
 requestAnimationFrame(frame);
@@ -365,16 +396,22 @@ requestAnimationFrame(frame);
 if (import.meta.env.DEV) {
   Object.assign(window, {
     __game: {
-      get state() { return { phase, lit, freed, ghostGone, busy: ui.busy, player: player.position.toArray(), facing: player.facing, door: foyer.state.doorOpen }; },
+      get state() {
+        return { phase, room: script.key, lit, freed, ghostGone, busy: ui.busy, player: player.position.toArray(), facing: player.facing, door: room.state.doorOpen };
+      },
       teleport: (x: number, z: number) => { player.position.set(x, 0, z); cam.jumpTo(player.position); },
-      /** Opens a cutscene frozen at movie time `ms`, for checking a frame. */
-      movieAt: (id: Clue["id"], ms: number) => void playMovie(id, ms),
+      /** Jumps straight to room `i` (0-based). */
+      room: (i: number) => { enterRoom(i); phase = "explore"; },
+      /** Opens the current room's cutscene frozen at movie time `ms`, for checking a frame. */
+      movieAt: (id: string, ms: number) => void playMovie(id, ms),
+      movieBeats: (id: string) => buildPlan([script.movies[id].lesson]).lessons[0].beats.map((b) => [b.start, b.end, b.motion]),
+      clueIds: () => room.clues.map((c) => c.id),
+      answerKey: () => script.questions.map((q) => q.correct),
       /** Lights every candle without the movies, for quick visual checks. */
       lightAll: () => {
-        for (const c of foyer.clues) if (!c.found) { c.found = true; c.wisp.group.visible = false; foyer.candles[c.candle].setLit(); lit++; }
+        for (const c of room.clues) if (!c.found) { c.found = true; c.wisp.group.visible = false; room.candles[c.candle].setLit(); lit++; }
         showProgress();
       },
-      movieBeats: (id: Clue["id"]) => buildPlan([MOVIES[id].lesson]).lessons[0].beats.map((b) => [b.start, b.end, b.motion]),
     },
   });
 }
