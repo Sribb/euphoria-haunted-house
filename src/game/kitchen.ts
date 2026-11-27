@@ -1,8 +1,9 @@
 import * as THREE from "three";
-import { doorSeal, smallFlame, wisp } from "../art/props";
+import { doorSeal, smallFlame } from "../art/props";
 import { HAUNTED_PIXEL_PALETTE as P } from "../lib/pixel/haunted-palette";
 import { Billboard } from "./billboard";
 import { Candle } from "./candles";
+import { makeClue, updateClues } from "./clues";
 import { box, COS_P, SCENE_EXTRAS as X, toon, toonMap, UNIT_PX, worldUV } from "./look";
 import { archInfill, archTrim, barrel, cobweb, crate, facet, jackOLantern, lathe } from "./props3d";
 import type { Clue, Rect, Room } from "./room";
@@ -291,13 +292,8 @@ export const buildKitchen = (): Room => {
   for (const c of candles) scene.add(c.group);
 
   // ---- clues
-  const clue = (id: string, at: [number, number], wispAt: [number, number, number], candle: number): Clue => {
-    const w = new Billboard(wisp, { noInfo: true });
-    w.position.set(...wispAt);
-    scene.add(w.group);
-    billboards.push(w);
-    return { id, at: new THREE.Vector3(at[0], 0, at[1]), radius: 1.5, candle, wisp: w, found: false };
-  };
+  const clue = (id: string, at: [number, number], wispAt: [number, number, number], candle: number): Clue =>
+    makeClue(scene, id, at, wispAt, candle, 1.5);
   const clues = [
     clue("basket", [tx, tz + 1.4], [tx - 0.2, 2.0, tz], 0),
     clue("jars", [5.3, WALL_Z + 2.3], [5.3, 3.3, WALL_Z + 0.3], 1),
@@ -319,7 +315,7 @@ export const buildKitchen = (): Room => {
   const dustPos = new Float32Array(dustCount * 3);
   for (let i = 0; i < dustCount; i++) dustPos.set([2.4 + (Math.random() - 0.5) * 1.4, Math.random() * 3.4, -5.4 + Math.random() * 3.6], i * 3);
   dustGeo.setAttribute("position", new THREE.BufferAttribute(dustPos, 3));
-  const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({ color: P.B, size: 1, sizeAttenuation: false }));
+  const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({ color: P.x, size: 1, sizeAttenuation: false }));
   dust.userData.noInfo = true;
   scene.add(dust);
 
@@ -327,7 +323,7 @@ export const buildKitchen = (): Room => {
   const update = (dt: number, t: number, camera: THREE.Camera, reducedMotion: boolean) => {
     for (const c of candles) c.update(dt, t, camera, reducedMotion);
     for (const b of billboards) b.update(dt, camera, reducedMotion);
-    clues.forEach((c, i) => { if (!c.found) c.wisp.lift = reducedMotion ? 0 : 0.12 * Math.sin(t * 2.2 + i * 2); });
+    updateClues(clues, dt, t, camera, reducedMotion);
     fire.intensity = reducedMotion ? 11 : 11 * (0.84 + 0.11 * Math.sin(t * 8) + 0.05 * Math.sin(t * 21));
     oven.intensity = reducedMotion ? 5 : 5 * (0.88 + 0.08 * Math.sin(t * 6 + 2) + 0.04 * Math.sin(t * 17));
     pumpkins.forEach((pk, i) => {

@@ -3,11 +3,12 @@ import story from "../../content/euphoria/if4-story.json";
 import { clockmakerCalm } from "../art/clockmaker";
 import { gamblerCalm } from "../art/gambler";
 import { miserCalm } from "../art/miser";
-import { doorSeal, wisp } from "../art/props";
+import { doorSeal } from "../art/props";
 import { HAUNTED_PIXEL_PALETTE as P } from "../lib/pixel/haunted-palette";
 import type { PixelSprite } from "../lib/pixel/types";
 import { Billboard } from "./billboard";
 import { Candle } from "./candles";
+import { makeClue, updateClues } from "./clues";
 import { box, COS_P, SCENE_EXTRAS as X, toon, toonMap, UNIT_PX, worldUV } from "./look";
 import { roundOpening } from "./props-clock";
 import { archInfill, archTrim, cobweb, facet, jackOLantern, lathe } from "./props3d";
@@ -249,13 +250,8 @@ export const buildGallery = (): Room => {
   for (const c of candles) scene.add(c.group);
 
   // ---- clues
-  const clue = (id: string, at: [number, number], wispAt: [number, number, number], candle: number): Clue => {
-    const w = new Billboard(wisp, { noInfo: true });
-    w.position.set(...wispAt);
-    scene.add(w.group);
-    billboards.push(w);
-    return { id, at: new THREE.Vector3(at[0], 0, at[1]), radius: 1.5, candle, wisp: w, found: false };
-  };
+  const clue = (id: string, at: [number, number], wispAt: [number, number, number], candle: number): Clue =>
+    makeClue(scene, id, at, wispAt, candle, 1.5);
   const clues = [
     clue("case", [cx, cz + 1.3], [cx, 2.5, cz], 0),
     clue("portraits", [3.8, ROPE_Z + 1.0], [3.8, 4.5, WALL_Z + 0.3], 1),
@@ -277,7 +273,7 @@ export const buildGallery = (): Room => {
   const dustPos = new Float32Array(dustCount * 3);
   for (let i = 0; i < dustCount; i++) dustPos.set([(Math.random() - 0.5) * 1.6, Math.random() * 4, -4.5 + Math.random() * 4.5], i * 3);
   dustGeo.setAttribute("position", new THREE.BufferAttribute(dustPos, 3));
-  const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({ color: P.B, size: 1, sizeAttenuation: false }));
+  const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({ color: P.x, size: 1, sizeAttenuation: false }));
   dust.userData.noInfo = true;
   scene.add(dust);
 
@@ -285,7 +281,7 @@ export const buildGallery = (): Room => {
   const update = (dt: number, t: number, camera: THREE.Camera, reducedMotion: boolean) => {
     for (const c of candles) c.update(dt, t, camera, reducedMotion);
     for (const b of billboards) b.update(dt, camera, reducedMotion);
-    clues.forEach((c, i) => { if (!c.found) c.wisp.lift = reducedMotion ? 0 : 0.12 * Math.sin(t * 2.2 + i * 2); });
+    updateClues(clues, dt, t, camera, reducedMotion);
     pumpkins.forEach((pk, i) => {
       (pk.userData.light as THREE.PointLight).intensity = reducedMotion ? 1.6 : 1.6 * (0.85 + 0.1 * Math.sin(t * 11 + i * 2));
     });

@@ -1,8 +1,9 @@
 import * as THREE from "three";
-import { doorSeal, wisp } from "../art/props";
+import { doorSeal } from "../art/props";
 import { HAUNTED_PIXEL_PALETTE as P } from "../lib/pixel/haunted-palette";
 import { Billboard } from "./billboard";
 import { Candle } from "./candles";
+import { makeClue, updateClues } from "./clues";
 import { box, COS_P, SCENE_EXTRAS as X, toon, toonMap, UNIT_PX, worldUV } from "./look";
 import { dialParts, gear, hourglass, roundOpening } from "./props-clock";
 import { archInfill, archTrim, cobweb, jackOLantern, pedestalTable, turnedLeg } from "./props3d";
@@ -180,13 +181,8 @@ export const buildClockTower = (): Room => {
   }
 
   // ---- clues, each marked by a wisp until found
-  const clue = (id: string, at: [number, number], wispAt: [number, number, number], candle: number): Clue => {
-    const w = new Billboard(wisp, { noInfo: true });
-    w.position.set(...wispAt);
-    scene.add(w.group);
-    billboards.push(w);
-    return { id, at: new THREE.Vector3(at[0], 0, at[1]), radius: 1.5, candle, wisp: w, found: false };
-  };
+  const clue = (id: string, at: [number, number], wispAt: [number, number, number], candle: number): Clue =>
+    makeClue(scene, id, at, wispAt, candle, 1.5);
   const clues = [
     clue("gears", [4.6, WALL_Z + 1.5], [3.96, 3.5, WALL_Z + 0.4], 0),
     clue("notes", [-5.3, -1.0], [-6.8, 1.7, -1.0], 1),
@@ -214,7 +210,7 @@ export const buildClockTower = (): Room => {
   const dustPos = new Float32Array(dustCount * 3);
   for (let i = 0; i < dustCount; i++) dustPos.set([DIAL.x + (Math.random() - 0.3) * 3.5, Math.random() * 3.6, -5 + Math.random() * 7], i * 3);
   dustGeo.setAttribute("position", new THREE.BufferAttribute(dustPos, 3));
-  const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({ color: P.B, size: 1, sizeAttenuation: false }));
+  const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({ color: P.x, size: 1, sizeAttenuation: false }));
   dust.userData.noInfo = true;
   scene.add(dust);
 
@@ -222,7 +218,7 @@ export const buildClockTower = (): Room => {
   const update = (dt: number, t: number, camera: THREE.Camera, reducedMotion: boolean) => {
     for (const c of candles) c.update(dt, t, camera, reducedMotion);
     for (const b of billboards) b.update(dt, camera, reducedMotion);
-    clues.forEach((c, i) => { if (!c.found) c.wisp.lift = reducedMotion ? 0 : 0.12 * Math.sin(t * 2.2 + i * 2); });
+    updateClues(clues, dt, t, camera, reducedMotion);
     if (!reducedMotion) {
       for (const g of train) g.mesh.rotation.z += g.speed * dt;
       // the hands tick: the minute hand jumps once a second, like a tower clock
