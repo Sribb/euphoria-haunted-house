@@ -159,19 +159,18 @@ button:disabled { cursor: inherit; }
 
 @media (max-width: 640px) {
   #hud { top: 10px; left: 10px; right: 10px; gap: 8px; }
-  /* the phone HUD: room and candles on one row, the goal line under a rule, the sound button a square icon */
-  #hud .status { display: grid; grid-template: "num head" auto "name head" auto "goal goal" auto / 1fr auto; max-width: calc(100% - 64px); padding: var(--s) calc(2 * var(--s)); }
+  /* the phone HUD: room and candles on one row (the candles count themselves), the goal line under a rule,
+     and the sound button as a square icon */
+  #hud .status { display: grid; grid-template: "num head" auto "name head" auto "goal goal" auto / 1fr auto; column-gap: 10px; max-width: calc(100% - 64px); padding: var(--s) calc(2 * var(--s)); }
   #hud .room, #hud .goal { display: contents; }
   #room-num { grid-area: num; }
   #room-name { grid-area: name; margin-top: 6px; }
   #hud .goal-head { grid-area: head; align-self: center; }
-  #hud .goal-head .label:first-child { display: none; }
-  #objective { grid-area: goal; margin-top: 6px; padding-top: 6px; border-top: var(--s) solid var(--stone-light); line-height: 1.05; }
+  #hud .goal-head .label { display: none; }
+  #objective { grid-area: goal; margin-top: 8px; padding-top: 6px; border-top: var(--s) solid var(--stone-light); line-height: 1.05; }
   #mute { width: 56px; height: 56px; padding: 0; gap: 0; justify-content: center; font-size: 0; }
-  #act { right: 12px; bottom: 28px; }
   #dialog { bottom: 12px; padding: calc(3 * var(--s)) calc(3 * var(--s)) 0; }
   #dialog .row { gap: calc(5 * var(--s)); }
-  #dialog .title { font-size: 42px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

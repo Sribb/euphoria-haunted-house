@@ -36,7 +36,7 @@
 .mark { flex: none; display: inline-block; }
 .mark svg { display: block; }
 .kicker .mark svg { width: calc(12 * var(--s)); height: calc(12 * var(--s)); }
-.card .guide { display: flex; gap: 14px; align-items: center; margin: 0 0 14px; text-align: left; font-size: var(--t-small); line-height: 1.1; color: var(--ink); }
+.card .guide { display: flex; gap: 14px; align-items: center; width: fit-content; max-width: 100%; margin: 0 auto 14px; text-align: left; font-size: var(--t-small); line-height: 1.1; color: var(--ink); }
 
 /* the gilded button: one primary action per screen. Hover and press swap the art; the art itself rises and sinks. */
 .card button, .card .btn, #act, .gilded {
@@ -61,11 +61,10 @@
 }
 /* a secondary action: plain candle text with a pixel underline, so it never competes with the gilded button */
 .card button.quiet {
-  height: auto; min-width: 0; min-height: 56px; padding: 0 6px; border: 0; border-image: none;
+  position: relative; height: auto; min-width: 0; min-height: 56px; padding: 0 6px; border: 0; border-image: none;
   font-size: var(--t-small); color: var(--candle-light); text-shadow: none;
 }
-.card button.quiet::after { content: ""; position: absolute; left: 6px; right: 6px; bottom: 14px; height: var(--s); background: var(--candle-deep); }
-.card button.quiet { position: relative; }
+.card button.quiet::after { content: ""; position: absolute; left: 6px; right: 6px; bottom: 12px; height: var(--s); background: var(--candle-deep); }
 .card button.quiet:hover, .card button.quiet:focus-visible { color: var(--ink-bright); }
 .card button.quiet:hover::after, .card button.quiet:focus-visible::after { background: var(--candle); }
 .card button.quiet:active { transform: translateY(var(--s)); }
@@ -73,50 +72,63 @@
 #act { position: absolute; right: 24px; bottom: 40px; }
 
 /* intro: Atlas explains, then three steps as rows with key-cap numbers */
-#intro { width: min(620px, calc(100% - 24px)); }
+#intro { width: min(680px, calc(100% - 24px)); }
 #intro .steps { list-style: none; counter-reset: step; margin: 0 0 16px; padding: 0; text-align: left; }
 #intro .steps li { counter-increment: step; display: flex; gap: 14px; align-items: center; padding: 8px 10px 10px; font-size: var(--t-small); line-height: 1.1; background: var(--k); box-shadow: inset 0 calc(-1 * var(--s)) 0 var(--stone-light); }
-#intro .steps li::before { content: counter(step); }
+#intro .steps li::before { content: counter(step); background: var(--candle); }
 #intro .steps b { color: var(--candle-light); font-weight: 400; }
 #intro .icon { flex: 0 0 60px; display: grid; place-items: center; }
 
-/* end: the score as lit candles, what each room taught, then the way on to Euphoria */
-#end { width: min(900px, calc(100% - 24px)); }
+/* end: the score as lit candles, every freed ghost with what its room taught, then the way on to Euphoria */
+#end { width: min(940px, calc(100% - 24px)); }
 #end .divider { margin: 6px auto 10px; }
 #end .score { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 0 0 12px; }
 #end .score .pips { display: flex; gap: var(--s); }
 #end .score p { margin: 0; font-size: var(--t-body); line-height: 1; color: var(--ink-bright); }
 #end .sub { font-size: var(--t-small); color: var(--muted); margin: 0 0 10px; }
-#end .recap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 20px; margin: 0 0 12px; text-align: left; }
-#end .recap section { padding: 8px 10px 10px; background: var(--k); box-shadow: inset 0 calc(-1 * var(--s)) 0 var(--stone-light); }
-#end .recap h3 { margin: 0 0 8px; font: 8px/1 "Press Start 2P", monospace; color: var(--muted); text-transform: uppercase; }
-#end .recap ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
-#end .recap li { display: flex; gap: 8px; align-items: flex-start; font-size: var(--t-small); line-height: 1.05; color: var(--ink); }
-#end .recap li svg { flex: none; margin-top: -6px; }
+#end .recap { list-style: none; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 12px; margin: 0 0 14px; padding: 0; }
+#end .recap li { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 6px 12px; background: var(--k); box-shadow: inset 0 calc(-1 * var(--s)) 0 var(--stone-light); }
+#end .recap svg { display: block; flex: none; }
+#end .recap .who { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+#end .recap .room { display: flex; align-items: flex-end; min-height: 20px; font: 8px/1.25 "Press Start 2P", monospace; color: var(--muted); text-transform: uppercase; }
+#end .recap .ghost { font-size: var(--t-small); line-height: 1; color: var(--candle-light); }
+#end .recap .point { font-size: var(--t-tiny); line-height: 1.1; color: var(--ink); }
 .card .next { font-size: var(--t-small); line-height: 1.1; color: var(--ghost); margin: 0 0 12px; }
 .card .next:empty { display: none; }
-#end .guide { justify-content: center; }
 #end .actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 24px; }
 
+@media (min-width: 641px) {
+  .card h1 br.narrow, .card h2 br.narrow { display: none; }
+}
 @media (max-width: 640px) {
   /* The gilt rule is 11 art pixels deep; past it the frame is flat fill. On a phone the content box takes
      back part of the 24 pixel border, and the frame is still drawn at full size. */
-  .card { border-width: 34px 28px 36px; padding: 0; }
+  .card { width: calc(100% - 16px); border-width: 34px 28px 36px; padding: 0; }
+  #intro, #end { width: calc(100% - 16px); }
   .card h1 { font-family: "Jacquard 12", "Jersey 10", serif; font-size: 63px; }
   .divider { width: 192px; height: 18px; margin: 8px auto; background-size: 192px 100%; }
   .card .sub { margin-bottom: 12px; }
   .card .hint { margin-top: 10px; }
+  .card .guide { gap: 10px; margin-bottom: 10px; }
   .card button, .card .btn, #act, .gilded { padding: 0; }
   #intro .steps { margin-bottom: 12px; }
   #intro .steps li { gap: 10px; padding: 6px 8px 8px; }
   #intro .icon { flex-basis: 32px; }
   #intro [data-icon="wisp"] svg { width: 30px; height: 30px; }
+  #intro [data-icon="candle"] svg { width: 18px; height: 32px; }
   #intro [data-icon="ghost"] svg { width: 30px; height: 32px; }
   #end h1 { font-size: 42px; line-height: 1; }
-  #end .score { flex-direction: column; gap: 8px; }
-  #end .recap { grid-template-columns: 1fr; gap: 0; }
-  #end .recap section { padding: 6px 8px 8px; }
-  #end .recap ul { gap: 2px; }
+  #end .divider { margin: 6px auto; }
+  #end .score { flex-direction: column; gap: 6px; margin-bottom: 8px; }
+  #end .sub { margin-bottom: 8px; }
+  /* one row per room: the freed ghost, then its room, its name and what it taught */
+  #end .recap { grid-auto-flow: row; gap: 0; margin-bottom: 10px; text-align: left; }
+  #end .recap li { flex-direction: row; align-items: center; gap: 10px; padding: 5px 8px 7px; }
+  #end .recap svg { width: 30px; height: 32px; }
+  #end .recap .who { flex: 1; min-width: 0; flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; }
+  #end .recap .room { min-height: 0; }
+  #end .recap .ghost { font: 8px/1.25 "Press Start 2P", monospace; text-transform: uppercase; }
+  #end .recap .point { flex-basis: 100%; }
   #end .actions { flex-direction: column; gap: 0; }
 }
 /* short screens (a phone on its side, a small laptop): tighten the cards so the primary button stays in view */
@@ -126,7 +138,4 @@
   .card .sub, .card .guide { margin-bottom: 10px; }
   #intro .steps li { padding: 4px 8px 6px; }
   .card .hint { margin-top: 8px; }
-}
-@media (min-width: 641px) {
-  #end h1 br { display: none; }
 }

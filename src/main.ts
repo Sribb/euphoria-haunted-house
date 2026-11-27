@@ -279,8 +279,7 @@ const leaveRoom = async () => {
     kicker: `${ROOMS.length} of ${TOTAL_ROOMS} rooms complete`,
     next: NEXT_ROOMS.length ? `Coming next: ${NEXT_ROOMS.join(", ")}.` : "",
     score: { right: tries.filter(Boolean).length, of: tries.length },
-    // each room's three clues teach its lesson's first three takeaways
-    recap: ROOMS.map((r) => ({ room: r.name, points: takeaways(r.num).slice(0, 3).map((c) => `${c.takeaway}.`) })),
+    recap: ROOMS.map((r) => ({ room: r.name, ghost: r.ghost.name, face: r.ghost.freed, point: `${takeaways(r.num)[0].takeaway}.` })),
   });
   await ui.fade(0, 600);
 };

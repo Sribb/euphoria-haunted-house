@@ -84,6 +84,17 @@ Everything not listed above, including the haunted palette, the 3D rooms, every 
 
 The starting setup (the engine import, the lesson export, this README and the first steering docs) was prepared with Claude Code on November 27, 2026. Rooms 1 to 5 (the Foyer, the Cellar, the Clock Tower, the Portrait Gallery and the Kitchen), the multi-room flow and the art fixer pass were also built with Claude Code that day. The `.kiro/` folder holds the project's steering docs, which describe the product, the stack, the structure and the pixel-art rules.
 
+## Credits
+
+The interface art comes from four CC0 (public domain) packs, recoloured to the haunted palette. Each pack's source page, license and colour mapping are in `assets/third-party/*/SOURCE.md`.
+
+- Gilded frames, buttons, the name plate and the answer pointer: [Tiny RPG Dragon Regalia GUI](https://opengameart.org/content/tiny-rpg-dragon-regalia-gui) by Gabriel "tiopalada" Lima.
+- Iron, dialog and answer frames, and the divider: [Fantasy UI Borders](https://opengameart.org/content/fantasy-ui-borders) by Kenney.
+- The bone frame and the icons: [1-Bit Graveyard pack](https://opengameart.org/content/1-bit-graveyard-pixel-art-asset-pack) by Fava Beans.
+- The bone hand cursor: [Spooky Cursors Pack, Vol. 1](https://opengameart.org/content/spooky-cursors-pack) by Tisroc.
+
+The fonts are loaded from Google Fonts under the SIL Open Font License: Jacquard 24, Jacquard 12 and Jersey 10 by Sarah Cadigan-Fried, and Press Start 2P by CodeMan38.
+
 ## License
 
 MIT. See [LICENSE](LICENSE). Third-party assets, if any, keep their own licenses, listed in `assets/third-party/*/SOURCE.md`.

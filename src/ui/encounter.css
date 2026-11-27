@@ -29,7 +29,7 @@
 /* The question panel. ui.ts locks its height for each question, so it is the same size while it asks and
    while it explains. --cap is the most of the screen it may take before it scrolls. */
 #battle .panel {
-  --cap: 52vh;
+  --cap: 54vh;
   position: absolute; left: 0; right: 0; bottom: 24px; margin: 0 auto; width: min(820px, calc(100% - 24px));
   max-height: var(--cap); overflow-y: auto; display: flex; flex-direction: column;
   padding: calc(2 * var(--s)) calc(4 * var(--s)); pointer-events: auto; touch-action: pan-y;
@@ -46,7 +46,7 @@
 #battle .options { --a: var(--s-answer); --inset: calc(7 * var(--a)); flex: none; display: grid; grid-template-columns: 1fr 1fr; gap: calc(4 * var(--s)) calc(16 * var(--a)); padding-left: calc(14 * var(--a)); margin: 0 0 calc(4 * var(--s)); }
 #battle .options button {
   position: relative; min-height: 56px; display: flex; gap: 10px; align-items: center; text-align: left;
-  padding: 0 calc(2 * var(--s)); border: var(--inset) solid transparent;
+  padding: 0 calc(2 * var(--s)) 0 calc(4 * var(--a)); border: var(--inset) solid transparent;
   border-image: url("../../assets/third-party/fantasy-ui-borders/haunted/answer-rest.png") 13 fill / calc(13 * var(--a)) stretch;
   background: none; image-rendering: pixelated; font-size: var(--t-small); line-height: 1.05; color: var(--ink);
   animation: deal 120ms steps(2) backwards; animation-delay: calc(var(--i, 0) * 40ms);
@@ -83,11 +83,12 @@
 
 /* the reply row: a hint while the question is open, then the ghost's face, the verdict in words and the
    lesson's explanation */
-#battle .reply { display: flex; gap: calc(6 * var(--s)); align-items: flex-start; margin-top: auto; padding-top: calc(3 * var(--s)); border-top: var(--s) solid var(--stone); }
+#battle .reply { display: flex; gap: calc(6 * var(--s)); align-items: flex-start; padding-top: calc(3 * var(--s)); border-top: var(--s) solid var(--stone); }
 #battle .panel:not(.told) .reply .portrait { display: none; }
 #battle .reply .portrait { margin: calc(2 * var(--s)) 0 var(--s) calc(2 * var(--s)); }
 #battle .words { flex: 1; min-width: 0; }
-#battle .head { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: calc(16 * var(--s)); }
+#battle .head { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: calc(13 * var(--s)); }
+#battle .panel.told .head { min-height: calc(16 * var(--s)); }
 #battle .verdict { margin: 0; display: flex; align-items: center; gap: 6px; font-size: var(--t-small); line-height: 1; color: var(--muted); }
 #battle .panel.good .verdict { color: var(--ecto); }
 #battle .panel.bad .verdict { color: var(--blood-light); }
@@ -99,20 +100,26 @@
 /* Once the explanation starts, the spent answers step aside for it: your answer and the right one stay. */
 #battle .panel.told .options button:disabled:not(.right):not(.wrong) { display: none; }
 #battle .panel.told .options.solo { grid-template-columns: 1fr; }
-/* Long lessons: ui.ts steps the type down (dense), then drops the question while explaining (brief). */
+/* Long lessons: ui.ts steps the type down (dense), then drops the question while explaining (brief), then
+   drops the hint line while asking (bare). */
 #battle .panel.dense .question { font-size: var(--t-small); }
 #battle .panel.dense .options button, #battle .panel.dense .feedback { font-size: var(--t-tiny); }
 #battle .panel.brief.told .question { display: none; }
+#battle .panel.bare:not(.told) .reply { display: none; }
+#battle .panel.bare:not(.told) .options { margin-bottom: 0; }
 
 @media (max-width: 640px) {
   /* compact: the plate drops "The" to clear the sound button, answers stack, the panel hugs the bottom */
   #battle .foe { left: 10px; }
   #battle .name .the { display: none; }
+  /* the skulls tuck under the plate's left end, clear of the ghost's hat; "Unrest" stays in the label */
+  #battle .unrest { margin-left: 4px; }
+  #battle .unrest .label { display: none; }
   #battle .panel { --cap: 64vh; width: calc(100% - 16px); bottom: 8px; padding: var(--s) var(--s); }
   #battle .question { margin-bottom: 8px; }
   #battle .options { grid-template-columns: 1fr; gap: 6px 16px; margin-bottom: 6px; }
   #battle .options.pair { grid-template-columns: 1fr 1fr; }
-  #battle .options button { gap: 8px; padding: 0 var(--s); }
+  #battle .options button { gap: 8px; padding: 0 var(--s) 0 calc(2 * var(--s)); }
   #battle .reply { gap: 10px; padding-top: 4px; }
   #battle .reply .portrait { margin: 6px 0 2px 4px; }
   #battle .reply .portrait svg { width: 30px; height: 32px; }

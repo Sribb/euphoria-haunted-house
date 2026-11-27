@@ -14,8 +14,14 @@ const BEAT_MS = 450;
 const ARM_MS = 350;
 const coarse = () => matchMedia("(pointer: coarse)").matches;
 
-/** What the end card shows: rooms done, what comes next, the first-try score, and each room's takeaways. */
-export type EndCard = { kicker: string; next: string; score: { right: number; of: number }; recap: { room: string; points: string[] }[] };
+/** What the end card shows: rooms done, what comes next (empty once the whole house is free), the first-try
+ *  score, and for each room its freed ghost and the lesson's first takeaway. */
+export type EndCard = {
+  kicker: string;
+  next: string;
+  score: { right: number; of: number };
+  recap: { room: string; ghost: string; face: PixelSprite; point: string }[];
+};
 
 /** The DOM layer over the game: title, HUD, prompts, dialog, the encounter, and the end card. */
 export class UI {
@@ -230,7 +236,7 @@ export class UI {
       return panel.offsetHeight;
     };
     let need = 0;
-    for (const fit of ["panel", "panel dense", "panel dense brief"]) {
+    for (const fit of ["panel", "panel dense", "panel dense brief", "panel dense brief bare"]) {
       panel.className = fit;
       need = Math.max(heightOf("good"), heightOf("bad"), heightOf(""));
       if (need <= cap) break;
@@ -356,7 +362,11 @@ export class UI {
   /** Fills and opens the end card, with the way on to Euphoria focused as the primary action. */
   showEnd(card: EndCard) {
     $("#hud").hidden = true;
+    // with nothing left to come this is the real ending: the whole house is at peace
+    const whole = !card.next;
     $("#end-kicker").textContent = card.kicker;
+    $("#end-title").innerHTML = whole ? 'The house <br class="narrow" />is at peace' : 'The ghosts <br class="narrow" />are at peace';
+    $("#end-sub").textContent = whole ? "You freed every ghost. Here is what each one taught you." : "Here is what each ghost taught you.";
     $("#end-next").textContent = card.next;
     const score = $("#end-score");
     score.hidden = card.score.of === 0;
@@ -366,17 +376,13 @@ export class UI {
     const recap = $("#end-recap");
     recap.innerHTML = "";
     for (const r of card.recap) {
-      const sec = document.createElement("section");
-      const h = document.createElement("h3");
-      h.textContent = r.room;
-      const list = document.createElement("ul");
-      for (const point of r.points) {
-        const li = document.createElement("li");
-        li.textContent = point;
-        list.append(li);
-      }
-      sec.append(h, list);
-      recap.append(sec);
+      const li = document.createElement("li");
+      li.innerHTML = `${spriteToSvgMarkup(r.face, ART)}<div class="who"><span class="room"></span><span class="ghost"></span><span class="point"></span></div>`;
+      (li.firstElementChild as SVGElement).setAttribute("aria-hidden", "true");
+      (li.querySelector(".room") as HTMLElement).textContent = r.room;
+      (li.querySelector(".ghost") as HTMLElement).textContent = r.ghost;
+      (li.querySelector(".point") as HTMLElement).textContent = r.point;
+      recap.append(li);
     }
     $("#end").hidden = false;
     $("#keep").focus();
