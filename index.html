@@ -23,7 +23,7 @@
   </head>
   <body>
     <div id="stage">
-      <canvas id="view" aria-label="The Foyer of the haunted house"></canvas>
+      <canvas id="view" tabindex="-1" aria-label="The Foyer of the haunted house"></canvas>
       <div id="letterbox" aria-hidden="true"><div></div><div></div></div>
       <div id="fade" aria-hidden="true"></div>
       <canvas id="wipe" aria-hidden="true"></canvas>
@@ -113,6 +113,7 @@
           <button id="restart" type="button" class="quiet">Play from the start</button>
         </div>
       </section>
+
       <section id="movie" hidden aria-live="polite">
         <div class="frame">
           <div class="chip" hidden></div>

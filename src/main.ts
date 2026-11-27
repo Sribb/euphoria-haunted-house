@@ -300,6 +300,7 @@ const begin = () => {
   phase = "explore";
   input.takeAction();
   ui.stickHint();
+  ui.focusGame();
 };
 const start = () => {
   sound.start();
@@ -317,6 +318,8 @@ muteBtn.addEventListener("click", () => {
   sound.setMuted(!sound.muted);
   muteBtn.setAttribute("aria-pressed", String(sound.muted));
   muteBtn.textContent = sound.muted ? "Sound off" : "Sound on";
+  // back to the room, so the next Space or Enter acts in the game and does not flip the sound again
+  ui.focusGame();
 });
 document.getElementById("restart")!.addEventListener("click", () => {
   try { localStorage.removeItem(SAVE_KEY); localStorage.removeItem(SCORE_KEY); } catch { /* nothing to clear */ }

@@ -4,7 +4,7 @@
  */
 .card {
   position: absolute; inset: 0; margin: auto; height: fit-content; width: min(560px, calc(100% - 24px));
-  max-height: calc(100% - 24px); overflow: auto; padding: 8px 8px 4px; text-align: center;
+  max-height: calc(100% - 24px); overflow: auto; touch-action: pan-y; padding: 8px 8px 4px; text-align: center;
   border-style: solid; border-color: transparent;
   border-width: calc(24 * var(--s)) calc(24 * var(--s)) calc(25 * var(--s));
   border-image: url("../../assets/third-party/dragon-regalia-gui/haunted/frame-gilded.png") 24 24 25 fill
@@ -138,4 +138,22 @@
   .card .sub, .card .guide { margin-bottom: 10px; }
   #intro .steps li { padding: 4px 8px 6px; }
   .card .hint { margin-top: 8px; }
+}
+/* small phones: the title card has already shown the controls hint, so the intro drops its copy to fit */
+@media (max-height: 700px) and (max-width: 640px) {
+  #intro { padding-bottom: 8px; }
+  #intro .hint { display: none; }
+  #intro .kicker { margin-bottom: 4px; }
+  #intro .divider { margin: 2px auto; }
+  #intro .guide { margin-bottom: 6px; }
+  #intro .steps { margin-bottom: 8px; }
+  #intro .steps li { padding: 2px 8px 4px; }
+}
+/* very short screens (a phone on its side): the smaller blackletter on one line, a thinner top and bottom */
+@media (max-height: 520px) {
+  .card { max-height: calc(100% - 12px); border-top-width: 30px; border-bottom-width: 32px; padding: 0 8px; }
+  .card h1 { font-family: "Jacquard 12", "Jersey 10", serif; font-size: 42px; line-height: 1; }
+  .card h1 br, .card h2 br { display: none; }
+  .divider { width: 192px; height: 18px; margin: 4px auto; background-size: 192px 100%; }
+  .card .sub { font-size: var(--t-small); margin-bottom: 8px; }
 }

@@ -45,14 +45,14 @@
    its rule is only 3 thick past the stepped corners, so the text sits 7 in. */
 #battle .options { --a: var(--s-answer); --inset: calc(7 * var(--a)); flex: none; display: grid; grid-template-columns: 1fr 1fr; gap: calc(4 * var(--s)) calc(16 * var(--a)); padding-left: calc(14 * var(--a)); margin: 0 0 calc(4 * var(--s)); }
 #battle .options button {
-  position: relative; min-height: 56px; display: flex; gap: 10px; align-items: center; text-align: left;
-  padding: 0 calc(2 * var(--s)) 0 calc(4 * var(--a)); border: var(--inset) solid transparent;
+  position: relative; min-height: 56px; display: flex; gap: calc(5 * var(--a) + 4px); align-items: center; text-align: left;
+  padding: 0 calc(2 * var(--s)) 0 calc(6 * var(--a)); border: var(--inset) solid transparent;
   border-image: url("../../assets/third-party/fantasy-ui-borders/haunted/answer-rest.png") 13 fill / calc(13 * var(--a)) stretch;
   background: none; image-rendering: pixelated; font-size: var(--t-small); line-height: 1.05; color: var(--ink);
   animation: deal 120ms steps(2) backwards; animation-delay: calc(var(--i, 0) * 40ms);
 }
-/* each answer is dealt in, 40 ms after the one before */
-@keyframes deal { from { visibility: hidden; transform: translateY(calc(2 * var(--s))); } }
+/* each answer is dealt in, 40 ms after the one before (unclipped, never hidden, so it can take focus at once) */
+@keyframes deal { from { clip-path: inset(50% 0); transform: translateY(calc(2 * var(--s))); } to { clip-path: inset(-64px); } }
 /* The number key in a candle cap. When the answer is marked, the check or the cross takes the cap's place;
    the icon is wider than the cap and spills into the frame's own margin, so the text never moves. */
 #battle .options button b { position: relative; flex: none; display: grid; place-items: center; width: 16px; height: 16px; font-weight: 400; }
@@ -80,6 +80,8 @@
 #battle .options button.right b i, #battle .options button.wrong b i { visibility: hidden; }
 #battle .options button:disabled:not(.right):not(.wrong) { border-image-source: url("../../assets/third-party/fantasy-ui-borders/haunted/answer-disabled.png"); color: var(--muted); }
 #battle .options button:disabled:not(.right):not(.wrong) b i { background: var(--fog); box-shadow: none; }
+/* a marked answer is no longer a control: a tap on it falls through to the panel, which turns the page */
+#battle .options button:disabled { pointer-events: none; }
 
 /* the reply row: a hint while the question is open, then the ghost's face, the verdict in words and the
    lesson's explanation */
@@ -119,8 +121,19 @@
   #battle .question { margin-bottom: 8px; }
   #battle .options { grid-template-columns: 1fr; gap: 6px 16px; margin-bottom: 6px; }
   #battle .options.pair { grid-template-columns: 1fr 1fr; }
-  #battle .options button { gap: 8px; padding: 0 var(--s) 0 calc(2 * var(--s)); }
+  #battle .options button { padding: 0 var(--s) 0 6px; }
   #battle .reply { gap: 10px; padding-top: 4px; }
   #battle .reply .portrait { margin: 6px 0 2px 4px; }
   #battle .reply .portrait svg { width: 30px; height: 32px; }
+}
+/* Short screens (a phone on its side): the plate and skulls share one row at the very top, the bones are drawn
+   at one pixel per art pixel and the type steps down, so the ghost keeps what room there is. */
+@media (max-height: 520px) {
+  #battle .foe { top: 4px; flex-direction: row; align-items: center; }
+  #battle .unrest { margin-left: 0; }
+  #battle .unrest .label { display: none; }
+  #battle .panel { --cap: calc(100vh - 80px); bottom: 6px; padding: 0 calc(2 * var(--s)); border-width: 16px; border-image-width: 16px; }
+  #battle .question { font-size: var(--t-small); margin-bottom: 6px; }
+  #battle .options { margin-bottom: 4px; }
+  #battle .options button, #battle .feedback { font-size: var(--t-tiny); }
 }

@@ -13,6 +13,11 @@ const BEAT_MS = 450;
 /** Taps, and the keys that also close dialog, cannot choose an answer until this long after it appears. */
 const ARM_MS = 350;
 const coarse = () => matchMedia("(pointer: coarse)").matches;
+/**
+ * The lesson's explanation for an answer. Some explanations open with their own verdict word ("Correct!",
+ * "Not quite."); the panel says the verdict itself, so that one word is dropped. Nothing else is changed.
+ */
+const explain = (q: Question, good: boolean) => (good ? q.right : q.wrong).replace(/^(Right\.|Correct!|Not quite\.)\s+/, "");
 
 /** What the end card shows: rooms done, what comes next (empty once the whole house is free), the first-try
  *  score, and for each room its freed ghost and the lesson's first takeaway. */
@@ -34,7 +39,15 @@ export class UI {
   private longestReply = "";
   busy = false;
 
-  constructor(private reducedMotion: boolean) {}
+  constructor(private reducedMotion: boolean) {
+    // Space or Enter on a focused card button or the sound button belongs to that control alone. The game
+    // listens for the same keys on the window (and cancels Space, to stop the page scrolling), so without
+    // this Space would not press the button and Enter would also act in the room.
+    this.stage.addEventListener("keydown", (e) => {
+      const onControl = e.target instanceof Element && e.target.closest(".card button, .card a, #mute");
+      if (onControl && (e.code === "Space" || e.code === "Enter")) e.stopPropagation();
+    });
+  }
 
   setCandles(lit: number, total: number) {
     const el = $("#candles");
@@ -87,6 +100,14 @@ export class UI {
   clearToast() {
     clearTimeout(this.toastTimer);
     $("#toast").classList.remove("on");
+  }
+
+  /**
+   * Hands keyboard focus back to the room. Tab then starts from the top of the page (the sound button), and
+   * Space or Enter act in the game instead of pressing whatever control was used last.
+   */
+  focusGame() {
+    $("#view").focus({ preventScroll: true });
   }
 
   /** Says a full line once to screen readers. The typewriter's own text is hidden from them. */
@@ -232,7 +253,7 @@ export class UI {
         btn.classList.toggle("right", state !== "" && i === q.correct);
         btn.classList.toggle("wrong", state === "bad" && btn === longestWrong);
       });
-      fb.textContent = state ? `${this.longestReply} ${state === "good" ? q.right : q.wrong}` : "";
+      fb.textContent = state ? `${this.longestReply} ${explain(q, state === "good")}` : "";
       return panel.offsetHeight;
     };
     let need = 0;
@@ -329,7 +350,7 @@ export class UI {
     const buttons = [...opts.querySelectorAll<HTMLButtonElement>("button")];
     const good = chosen === q.correct;
     const verdict = good ? "Right." : "Not quite.";
-    const text = `${ghostLine} ${good ? q.right : q.wrong}`;
+    const text = `${ghostLine} ${explain(q, good)}`;
     const tag = (btn: HTMLButtonElement, cls: string, words: string) => {
       btn.classList.add(cls);
       btn.insertAdjacentHTML("beforeend", `<span class="sr-only"> ${words}</span>`);
@@ -357,6 +378,7 @@ export class UI {
     this.stage.classList.remove("battle");
     this.battleEl.hidden = true;
     this.busy = false;
+    this.focusGame();
   }
 
   /** Fills and opens the end card, with the way on to Euphoria focused as the primary action. */
