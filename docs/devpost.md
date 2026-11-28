@@ -89,9 +89,9 @@ TypeScript, three.js, Vite, Web Audio API, Python (art generators), Vercel. Add 
 
 **FILL IN from real use. Do not submit this section as written.**
 
-Honest status on November 27, 2026: the `.kiro/steering/` docs exist and describe the product, stack, structure, pixel-art rules and UI style, but they were written with Claude Code, and the two playable rooms were built with Claude Code. Kiro has not been used to build yet. The rules require the project to use Kiro, and judges score how well it was used, so this section needs real work done in Kiro before you submit.
+Honest status on November 28, 2026: the `.kiro/steering/` docs exist and describe the product, stack, structure, pixel-art rules and UI style, but they were written with Claude Code, and all five rooms, the UI and the cutscenes were built with Claude Code. Kiro has not been used to build yet. The rules require the project to use Kiro, and judges score how well it was used, so this section needs real work done in Kiro before you submit.
 
-A workable plan: build rooms 3 to 5 in Kiro, and record what happens as you go. For each heading below, write two or three sentences of what you actually did and what it changed.
+The plan is in "The Kiro session plan" in `docs/submission-checklist.md`: a mansion map built from a Kiro spec, property-based tests from a second spec, agent hooks, and an MCP playtest. For each heading below, write two or three sentences of what you actually did and what it changed. It is fine, and honest, to say the game was built with another AI tool first and Kiro was brought in for these parts.
 
 - **Kiro IDE, CLI, Web, Crew.** Which did you use? If more than one, how did they differ?
 - **Spec-driven development.** Write a spec for a room (for example the Clock Tower from lesson 3). How did Kiro's requirements, design and tasks compare with just prompting? Link the spec in `.kiro/specs/`.
