@@ -24,15 +24,22 @@ export const GALLERY: RoomScript = {
   name: "The Portrait Gallery",
   build: buildGallery,
   movies: {
-    case: kit.make("case", 1, "A memory in the glass", kit.storyTitle, "Two ways to raise money", kit.storyBeats()),
-    portraits: kit.make("portraits", 2, "The portraits remember", "The lender and the owner", "What each one is promised", [
-      ...kit.toggleBeats(toggles[0]),
-      ...kit.toggleBeats(toggles[1]),
-    ]),
-    lectern: kit.make("lectern", 3, "The last auction", toggles[2].title, "Who gets paid first", [
-      ...kit.toggleBeats(toggles[2]),
-      ...kit.toggleBeats(toggles[3]),
-    ]),
+    case: kit.make("case", 1, "A memory in the glass", kit.storyTitle, "Two ways to raise money", kit.storyBeats(), { sprite: duchessCalm, beat: 1, x: 49, y: 14 }),
+    portraits: kit.make(
+      "portraits",
+      2,
+      "The portraits remember",
+      "The lender and the owner",
+      "What each one is promised",
+      [...kit.toggleBeats(toggles[0]), ...kit.toggleBeats(toggles[1])],
+      { sprite: duchessCalm, beat: 5, x: 54, y: -4 },
+    ),
+    lectern: kit.make("lectern", 3, "The last auction", toggles[2].title, "Who gets paid first", [...kit.toggleBeats(toggles[2]), ...kit.toggleBeats(toggles[3])], {
+      sprite: duchessCalm,
+      beat: 2,
+      x: 54,
+      y: -4,
+    }),
   },
   clueLabels: { case: "Look in the display case", portraits: "Look at the two portraits", lectern: "Read the auction notice" },
   ghost: { name: NAME, restless: duchessRestless, calm: duchessCalm, freed: duchessFreed, light: "#E0559F" },

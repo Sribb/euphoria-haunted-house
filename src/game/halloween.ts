@@ -77,16 +77,15 @@ export const gravestone = s("gravestone", "Gravestone", ["halloween"], "A small 
   "DDDDD",
 ]);
 
-export const cobweb = s("cobweb", "Cobweb", ["halloween"], "A cobweb in a top corner.", [
-  "xxxxxxxx",
-  ".x..x..x",
-  "..x.x.x.",
-  "...xxx.x",
-  "x...xx..",
-  ".xx..x..",
-  "...xx.x.",
-  ".......x",
-]);
+const COBWEB_ROWS = ["xxxxxxxx", ".x..x..x", "..x.x.x.", "...xxx.x", "x...xx..", ".xx..x..", "...xx.x.", ".......x"];
+export const cobweb = s("cobweb", "Cobweb", ["halloween"], "A cobweb in a top right corner.", COBWEB_ROWS);
+export const cobwebLeft = s(
+  "cobweb-left",
+  "Cobweb, left corner",
+  ["halloween"],
+  "The same cobweb mirrored, for a top left corner.",
+  COBWEB_ROWS.map((row) => [...row].reverse().join("")),
+);
 
 export const spider = s("spider", "Spider", ["halloween"], "A spider hanging on its thread.", [
   "..x..",
@@ -106,31 +105,69 @@ type Spot = [PixelSprite, number, number, ReelLayer["motion"]?];
 const drift = (amp: number, periodMs: number, phase = 0) => ({ kind: "drift" as const, amp, periodMs, phase });
 const bob = (amp: number, periodMs: number, phase = 0) => ({ kind: "bob" as const, amp, periodMs, phase });
 
-/** Where the decorations go in each scene, kept clear of every actor path and label. */
+/** The driveway scenes of lessons 4 and 5 share one layout: people at both sides, coins down the middle. */
+const DRIVEWAY: Spot[] = [[bat, 21, 3, drift(2, 3100)], [jackOLantern, 1, 54], [jackOLantern, 72, 54]];
+const DRIVEWAY_BUSY: Spot[] = [...DRIVEWAY, [bat, 66, 2, drift(3, 2700, 0.4)]];
+const BOOTH: Spot[] = [[bat, 44, 3, drift(5, 3400)], [bat, 67, 2, drift(3, 2800, 0.4)], [gravestone, 1, 44], [jackOLantern, 72, 52]];
+/** The brick wall behind the counter in lessons 4 and 5. Nothing sits on the counter: the lesson's tiles go there. */
+const COUNTER: Spot[] = [[cobwebLeft, 0, 0], [spider, 75, 0, bob(3, 2600)]];
+
+/**
+ * Where the decorations go in each scene. A decoration never overlaps an actor, a label pill or the tile
+ * strip in any beat, and never sits on art that a caption talks about. Scenes that follow each other in
+ * a movie keep the same decorations in the same places, so nothing jumps at a cut.
+ */
 const DRESSING: Record<string, Spot[]> = {
-  room: [[cobweb, 72, 0], [spider, 31, 0, bob(3, 2600)], [bat, 9, 9, drift(3, 3000)], [jackOLantern, 58, 20]],
-  booth: [[bat, 44, 3, drift(5, 3400)], [bat, 58, 7, drift(4, 2800, 0.4)], [gravestone, 1, 44], [jackOLantern, 72, 52]],
-  orchard: [[bat, 40, 3, drift(5, 3200)], [gravestone, 46, 45], [jackOLantern, 63, 51], [jackOLantern, 71, 53]],
+  // lessons 1 to 3
+  room: [[cobweb, 72, 0], [spider, 31, 0, bob(3, 2600)], [bat, 9, 9, drift(3, 3000)], [jackOLantern, 71, 53]],
+  booth: BOOTH,
+  orchard: [[bat, 40, 3, drift(5, 3200)], [gravestone, 9, 51], [jackOLantern, 63, 51], [jackOLantern, 71, 53]],
+  "orchard-moon": [[bat, 40, 3, drift(5, 3200)], [gravestone, 9, 51], [tinyGhost, 36, 16, bob(2, 2400)], [jackOLantern, 71, 53]],
   stand: [[bat, 62, 3, drift(4, 3100)], [bat, 70, 10, drift(3, 2700, 0.5)], [jackOLantern, 34, 7], [jackOLantern, 56, 7]],
   "stand-rain": [[jackOLantern, 34, 7], [jackOLantern, 56, 7]],
-  "stand-closed": [[bat, 62, 3, drift(4, 3100)], [jackOLantern, 34, 7], [tinyGhost, 66, 22, bob(2, 2200)]],
-  bank: [[bat, 46, 2, drift(5, 3300)], [bat, 58, 8, drift(3, 2900, 0.3)], [gravestone, 66, 45], [gravestone, 73, 47]],
-  "coin-plus": [[bat, 56, 3, drift(5, 3200)], [gravestone, 66, 45], [jackOLantern, 72, 52]],
-  stacks: [[bat, 50, 3, drift(5, 3200)], [jackOLantern, 72, 52]],
-  board: [[cobweb, 0, 0], [spider, 74, 0, bob(3, 2600)]],
-  ground: [[bat, 44, 3, drift(5, 3300)], [gravestone, 72, 45], [jackOLantern, 2, 52]],
-  doublings: [[bat, 52, 3, drift(5, 3200)], [jackOLantern, 72, 52]],
-  sooner: [[bat, 46, 4, drift(4, 3000)], [tinyGhost, 60, 14, bob(2, 2400)], [jackOLantern, 72, 52]],
-  "orchard-moon": [[bat, 40, 3, drift(5, 3200)], [gravestone, 46, 45], [tinyGhost, 36, 16, bob(2, 2400)], [jackOLantern, 71, 53]],
+  "stand-closed": [[bat, 62, 3, drift(4, 3100)], [jackOLantern, 34, 7], [jackOLantern, 56, 7], [tinyGhost, 66, 22, bob(2, 2200)]],
+  bank: [[bat, 34, 3, drift(4, 3300)], [bat, 68, 4, drift(3, 2900, 0.3)], [gravestone, 67, 48], [gravestone, 74, 49]],
+  "coin-plus": [[bat, 24, 3, drift(4, 3200)], [gravestone, 9, 51], [jackOLantern, 72, 52]],
+  stacks: [[bat, 24, 3, drift(4, 3200)], [gravestone, 9, 51], [jackOLantern, 72, 52]],
+  ground: [[bat, 56, 4, drift(4, 3300)], [gravestone, 9, 51], [jackOLantern, 72, 52]],
+  doublings: [[bat, 52, 3, drift(5, 3200)], [gravestone, 9, 51], [jackOLantern, 72, 52]],
+  sooner: [[bat, 60, 3, drift(4, 3000)], [gravestone, 9, 51], [jackOLantern, 72, 52]],
+  board: [[cobwebLeft, 0, 0], [spider, 74, 0, bob(3, 2600)]],
+  // lessons 4 and 5
+  garage: [[spider, 45, 0, bob(3, 2600)], [jackOLantern, 1, 54], [jackOLantern, 72, 54]],
+  driveway: DRIVEWAY,
+  "driveway-busy": DRIVEWAY_BUSY,
+  "driveway-slow": DRIVEWAY,
+  "driveway-closed": [[tinyGhost, 18, 3, bob(1, 2300)], [jackOLantern, 1, 54], [jackOLantern, 72, 54]],
+  bench: [...COUNTER, [bat, 56, 4, drift(1, 3000)]],
+  "2022": [...COUNTER, [bat, 14, 3, drift(3, 3000)]],
+  spread: [...COUNTER, [bat, 14, 3, drift(3, 3000)]],
+  // lesson 4 stills that no movie plays yet: the same driveway and booth layouts
+  interest: DRIVEWAY,
+  payback: DRIVEWAY,
+  three: DRIVEWAY,
+  "paid-first": DRIVEWAY,
+  dividend: DRIVEWAY_BUSY,
+  "booth-coin": BOOTH,
 };
 
-/** A story scene in its Halloween costume: autumn colours plus the scene's decorations. */
-export const dressScene = (name: string, frame: ReelFrame): ReelFrame => ({
-  base: autumn(frame.base),
-  layers: [
-    ...frame.layers.map((l) => ({ ...l, sprite: autumn(l.sprite) })),
-    ...(DRESSING[name] ?? []).map(([sprite, x, y, motion]) => ({ sprite, x, y, motion })),
-  ],
-});
+/**
+ * Scenes that keep their greens. They are indoors, with no grass or leaves to turn, and their only green
+ * is a lesson tile: one of Sid's ten pieces. The same tiles are actors in the bench scene, and actors are
+ * never recoloured, so shifting the still would make one piece change colour between two movies.
+ */
+const KEEPS_GREEN = new Set(["2022", "spread"]);
 
-export const HALLOWEEN_SPRITES = [bat, jackOLantern, gravestone, cobweb, spider, tinyGhost];
+/** A story scene in its Halloween costume: autumn colours plus the scene's decorations. */
+export const dressScene = (name: string, frame: ReelFrame): ReelFrame => {
+  const turn = KEEPS_GREEN.has(name) ? (sp: PixelSprite) => sp : autumn;
+  return {
+    base: turn(frame.base),
+    layers: [
+      ...frame.layers.map((l) => ({ ...l, sprite: turn(l.sprite) })),
+      ...(DRESSING[name] ?? []).map(([sprite, x, y, motion]) => ({ sprite, x, y, motion })),
+    ],
+  };
+};
+
+export const HALLOWEEN_SPRITES = [bat, jackOLantern, gravestone, cobweb, cobwebLeft, spider, tinyGhost];

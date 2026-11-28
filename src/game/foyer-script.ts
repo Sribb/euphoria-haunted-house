@@ -38,12 +38,17 @@ export const FOYER: RoomScript = {
   name: "The Foyer",
   build: buildFoyer,
   movies: {
-    drawer: kit.make("drawer", 1, "A memory in the drawer", kit.storyTitle, "Why the safest place for money is not safe", kit.storyBeats()),
-    portraits: kit.make("portraits", 2, "The portraits remember", "Own a piece, or lend it", "Two ways to put money to work", [
-      ...kit.toggleBeats(story.own as Toggle),
-      ...kit.toggleBeats(story.lend as Toggle),
-    ]),
-    clock: kit.make("clock", 3, "The clock strikes", "Watch Maya's money grow", "Growth on growth", clockBeats),
+    drawer: kit.make("drawer", 1, "A memory in the drawer", kit.storyTitle, "Why the safest place for money is not safe", kit.storyBeats(), { sprite: miserCalm, beat: 2, x: 5, y: 15 }),
+    portraits: kit.make(
+      "portraits",
+      2,
+      "The portraits remember",
+      "Own a piece, or lend it",
+      "Two ways to put money to work",
+      [...kit.toggleBeats(story.own as Toggle), ...kit.toggleBeats(story.lend as Toggle)],
+      { sprite: miserCalm, beat: 5, x: 9, y: -2 },
+    ),
+    clock: kit.make("clock", 3, "The clock strikes", "Watch Maya's money grow", "Growth on growth", clockBeats, { sprite: miserCalm, beat: 3, x: 46, y: 3 }),
   },
   clueLabels: { drawer: "Open the drawer", portraits: "Look at the portraits", clock: "Look at the clock" },
   ghost: { name: NAME, restless: miserRestless, calm: miserCalm, freed: miserFreed, light: "#D63A3A" },
