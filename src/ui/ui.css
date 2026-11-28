@@ -1,83 +1,113 @@
+/*
+ * The haunted UI, per .kiro/steering/ui-style.md. Three materials: gilt for ceremony (cards.css), iron for
+ * everyday chrome (this file), bone for the ghost (encounter.css). Frames are CC0 art in assets/third-party,
+ * drawn with border-image at whole multiples of one art pixel (--s).
+ */
 :root {
-  --canvas: #07050c;
-  --surface: #151024;
-  --ink: #e6e1d3;
-  --muted: #9c95ae;
-  --violet: #9256e0;
-  --violet-deep: #5c2496;
-  --candle: #e89a2e;
-  --candle-light: #ffd47a;
-  --blood: #d63a3a;
-  --ecto: #5be37d;
-  --ghost: #6fe3e8;
-  --px: 4px;
+  --s: 2px;                 /* one art pixel; every frame, icon and outline is a whole multiple */
+  --canvas: #07050c;        /* page behind the 3D view */
+  --outline: #0b0714;       /* HAUNTED_CANVAS: the outline baked into the art */
+  --surface: #151024;       /* HAUNTED_SURFACE: panel fill */
+  --k: #241a33; --stone-deep: #1a1428; --stone: #2c2140; --stone-light: #3e3058;
+  --ink: #e6e1d3; --ink-bright: #fffbef; --muted: #9c95ae; --fog: #5e5870; --fog-deep: #4c4760;
+  --violet: #9256e0; --violet-mid: #6a2bb0; --violet-deep: #5c2496;
+  --candle: #e89a2e; --candle-light: #ffd47a; --candle-deep: #7e4d14; --wick: #1c1210;
+  --blood: #d63a3a; --blood-light: #f08a80; --blood-deep: #8e1c24;
+  --ecto: #5be37d; --ghost: #6fe3e8;
+  --t-body: 28px; --t-small: 24.8889px; --t-tiny: 18.6667px;
+  --s-answer: var(--s);
+  /* a one-art-pixel dark outline for text that sits straight on the 3D scene */
+  --text-outline: var(--s) 0 0 var(--outline), calc(-1 * var(--s)) 0 0 var(--outline), 0 var(--s) 0 var(--outline), 0 calc(-1 * var(--s)) 0 var(--outline);
   font-family: "Jersey 10", ui-monospace, monospace;
+}
+@media (max-width: 640px) {
+  :root { --t-body: 24.8889px; --t-small: 18.6667px; --s-answer: 1px; }
 }
 
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; background: var(--canvas); color: var(--ink); overflow: hidden; }
-body { touch-action: none; user-select: none; -webkit-user-select: none; }
+body { touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
 button { font: inherit; color: inherit; cursor: pointer; }
+button:disabled { cursor: inherit; }
 [hidden] { display: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+/* keyboard focus is ghost teal, and teal is used for nothing else */
+:focus-visible { outline: calc(2 * var(--s)) solid var(--ghost); outline-offset: var(--s); }
 
 #stage { position: fixed; inset: 0; overflow: hidden; }
 #view { position: absolute; left: 0; top: 0; image-rendering: pixelated; image-rendering: crisp-edges; }
+/* the room itself takes focus between controls, so Tab starts from the top; it is not a control and shows no ring */
+#view:focus { outline: none; }
 
-/* pixel panels: a hard two-step border made with box-shadow, no rounded corners */
-.panel, #dialog, .card, #prompt, #act, #hud .status, #mute, #toast {
-  background: var(--surface);
-  border: var(--px) solid var(--violet-deep);
-  box-shadow: 0 0 0 var(--px) #07050c, inset 0 0 0 var(--px) #1d1530;
+/* iron: a cold riveted rule for the HUD, the prompt, the toast and the sound button */
+#hud .status, #mute, #prompt, #toast {
+  border: calc(11 * var(--s)) solid transparent;
+  border-image: url("../../assets/third-party/fantasy-ui-borders/haunted/frame-iron.png") 11 fill / calc(11 * var(--s)) stretch;
+  background: none; box-shadow: none; image-rendering: pixelated;
 }
+/* Past its studs the iron rule is 3 art pixels thick, so content may sit 7 art pixels in from the edge.
+   The frame is still drawn 11 wide; only the content box grows. */
+#hud .status, #prompt, #toast { border-width: calc(7 * var(--s)); }
 
-#hud { position: absolute; top: 16px; left: 16px; right: 16px; display: flex; gap: 12px; align-items: flex-start; pointer-events: none; }
-#hud .status { display: flex; align-items: stretch; pointer-events: auto; max-width: min(560px, calc(100% - 140px)); }
-#hud .room { display: flex; flex-direction: column; justify-content: center; line-height: 1; padding: 8px 14px; border-right: 3px solid #2c2140; }
-#hud .label { font-family: "Press Start 2P", monospace; font-size: 8px; color: var(--muted); letter-spacing: 1px; white-space: nowrap; }
-#hud .name { font-size: 28px; color: var(--candle-light); white-space: nowrap; }
-#hud .goal { padding: 6px 14px 8px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-#hud .goal-head { display: flex; align-items: center; gap: 10px; }
-#objective { margin: 0; font-size: 22px; line-height: 1.05; color: var(--ink); }
-#candles { display: flex; gap: 2px; }
-#candles svg { width: 18px; height: 32px; image-rendering: pixelated; transition: filter 0.4s; }
+#hud { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; gap: 12px; align-items: flex-start; pointer-events: none; }
+#hud .status { display: flex; align-items: stretch; pointer-events: auto; max-width: min(640px, calc(100% - 190px)); padding: calc(2 * var(--s)) calc(3 * var(--s)); }
+#hud .room { display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 0 14px 0 4px; border-right: var(--s) solid var(--stone-light); }
+#hud .label { font: 8px/1 "Press Start 2P", monospace; color: var(--muted); text-transform: uppercase; white-space: nowrap; }
+#hud .name { font-size: var(--t-body); line-height: 0.8; color: var(--candle-light); white-space: nowrap; }
+#hud .goal { padding: 0 4px 0 14px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+#hud .goal-head { display: flex; align-items: center; gap: 8px; }
+#objective { margin: 0; font-size: var(--t-small); line-height: 1; color: var(--ink); }
+#candles { display: flex; gap: var(--s); }
+#candles svg { display: block; }
+/* a newly lit candle gains its glow in three hard steps */
 #candles svg.lit { filter: drop-shadow(0 0 6px rgba(255, 154, 60, 0.7)); }
-#mute { margin-left: auto; padding: 6px 12px; font-size: 22px; color: var(--muted); pointer-events: auto; }
-#mute[aria-pressed="true"] { color: var(--blood); }
+#candles svg.new { animation: candle-lit 300ms steps(3) backwards; }
+@keyframes candle-lit { from { filter: drop-shadow(0 0 0 rgba(255, 154, 60, 0)); } }
 
-#prompt { position: absolute; transform: translate(-50%, -100%); display: flex; gap: 8px; align-items: center; padding: 4px 10px; font-size: 24px; pointer-events: none; white-space: nowrap; }
-#prompt kbd { font-family: "Press Start 2P", monospace; font-size: 10px; background: var(--candle); color: #1c1210; padding: 4px 6px; }
-#act { position: absolute; right: 24px; bottom: 40px; padding: 14px 22px; font-size: 30px; color: var(--candle-light); }
+#mute { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; min-height: 56px; padding: 0 4px; border-width: calc(6 * var(--s)); font-size: var(--t-small); line-height: 1; color: var(--muted); white-space: nowrap; pointer-events: auto; }
+#mute::before { content: ""; flex: none; width: calc(16 * var(--s)); height: calc(16 * var(--s)); background: url("../../assets/third-party/graveyard-1bit/haunted/icons/bone/volume-on.png") 0 0 / 100% 100%; }
+#mute[aria-pressed="true"]::before { background-image: url("../../assets/third-party/graveyard-1bit/haunted/icons/blood/volume-off.png"); }
+#mute:hover, #mute:focus-visible { color: var(--candle-light); }
+#mute:hover::before, #mute:focus-visible::before { background-image: url("../../assets/third-party/graveyard-1bit/haunted/icons/candle/volume-on.png"); }
+#mute[aria-pressed="true"]:hover::before, #mute[aria-pressed="true"]:focus-visible::before { background-image: url("../../assets/third-party/graveyard-1bit/haunted/icons/candle/volume-off.png"); }
+#mute:active { transform: translateY(var(--s)); }
 
-#toast { position: absolute; left: 50%; top: 84px; transform: translate(-50%, -12px); padding: 6px 16px; font-size: 28px; color: var(--candle-light); opacity: 0; transition: opacity 0.3s, transform 0.3s; pointer-events: none; }
-#toast.on { opacity: 1; transform: translate(-50%, 0); }
+/* key caps: the prompt's key, the intro's step numbers */
+#prompt kbd, #intro .steps li::before {
+  flex: none; font: 16px/1 "Press Start 2P", monospace; color: var(--wick); background: var(--candle-light);
+  padding: 4px 6px 4px 8px; box-shadow: 0 var(--s) 0 var(--candle-deep), 0 0 0 var(--s) var(--outline);
+}
+#prompt { position: absolute; transform: translate(-50%, -100%); display: flex; gap: 10px; align-items: center; padding: var(--s) calc(2 * var(--s)); font-size: var(--t-body); line-height: 1; pointer-events: none; white-space: nowrap; }
 
-#dialog { position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%); width: min(760px, calc(100% - 32px)); padding: 16px 22px 14px; cursor: pointer; }
-#dialog .speaker { font-family: "Press Start 2P", monospace; font-size: 11px; color: var(--blood); margin-bottom: 8px; }
-#dialog .speaker:empty, #dialog .title:empty { display: none; }
-#dialog .title { margin: 0 0 6px; font-weight: 400; font-size: 30px; color: var(--candle-light); line-height: 1; }
-#dialog .text { margin: 0; font-size: 28px; line-height: 1.12; min-height: 3.4em; }
-.more { text-align: right; font-size: 22px; color: var(--muted); animation: bob 0.9s steps(2) infinite; }
-@keyframes bob { 50% { transform: translateY(3px); } }
+/* the toast drops in below the HUD in three hard steps (ui.ts sets `top` from the HUD's real height) */
+#toast { position: absolute; left: 50%; top: 112px; width: max-content; max-width: calc(100% - 24px); padding: var(--s) calc(4 * var(--s)); font-size: var(--t-body); line-height: 1; text-align: center; color: var(--candle-light); pointer-events: none; visibility: hidden; transform: translate(-50%, calc(-6 * var(--s))); transition: transform 150ms steps(3), visibility 0s 150ms; }
+#toast.on { visibility: visible; transform: translate(-50%, 0); transition: transform 150ms steps(3); }
 
-#battle { position: absolute; inset: 0; pointer-events: none; }
-#battle .foe { position: absolute; top: 84px; right: 16px; text-align: center; padding: 10px 14px; background: var(--surface); border: var(--px) solid #8e1c24; box-shadow: 0 0 0 var(--px) #07050c; }
-#battle .name { font-family: "Press Start 2P", monospace; font-size: 14px; color: var(--blood); text-shadow: 2px 2px 0 #07050c; }
-#battle .unrest { display: flex; gap: 6px; justify-content: center; margin-top: 10px; }
-#battle .unrest i { width: 44px; height: 14px; background: var(--blood); box-shadow: 0 0 0 3px #07050c, inset 0 -4px 0 #8e1c24; transition: background 0.3s, transform 0.3s; }
-#battle .unrest i.gone { background: #241a33; box-shadow: 0 0 0 3px #07050c; transform: scaleY(0.6); }
-#battle .panel { position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%); width: min(820px, calc(100% - 32px)); padding: 16px 20px; pointer-events: auto; }
-#battle .question { margin: 0 0 12px; font-size: 30px; line-height: 1.08; }
-#battle .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-#battle .options button { text-align: left; padding: 10px 12px; font-size: 24px; line-height: 1.05; background: #1d1530; border: 3px solid #3e3058; display: flex; gap: 10px; align-items: flex-start; }
-#battle .options button b { font-family: "Press Start 2P", monospace; font-size: 10px; color: var(--candle); padding-top: 6px; font-weight: 400; }
-#battle .options button:hover, #battle .options button.sel { border-color: var(--candle); background: #2c2140; }
-#battle .options button.right { border-color: var(--ecto); background: #123a22; }
-#battle .options button.wrong { border-color: var(--blood); background: #3a1018; }
-#battle .options button:disabled { cursor: default; }
-#battle .feedback { margin: 12px 0 0; font-size: 26px; line-height: 1.1; }
-#battle .feedback:empty { display: none; }
-#battle .feedback.good { color: var(--ecto); }
-#battle .feedback.bad { color: #f08a80; }
+/* dialog: a double rule (fog outside, violet inside), the speaker in a tab on the top rule */
+#dialog {
+  position: absolute; left: 0; right: 0; bottom: 24px; margin: 0 auto; width: min(760px, calc(100% - 24px));
+  padding: calc(6 * var(--s)) calc(6 * var(--s)) calc(2 * var(--s)); cursor: pointer;
+  border: calc(11 * var(--s)) solid transparent;
+  border-image: url("../../assets/third-party/fantasy-ui-borders/haunted/frame-dialog.png") 11 fill / calc(11 * var(--s)) stretch;
+  image-rendering: pixelated; animation: open 160ms steps(4) backwards;
+}
+/* the ghost starts to speak: the box shudders one art pixel left and right, twice */
+#dialog.shudder { animation: open 160ms steps(4) backwards, shudder 160ms steps(1) 160ms; }
+#dialog .speaker { position: absolute; top: calc(-11 * var(--s) - 10px); left: calc(8 * var(--s)); font: 8px/1 "Press Start 2P", monospace; color: var(--wick); background: var(--blood-light); padding: 6px 8px; box-shadow: 0 0 0 var(--s) var(--outline); }
+#dialog .speaker:empty, #dialog .title:empty, .portrait:empty { display: none; }
+#dialog .row { display: flex; gap: calc(8 * var(--s)); align-items: flex-start; }
+#dialog .body { flex: 1; min-width: 0; }
+#dialog .title { margin: 0 0 6px; font: 400 42px/1 "Jacquard 12", "Jersey 10", serif; color: var(--candle-light); text-shadow: 0 var(--s) 0 var(--violet-deep); }
+#dialog .text { margin: 0; font-size: var(--t-body); line-height: 1.12; min-height: 3.36em; }
+/* the ghost's face beside its words: its current sprite on a dark tile */
+.portrait { flex: none; padding: var(--s); background: var(--k); box-shadow: 0 0 0 var(--s) var(--stone-light), 0 0 0 calc(2 * var(--s)) var(--outline); }
+.portrait svg { display: block; }
+.more { display: flex; justify-content: flex-end; align-items: center; gap: 2px; font-size: var(--t-small); line-height: 1; color: var(--muted); }
+.more i { width: calc(16 * var(--s)); height: calc(16 * var(--s)); background: url("../../assets/third-party/graveyard-1bit/haunted/icons/candle/play.png") 0 0 / 100% 100%; transform: rotate(90deg); animation: bob 0.9s steps(2) infinite; }
+@keyframes bob { 50% { transform: rotate(90deg) translateX(var(--s)); } }
+/* panels open by unclipping from the middle; clipping never blurs the art the way scaling does */
+@keyframes open { from { clip-path: inset(50% -64px); } to { clip-path: inset(-64px); } }
+@keyframes shudder { 0%, 50% { transform: translateX(calc(-1 * var(--s))); } 25%, 75% { transform: translateX(var(--s)); } 100% { transform: none; } }
 
 #letterbox div { position: absolute; left: 0; right: 0; height: 0; background: #000; transition: height 0.45s steps(6); pointer-events: none; }
 #letterbox div:first-child { top: 0; }
@@ -85,33 +115,28 @@ button { font: inherit; color: inherit; cursor: pointer; }
 #stage.battle #letterbox div { height: 7vh; }
 
 #wipe { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; image-rendering: pixelated; z-index: 15; }
-#fade { position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; transition: opacity 0.5s; }
+#fade { position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; transition: opacity 0.5s steps(6); }
 
-.card { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(560px, calc(100% - 32px)); padding: 28px 28px 22px; text-align: center; }
-.card .kicker { font-family: "Press Start 2P", monospace; font-size: 10px; color: var(--muted); margin: 0 0 14px; letter-spacing: 1px; }
-.card h1 { font-family: "Press Start 2P", monospace; font-weight: 400; font-size: clamp(24px, 6vw, 40px); line-height: 1.25; margin: 0 0 14px; color: var(--candle-light); text-shadow: 4px 4px 0 var(--violet-deep); }
-.card .sub { font-size: 28px; margin: 0 0 18px; line-height: 1.1; }
-.card .next { font-size: 24px; color: var(--ghost); margin: -6px 0 18px; }
-.card button { font-size: 30px; padding: 10px 26px; background: var(--violet-deep); border: var(--px) solid var(--violet); color: var(--ink); box-shadow: 0 var(--px) 0 #2a0f48; }
-.card button:hover, .card button:focus-visible { background: var(--violet); outline: none; }
-.card .hint { font-size: 22px; color: var(--muted); margin: 18px 0 0; }
-#title { background: rgba(21, 16, 36, 0.92); }
-/* the right controls hint for the device, chosen in CSS so it is correct before the script loads */
-.hint-touch { display: none; }
-@media (pointer: coarse) { .hint-keys { display: none; } .hint-touch { display: inline; } }
-.card button:disabled { opacity: 0.6; cursor: wait; }
-#intro { width: min(620px, calc(100% - 32px)); text-align: left; max-height: calc(100% - 32px); overflow: auto; }
-#intro .kicker, #intro h2 { text-align: center; }
-#intro h2 { font-family: "Press Start 2P", monospace; font-weight: 400; font-size: clamp(18px, 4vw, 28px); line-height: 1.35; margin: 0 0 14px; color: var(--candle-light); text-shadow: 3px 3px 0 var(--violet-deep); }
-#intro .sub { font-size: 25px; text-align: center; }
-#intro .steps { list-style: none; counter-reset: step; margin: 0 0 22px; padding: 0; display: flex; flex-direction: column; gap: 12px; }
-#intro .steps li { counter-increment: step; display: flex; gap: 14px; align-items: center; font-size: 24px; line-height: 1.1; background: #1d1530; border: 3px solid #2c2140; padding: 10px 12px; }
-#intro .steps li::before { content: counter(step); font-family: "Press Start 2P", monospace; font-size: 12px; color: #1c1210; background: var(--candle); padding: 6px 8px; }
-#intro .steps b { color: var(--candle-light); font-weight: 400; }
-#intro .icon { flex: 0 0 48px; height: 48px; display: grid; place-items: center; }
-#intro .icon svg { max-width: 48px; max-height: 48px; image-rendering: pixelated; }
-#intro button { display: block; margin: 0 auto; }
-#intro .hint { text-align: center; }
+/* while a card, a dialog, the encounter or a movie is up, a touch is a tap, so the joystick stays out of sight */
+#stage:has(.card:not([hidden]), #dialog:not([hidden]), #battle:not([hidden]), #movie:not([hidden])) #stick { display: none; }
+/* a faint ring where a thumb can rest, shown for the first seconds on a touch screen */
+#stick-hint { display: none; position: absolute; left: 28px; bottom: 104px; width: 112px; height: 112px; border: 4px solid rgba(146, 86, 224, 0.4); pointer-events: none; }
+#stick-hint i { position: absolute; left: 32px; top: 32px; width: 40px; height: 40px; background: rgba(232, 154, 46, 0.45); animation: nudge 1.2s steps(1) infinite; }
+#stick-hint span { position: absolute; left: 50%; bottom: 100%; margin-bottom: 10px; transform: translateX(-50%); white-space: nowrap; font-size: var(--t-small); line-height: 1; color: var(--ink); text-shadow: var(--text-outline); }
+@keyframes nudge { 50% { transform: translate(calc(4 * var(--s)), calc(-4 * var(--s))); } }
+@media (pointer: coarse) { #stage.stick-hint #stick-hint { display: block; } }
+
+/* the bone hand, on a mouse only; where image-set is missing the system cursor stays */
+@media (pointer: fine) {
+  #stage { cursor: image-set(url("../../assets/third-party/spooky-cursors/bone_hand_1_default.png") 2x) 2 2, auto; }
+  #stage button:not(:disabled), #stage a, #dialog, #battle .panel.told { cursor: image-set(url("../../assets/third-party/spooky-cursors/bone_hand_2_hover.png") 2x) 2 2, pointer; }
+  #stage button:not(:disabled):active, #stage a:active { cursor: image-set(url("../../assets/third-party/spooky-cursors/bone_hand_3_click.png") 2x) 2 2, pointer; }
+}
+
+/* reduced motion: nothing animates and nothing eases, every state swaps at once */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
 
 #stick { position: absolute; width: 112px; height: 112px; margin: -56px 0 0 -56px; border: 4px solid rgba(146, 86, 224, 0.5); opacity: 0; pointer-events: none; }
 #stick.on { opacity: 1; }
@@ -138,17 +163,18 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 @media (max-width: 640px) {
   #hud { top: 10px; left: 10px; right: 10px; gap: 8px; }
-  #hud .status { flex-direction: column; max-width: calc(100% - 96px); }
-  #hud .room { border-right: 0; border-bottom: 3px solid #2c2140; padding: 6px 10px; }
-  #hud .name { font-size: 22px; }
-  #hud .goal { padding: 4px 10px 6px; }
-  #objective { font-size: 19px; }
-  #candles svg { width: 14px; height: 24px; }
-  #intro .steps li { font-size: 21px; }
-  #dialog .text, #battle .question { font-size: 24px; }
-  #battle .options { grid-template-columns: 1fr; }
-  #battle .options button { font-size: 21px; }
-  #battle .foe { top: 70px; right: 10px; }
+  /* the phone HUD: room and candles on one row (the candles count themselves), the goal line under a rule,
+     and the sound button as a square icon */
+  #hud .status { display: grid; grid-template: "num head" auto "name head" auto "goal goal" auto / 1fr auto; column-gap: 10px; max-width: calc(100% - 64px); padding: var(--s) calc(2 * var(--s)); }
+  #hud .room, #hud .goal { display: contents; }
+  #room-num { grid-area: num; }
+  #room-name { grid-area: name; margin-top: 6px; }
+  #hud .goal-head { grid-area: head; align-self: center; }
+  #hud .goal-head .label { display: none; }
+  #objective { grid-area: goal; margin-top: 8px; padding-top: 6px; border-top: var(--s) solid var(--stone-light); line-height: 1.05; }
+  #mute { width: 56px; height: 56px; padding: 0; gap: 0; justify-content: center; font-size: 0; }
+  #dialog { bottom: 12px; padding: calc(3 * var(--s)) calc(3 * var(--s)) 0; }
+  #dialog .row { gap: calc(5 * var(--s)); }
 }
 
 @media (prefers-reduced-motion: reduce) {

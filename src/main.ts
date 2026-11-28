@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import story2 from "../content/euphoria/if2-story.json";
 import { candleLit } from "./art/candle";
 import { miserRestless } from "./art/miser";
 import { wisp } from "./art/props";
@@ -6,6 +7,7 @@ import { Sound } from "./game/audio";
 import { Billboard } from "./game/billboard";
 import { FollowCamera } from "./game/camera";
 import { Input } from "./game/input";
+import { takeaways } from "./game/lesson";
 import { SCENE_PALETTE, UNIT_PX } from "./game/look";
 import { Particles } from "./game/particles";
 import { createPipeline } from "./game/pipeline";
@@ -20,6 +22,7 @@ import { UI } from "./ui/ui";
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const SAVE_KEY = "euphoria-haunted-v2";
 const INTRO_KEY = "euphoria-haunted-intro-seen";
+const SCORE_KEY = "euphoria-haunted-first-try";
 const TARGET_H = 190;
 
 // ---- systems shared by every room
@@ -56,6 +59,9 @@ let flicker = 0;
 let t = 0;
 let scale = 4;
 let viewW = 2, viewH = 2;
+/** For the end card's score: whether each question's first answer was right, keyed by room and question. */
+let firstTry: Record<string, boolean> = {};
+try { firstTry = JSON.parse(localStorage.getItem(SCORE_KEY) ?? "{}") ?? {}; } catch { /* storage blocked: the score covers this visit only */ }
 
 /** Builds room `i` and moves the player, lantern, particles and a fresh ghost into it. */
 const enterRoom = (i: number, found: string[] = [], wasFreed = false) => {
@@ -181,16 +187,21 @@ const encounter = async () => {
   cam.jumpTo(ghost.position.clone().add(new THREE.Vector3(0, 0, 0.7)));
   flash(0.9, "#FFFBEF");
   await ui.wipe(false);
-  await ui.dialog(script.lines.intro);
+  await ui.dialog(script.lines.intro, script.ghost.restless);
   // A missed question goes to the back of the queue. Asking it again at once would hand over the answer
   // (on a true-or-false question, one wrong guess guarantees the next one).
   const queue = [...script.questions];
-  ui.openBattle(script.ghost.name, queue.length);
+  ui.openBattle(script.ghost.name, queue.length, script.ghost.restless, [...script.lines.right, ...script.lines.wrong]);
   let unrest = queue.length;
   while (unrest > 0) {
     const q = queue[0];
     const chosen = await ui.ask(q);
     const good = chosen === q.correct;
+    const qid = `${script.key}:${script.questions.indexOf(q)}`;
+    if (!(qid in firstTry)) {
+      firstTry[qid] = good;
+      try { localStorage.setItem(SCORE_KEY, JSON.stringify(firstTry)); } catch { /* storage blocked */ }
+    }
     if (good) {
       unrest--;
       ui.setUnrest(unrest);
@@ -206,7 +217,7 @@ const encounter = async () => {
       flicker = 0.6;
       cam.shake(0.6);
     }
-    await ui.answer(q, chosen, pick(good ? script.lines.right : script.lines.wrong));
+    await ui.answer(q, chosen, pick(good ? script.lines.right : script.lines.wrong), good ? script.ghost.calm : script.ghost.restless);
     queue.shift();
     if (!good) queue.push(q);
   }
@@ -221,7 +232,7 @@ const encounter = async () => {
   sound.freed();
   flash(0.7, "#6FE3E8");
   particles.burst(ghostTop(), ["#6FE3E8", "#FFFBEF", "#DCC8FF", "#8FB8F0"], 80, 2, 1.2, 1.6, -0.3);
-  await ui.dialog(script.lines.freed);
+  await ui.dialog(script.lines.freed, script.ghost.freed);
   input.takeAction();
   flash(0.6, "#FFFBEF");
   cam.zoom = 1;
@@ -238,7 +249,7 @@ const talkToGhost = async () => {
     sound.boo();
     cam.shake(0.3);
     flash(0.15, "#D63A3A");
-    await ui.dialog(script.lines.tooSoon);
+    await ui.dialog(script.lines.tooSoon, script.ghost.restless);
     input.takeAction();
     return;
   }
@@ -263,17 +274,24 @@ const leaveRoom = async () => {
     return;
   }
   phase = "end";
-  document.getElementById("hud")!.hidden = true;
-  document.getElementById("end-kicker")!.textContent = `${ROOMS.length} of ${TOTAL_ROOMS} rooms complete`;
-  document.getElementById("end-next")!.textContent = NEXT_ROOMS.length ? `Coming next: ${NEXT_ROOMS.join(", ")}.` : "";
-  document.getElementById("end")!.hidden = false;
+  const tries = Object.values(firstTry);
+  ui.showEnd({
+    kicker: `${ROOMS.length} of ${TOTAL_ROOMS} rooms complete`,
+    next: NEXT_ROOMS.length ? `Coming next: ${NEXT_ROOMS.join(", ")}.` : "",
+    score: { right: tries.filter(Boolean).length, of: tries.length },
+    recap: ROOMS.map((r) => ({ room: r.name, ghost: r.ghost.name, face: r.ghost.freed, point: `${takeaways(r.num)[0].takeaway}.` })),
+  });
   await ui.fade(0, 600);
 };
 
 // ---- title, intro, mute, restart, touch action
 const intro = document.getElementById("intro")!;
-for (const [key, sprite, size] of [["wisp", wisp, 8], ["candle", candleLit, 3], ["ghost", miserRestless, 1.5]] as const)
-  intro.querySelector(`[data-icon="${key}"]`)!.innerHTML = spriteToSvgMarkup(sprite, size);
+// Atlas is Euphoria's mascot; his sprite ships with the lesson 2 story art. Every size is a whole multiple.
+const ICONS = { wisp: [wisp, 8], candle: [candleLit, 3], ghost: [miserRestless, 2], atlas: [story2.art.actors.atlas, 4] } as const;
+for (const el of document.querySelectorAll<HTMLElement>("[data-icon]")) {
+  const [sprite, size] = ICONS[el.dataset.icon as keyof typeof ICONS];
+  el.innerHTML = spriteToSvgMarkup(sprite, size);
+}
 
 const begin = () => {
   intro.hidden = true;
@@ -281,6 +299,8 @@ const begin = () => {
   document.getElementById("hud")!.hidden = false;
   phase = "explore";
   input.takeAction();
+  ui.stickHint();
+  ui.focusGame();
 };
 const start = () => {
   sound.start();
@@ -298,9 +318,11 @@ muteBtn.addEventListener("click", () => {
   sound.setMuted(!sound.muted);
   muteBtn.setAttribute("aria-pressed", String(sound.muted));
   muteBtn.textContent = sound.muted ? "Sound off" : "Sound on";
+  // back to the room, so the next Space or Enter acts in the game and does not flip the sound again
+  ui.focusGame();
 });
 document.getElementById("restart")!.addEventListener("click", () => {
-  try { localStorage.removeItem(SAVE_KEY); } catch { /* nothing to clear */ }
+  try { localStorage.removeItem(SAVE_KEY); localStorage.removeItem(SCORE_KEY); } catch { /* nothing to clear */ }
   location.reload();
 });
 document.getElementById("act")!.addEventListener("click", () => input.pressAction());
