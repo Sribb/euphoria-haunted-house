@@ -7,6 +7,7 @@ import { Sound } from "./game/audio";
 import { Billboard } from "./game/billboard";
 import { FollowCamera } from "./game/camera";
 import { Input } from "./game/input";
+import { GhostKick, wait } from "./game/juice";
 import { takeaways } from "./game/lesson";
 import { SCENE_PALETTE, UNIT_PX } from "./game/look";
 import { Particles } from "./game/particles";
@@ -17,6 +18,7 @@ import { NEXT_ROOMS, ROOMS, TOTAL_ROOMS } from "./game/rooms";
 import { buildPlan } from "./lib/pixel/story/engine";
 import { spriteToSvgMarkup } from "./lib/pixel/svg";
 import { MoviePlayer } from "./ui/movie";
+import { CluePointer } from "./ui/pointer";
 import { UI } from "./ui/ui";
 
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -41,6 +43,7 @@ const sound = new Sound();
 const ui = new UI(reducedMotion);
 const movies = new MoviePlayer(reducedMotion);
 const cam = new FollowCamera(pipeline.camera, { x0: -8.6, x1: 8.6, u0: -3.3, u1: 7.9 });
+const pointer = new CluePointer(document.getElementById("stage")!);
 
 // ---- the current room (replaced on every walk through a door)
 type Phase = "title" | "explore" | "battle" | "moving" | "end";
@@ -52,6 +55,7 @@ const player = new Player(room.scene);
 const particles = new Particles(room.scene);
 let ghost = new Billboard(script.ghost.restless, { pid: 70, lift: 0.5, shadow: 0.42 });
 const ghostLight = new THREE.PointLight(script.ghost.light, 2.6, 4.5, 1.2);
+const kick = new GhostKick();
 let lit = 0;
 let freed = false;
 let ghostGone = false;
@@ -207,13 +211,16 @@ const encounter = async () => {
       ui.setUnrest(unrest);
       sound.right();
       ghost.setSprite(script.ghost.calm);
+      kick.recoil();
       particles.burst(ghostTop(), ["#6FE3E8", "#DCC8FF", "#FFFBEF"], 24, 1.2, 0.8, 0.8, 0);
       flash(0.2, "#6FE3E8");
       cam.shake(0.15);
     } else {
       sound.wrong();
       ghost.setSprite(script.ghost.restless);
+      kick.lunge();
       particles.burst(ghostTop(), ["#D63A3A", "#F08A80", "#951C4C"], 24, 1.6, 0.6, 0.7, 0);
+      flash(0.12, "#951C4C");
       flicker = 0.6;
       cam.shake(0.6);
     }
@@ -237,6 +244,14 @@ const encounter = async () => {
   flash(0.6, "#FFFBEF");
   cam.zoom = 1;
   cam.jumpTo(player.position);
+  // back in the wide view, the three candles the player lit swell one after another, then the room fills
+  await wait(350);
+  for (const [i, c] of room.candles.entries()) {
+    c.flare();
+    sound.chime(i);
+    particles.burst(c.top.clone().add(new THREE.Vector3(0, 0.45, 0)), ["#FFD47A", "#FFE3A0", "#6FE3E8"], 16, 0.7, 1.1, 0.8);
+    await wait(240);
+  }
   room.celebrate();
   setTimeout(() => { ui.toast("The door is open."); showProgress(); }, 1700);
   phase = "explore";
@@ -371,6 +386,8 @@ const frame = (now: number) => {
       ghostLight.color.set(freed ? "#6FE3E8" : script.ghost.light);
       ghostLight.intensity = 2.6 * (0.85 + 0.15 * Math.sin(t * 3.1));
     }
+    // a right answer knocks the ghost back, a wrong one makes it lunge (whole pixels only, see juice.ts)
+    ghost.position.z = room.ghostHome.z + kick.offset(dt, reducedMotion);
     ghostLight.position.set(ghost.position.x, ghost.lift + 1.1, ghost.position.z + 0.6);
     if (!reducedMotion && Math.random() < dt * 7) {
       const p = ghost.position.clone().add(new THREE.Vector3((Math.random() - 0.5) * 1.1, ghost.lift + Math.random() * 1.1, 0.2));
@@ -386,7 +403,7 @@ const frame = (now: number) => {
   const dist = ghostGone ? 99 : player.position.distanceTo(ghost.position);
   const dread = freed ? 0 : THREE.MathUtils.clamp(1 - (dist - 1.3) / 4.5, 0, 1);
   sound.setDread(phase === "title" ? 0 : dread);
-  pipeline.effects.vignette = 0.32 + 0.33 * dread;
+  pipeline.effects.vignette = 0.32 + 0.33 * dread + kick.vignette(reducedMotion);
   pipeline.effects.flash = Math.max(0, pipeline.effects.flash - dt * 2.6);
   flicker = Math.max(0, flicker - dt);
   // A wrong answer dims the room once and lets it recover (one dip in 0.6 s, well under 3 flashes a second).
@@ -419,6 +436,12 @@ const frame = (now: number) => {
       input.takeAction();
     }
     if (open && player.position.z < d.exitZ) void leaveRoom();
+    // the nearest clue still to find, pointed at from the screen edge when it is out of view
+    let near: Clue | null = null;
+    for (const c of room.clues) if (!c.found && (!near || player.position.distanceTo(c.at) < player.position.distanceTo(near.at))) near = c;
+    pointer.update(near ? projectToScreen(near.wisp.position) : null, input.hasTouch);
+  } else {
+    pointer.hide();
   }
 
   pipeline.render(room.scene);
@@ -431,7 +454,7 @@ if (import.meta.env.DEV) {
   Object.assign(window, {
     __game: {
       get state() {
-        return { phase, room: script.key, lit, freed, ghostGone, busy: ui.busy, player: player.position.toArray(), facing: player.facing, door: room.state.doorOpen };
+        return { phase, room: script.key, lit, freed, ghostGone, busy: ui.busy, player: player.position.toArray(), facing: player.facing, door: room.state.doorOpen, ghostZ: ghost.position.z, ghostHomeZ: room.ghostHome.z };
       },
       teleport: (x: number, z: number) => { player.position.set(x, 0, z); cam.jumpTo(player.position); },
       /** Jumps straight to room `i` (0-based). */

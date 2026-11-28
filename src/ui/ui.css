@@ -142,6 +142,14 @@ button:disabled { cursor: inherit; }
 #stick.on { opacity: 1; }
 #stick-knob { position: absolute; left: 32px; top: 32px; width: 40px; height: 40px; background: rgba(232, 154, 46, 0.8); }
 
+/* the edge arrow toward an off-screen clue (pointer.ts): turned only in quarter turns, nudging along its
+   own direction in two hard steps, with a teal glow to match the clue wisps */
+#clue-pointer { position: absolute; left: 0; top: 0; width: 44px; height: 36px; pointer-events: none; z-index: 5; transform-origin: 22px 18px; filter: drop-shadow(0 0 6px rgba(111, 227, 232, 0.55)); }
+#clue-pointer[hidden] { display: none; }
+#clue-pointer span { display: block; animation: clue-nudge 0.9s steps(1) infinite; }
+#clue-pointer svg { display: block; image-rendering: pixelated; }
+@keyframes clue-nudge { 50% { transform: translateX(4px); } }
+
 @media (max-width: 640px) {
   #hud { top: 10px; left: 10px; right: 10px; gap: 8px; }
   /* the phone HUD: room and candles on one row (the candles count themselves), the goal line under a rule,

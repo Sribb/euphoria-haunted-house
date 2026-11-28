@@ -13,6 +13,8 @@ export class Candle {
   readonly flame: Billboard;
   lit = false;
   private level = 0;
+  /** A short over-bright swell on top of the steady flame, for the moment a ghost is freed. */
+  private boost = 0;
   private seed = Math.random() * 100;
 
   constructor(readonly top: THREE.Vector3, readonly brightness = 3.2, waxHeight = 0.32) {
@@ -46,10 +48,16 @@ export class Candle {
     this.level = 1;
   }
 
+  /** Swell to well over full brightness, then settle back over about a second. */
+  flare() {
+    this.boost = 1.4;
+  }
+
   update(dt: number, t: number, camera: THREE.Camera, reducedMotion: boolean) {
     if (this.lit) this.level = Math.min(1, this.level + dt * 2);
+    this.boost = Math.max(0, this.boost - dt * 1.4);
     const flicker = reducedMotion ? 1 : 0.88 + 0.08 * Math.sin(t * 13 + this.seed) + 0.04 * Math.sin(t * 31 + this.seed * 2);
-    this.light.intensity = this.brightness * this.level * flicker;
+    this.light.intensity = this.brightness * this.level * flicker * (1 + this.boost);
     this.flame.update(dt, camera, reducedMotion);
   }
 }

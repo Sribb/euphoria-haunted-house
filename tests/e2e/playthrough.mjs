@@ -125,9 +125,66 @@ const touchSafety = async () => {
   await ctx.close();
 };
 
+/** On a phone, an edge arrow points to the nearest clue that is out of view, and goes once all are found. */
+const cluePointer = async () => {
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, deviceScaleFactor: 3 });
+  const page = await ctx.newPage();
+  await start(page, true);
+  // the far right of the Foyer: on a phone every clue is out of view to the left from here
+  await page.evaluate(() => window.__game.teleport(8, 5));
+  await page.waitForTimeout(600);
+  const box = await page.evaluate(() => {
+    const el = document.getElementById("clue-pointer");
+    if (!el || el.hidden) return null;
+    const r = el.getBoundingClientRect(), hud = document.getElementById("hud").getBoundingClientRect();
+    return { l: r.left, t: r.top, r: r.right, b: r.bottom, hudBottom: hud.bottom, left: el.style.transform.includes("rotate(180deg)") };
+  });
+  check(!!box && box.left, "on a phone, an arrow at the left edge points to clues that are out of view to the left");
+  if (box) {
+    check(box.l >= 0 && box.r <= 390 && box.t >= box.hudBottom && box.b <= 844 - 100, `the arrow stays on screen, under the HUD and above the thumb controls (${Math.round(box.l)},${Math.round(box.t)})`);
+  }
+  await page.evaluate(() => window.__game.lightAll());
+  await page.waitForTimeout(300);
+  check(await page.isHidden("#clue-pointer"), "the arrow goes away once every clue is found");
+  await ctx.close();
+};
+
+/** A wrong answer makes the ghost lunge at the player and drift back; under reduced motion it stays put. */
+const lunge = async (reduce) => {
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, reducedMotion: reduce ? "reduce" : "no-preference" });
+  const page = await ctx.newPage();
+  await start(page);
+  await page.evaluate(() => { window.__game.lightAll(); window.__game.teleport(0, -3.4); });
+  await page.waitForTimeout(500);
+  await page.keyboard.press("KeyE");
+  await page.waitForSelector("#dialog:not([hidden])", { timeout: 6000 });
+  for (let i = 0; i < 12 && (await page.isVisible("#dialog")); i++) {
+    await page.keyboard.press("Space");
+    await page.waitForTimeout(220);
+  }
+  await page.waitForSelector("#battle .options button:not([disabled])", { timeout: 5000 });
+  const [key, count] = await page.evaluate(() => [window.__game.answerKey()[0], document.querySelectorAll("#battle .options button").length]);
+  const home = (await page.evaluate(() => window.__game.state)).ghostHomeZ;
+  await page.waitForTimeout(120);
+  await page.keyboard.press(String(((key + 1) % count) + 1));
+  let peak = 0;
+  for (let i = 0; i < 12; i++) {
+    peak = Math.max(peak, (await page.evaluate(() => window.__game.state)).ghostZ - home);
+    await page.waitForTimeout(30);
+  }
+  await page.waitForTimeout(700);
+  const rest = Math.abs((await page.evaluate(() => window.__game.state)).ghostZ - home);
+  if (reduce) check(peak < 0.01, `under reduced motion the ghost does not lunge (moved ${peak.toFixed(2)})`);
+  else check(peak > 0.3 && rest < 0.02, `a wrong answer makes the ghost lunge (${peak.toFixed(2)} units) and return home`);
+  await ctx.close();
+};
+
 try {
   await playthrough();
   await touchSafety();
+  await cluePointer();
+  await lunge(false);
+  await lunge(true);
 } catch (e) {
   check(false, `the run stopped early: ${e.message.split("\n")[0]}`);
 } finally {

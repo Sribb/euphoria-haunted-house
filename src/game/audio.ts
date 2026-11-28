@@ -131,6 +131,8 @@ export class Sound {
     [523, 659, 784].forEach((f, i) => this.tone(f, 0.5, "triangle", 0.06, 0.15 + i * 0.07));
   }
   boo() { this.tone(180, 0.7, "sawtooth", 0.06, 0, 90); this.hiss(0.6, 700, 0.06, 0, 200); }
+  /** One rising note per candle as the freed ghost's room brightens (step 0, 1, 2). */
+  chime(step: number) { this.tone([784, 988, 1175][step % 3], 0.5, "triangle", 0.05); }
   encounter() {
     this.tone(110, 1.2, "sawtooth", 0.08, 0, 55);
     this.tone(116.5, 1.2, "sawtooth", 0.06);
