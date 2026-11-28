@@ -263,7 +263,8 @@ export class UI {
       if (need <= cap) break;
     }
     panel.style.maxHeight = "";
-    panel.style.minHeight = `${Math.min(need, cap)}px`;
+    // capped by --cap too, so turning a phone sideways mid-question cannot push the panel off the screen
+    panel.style.minHeight = `min(${Math.min(need, cap)}px, var(--cap))`;
   }
 
   /** Asks a question; resolves with the chosen option index. */
@@ -407,7 +408,8 @@ export class UI {
       recap.append(li);
     }
     $("#end").hidden = false;
-    $("#keep").focus();
+    // without preventScroll a short landscape screen opens the card scrolled down past its title and score
+    $("#keep").focus({ preventScroll: true });
   }
 
   /**

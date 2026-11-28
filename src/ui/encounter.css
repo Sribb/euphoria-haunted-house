@@ -137,3 +137,12 @@
   #battle .options { margin-bottom: 4px; }
   #battle .options button, #battle .feedback { font-size: var(--t-tiny); }
 }
+
+/* iOS Safari measures vh as the screen with its toolbar hidden, but this page never scrolls, so the toolbar
+   stays and a panel at its vh cap reaches under the name plate. Where dvh exists, cap by the screen that is
+   really visible. Same order as the rules above, so the short-screen cap still wins over the narrow one. */
+@supports (height: 1dvh) {
+  #battle .panel { --cap: 54dvh; }
+  @media (max-width: 640px) { #battle .panel { --cap: 64dvh; } }
+  @media (max-height: 520px) { #battle .panel { --cap: calc(100dvh - 80px); } }
+}

@@ -154,6 +154,8 @@ const playMovie = async (id: string, freezeAt?: number) => {
     freezeAt,
   );
   ui.busy = false;
+  // the movie's Continue button is gone, so hand focus back to the room instead of losing it to the page
+  ui.focusGame();
 };
 
 const examine = async (clue: Clue) => {
@@ -247,9 +249,12 @@ const encounter = async () => {
   // back in the wide view, the three candles the player lit swell one after another, then the room fills
   await wait(350);
   for (const [i, c] of room.candles.entries()) {
-    c.flare();
     sound.chime(i);
-    particles.burst(c.top.clone().add(new THREE.Vector3(0, 0.45, 0)), ["#FFD47A", "#FFE3A0", "#6FE3E8"], 16, 0.7, 1.1, 0.8);
+    // under reduced motion the chimes still play, but the candles do not flare and nothing bursts
+    if (!reducedMotion) {
+      c.flare();
+      particles.burst(c.top.clone().add(new THREE.Vector3(0, 0.45, 0)), ["#FFD47A", "#FFE3A0", "#6FE3E8"], 16, 0.7, 1.1, 0.8);
+    }
     await wait(240);
   }
   room.celebrate();

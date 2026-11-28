@@ -179,8 +179,30 @@ const lunge = async (reduce) => {
   await ctx.close();
 };
 
+/** Turning a phone sideways while a question is up must keep the whole panel on screen. */
+const rotateMidQuestion = async () => {
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, deviceScaleFactor: 3 });
+  const page = await ctx.newPage();
+  await start(page, true);
+  await page.evaluate(() => { window.__game.lightAll(); window.__game.teleport(0, -3.4); });
+  await page.waitForTimeout(600);
+  await page.tap("#act");
+  await page.waitForSelector("#dialog:not([hidden])", { timeout: 6000 });
+  for (let i = 0; i < 14 && (await page.isVisible("#dialog")); i++) {
+    await page.tap("#dialog");
+    await page.waitForTimeout(260);
+  }
+  await page.waitForSelector("#battle .options button:not([disabled])", { timeout: 6000 });
+  await page.setViewportSize({ width: 844, height: 390 });
+  await page.waitForTimeout(400);
+  const top = await page.evaluate(() => document.querySelector("#battle .panel").getBoundingClientRect().top);
+  check(top >= 0, `turning a phone sideways mid-question keeps the question on screen (panel top ${Math.round(top)})`);
+  await ctx.close();
+};
+
 try {
   await playthrough();
+  await rotateMidQuestion();
   await touchSafety();
   await cluePointer();
   await lunge(false);
